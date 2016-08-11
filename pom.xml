@@ -173,25 +173,7 @@
                     </resource>
                 </resources>
             </build>
-        </profile>
-        <!-- Configuracion especifica para el ambiente de prueba -->
-        <profile>
-            <id>prueba</id>
-            <properties>
-                <war.name>sisinv-prueba</war.name>
-                <backend.deployment-name>sisinv-prueba.war</backend.deployment-name>
-            </properties>
-            <build>
-                <resources>
-                    <resource>
-                        <directory>src/main/resources-prueba</directory>
-                    </resource>
-                    <resource>
-                        <directory>src/main/resources</directory>
-                    </resource>
-                </resources>
-            </build>
-        </profile>
+        </profile>        
         <!-- Configuracion especifica para el ambiente de produccion-->
         <profile>
             <id>produccion</id>

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+        version="3.0">
+
+    <context-param>
+        <param-name>primefaces.THEME</param-name>
+        <param-value>sentinel</param-value>
+    </context-param>
+
+
+    <!--========== Context Param ==========-->
+
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/web-application-config.xml</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>javax.faces.PROJECT_STAGE</param-name>
+        <param-value>Development</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>primefaces.UPLOADER</param-name>
+        <param-value>commons</param-value>
+    </context-param>
+    
+    <context-param>
+        <param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>javax.faces.INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
+    <error-page>
+        <exception-type>javax.faces.application.ViewExpiredException</exception-type>
+        <location>/faces/login.xhtml</location>
+    </error-page>
+
+    <error-page>
+        <error-code>500</error-code>
+        <location>/faces/public/error/500.xhtml</location>
+    </error-page>
+
+    <error-page>
+        <error-code>404</error-code>
+        <location>/faces/public/error/404/404.xhtml</location>
+    </error-page>
+
+
+    <!--========== /Context Param ==========-->
+    
+     <!--==========  MIME TYPES  ==========-->
+    <mime-mapping>
+        <extension>eot</extension>
+        <mime-type>application/vnd.ms-fontobject</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>eot?#iefix</extension>
+        <mime-type>application/vnd.ms-fontobject</mime-type>
+    </mime-mapping>
+    <mime-mapping> 
+        <extension>otf</extension> 
+        <mime-type>font/opentype</mime-type> 
+    </mime-mapping>
+    <mime-mapping> 
+        <extension>ttf</extension> 
+        <mime-type>application/x-font-ttf</mime-type> 
+    </mime-mapping>     
+    <mime-mapping> 
+        <extension>woff</extension> 
+        <mime-type>application/x-font-woff</mime-type> 
+    </mime-mapping>
+    <mime-mapping> 
+        <extension>svg</extension>
+        <mime-type>image/svg+xml</mime-type> 
+    </mime-mapping>
+    <mime-mapping> 
+        <extension>svg#fontawesomeregular</extension>
+        <mime-type>image/svg+xml</mime-type> 
+    </mime-mapping>
+    <mime-mapping> 
+        <extension>ico</extension> 
+        <mime-type>image/x-icon</mime-type> 
+    </mime-mapping>
+
+
+    <!--========== Listener ==========-->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+    </listener>
+
+    <!--========== /Listener ==========-->
+
+    <!--========== Filter WEB ==========-->
+
+    <filter>
+        <filter-name>securityFilter</filter-name>
+        <filter-class>ni.gob.inss.barista.view.security.SecurityFilter</filter-class>
+    </filter>
+
+
+    <filter-mapping>
+        <filter-name>securityFilter</filter-name>
+        <url-pattern>/mobile/views/*</url-pattern>
+        <url-pattern>/mobile/index.html</url-pattern>
+        <url-pattern>/web/views/*</url-pattern>
+        <url-pattern>/web/index.html</url-pattern>
+        <url-pattern>/login.html</url-pattern>
+        <url-pattern>/menu.html</url-pattern>
+        <url-pattern>/changePassword.html</url-pattern>
+    </filter-mapping>
+
+    <!--========== /Filter WEB ==========-->
+
+    <servlet>
+        <servlet-name>Push Servlet</servlet-name>
+        <servlet-class>org.primefaces.push.PushServlet</servlet-class>
+        <init-param>
+            <param-name>org.atmosphere.cpr.broadcasterCacheClass</param-name>
+            <param-value>org.atmosphere.cache.UUIDBroadcasterCache</param-value>
+        </init-param>
+        <load-on-startup>0</load-on-startup>
+        <async-supported>true</async-supported>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Push Servlet</servlet-name>
+        <url-pattern>/primepush/*</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>Faces Servlet</servlet-name>
+        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+        <async-supported>true</async-supported>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>/faces/*</url-pattern>
+        <url-pattern>*.html</url-pattern>
+    </servlet-mapping>
+
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
+
+    <welcome-file-list>
+        <welcome-file>login.html</welcome-file>
+    </welcome-file-list>
+
+
+
+</web-app>

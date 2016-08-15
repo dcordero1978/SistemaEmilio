@@ -1,0 +1,62 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                template="/web/template/innerLayout.xhtml"
+                xmlns:mc="http://java.sun.com/jsf/composite/comps">
+
+	<ui:param name="backBean" value="#{delegacionBackBean}"/>
+	<ui:define name="headerContent">
+		Administración de Catalogo Delegación
+	</ui:define>
+	<ui:define name="content">
+		<div id="ContainerIndent">
+				<div class="Container50 Responsive">
+					<h:form id="formListaDelegaciones" style="width: 99%;">
+						<p:panel styleClass="fondoPaneles">
+							<f:facet name="header">
+									<p:outputPanel style="display:block;" styleClass="left">
+										<p:inputText value="#{delegacionBackBean.txtBusquedaDelegacionByNombre}" maxlength="50" placeholder="#{labelName.placeholderBuscar}"/>
+										<p:commandButton action="#{delegacionBackBean.buscarDelegacionByName}"  icon="ui-icon-search"/>
+									</p:outputPanel>
+									<p:outputPanel style="display: block;" styleClass="right">
+										<p:commandButton icon="ui-icon-circle-plus" action="#{delegacionBackBean.crearDelegacion}" value="#{labelName.btnAgregar}"/>
+										<p:commandButton icon="ui-icon-pencil" action="#{delegacionBackBean.editarDelegacion}" value="#{labelName.btnEditar}"/>
+									</p:outputPanel>
+							</f:facet>
+						</p:panel>
+					</h:form>
+				</div>
+				<div class="Container50 Responsive">
+					<h:form id="formDatosDelegacion" style="width: 99%">
+						<p:inputText rendered="false" value="#{delegacionBackBean.hfId}" />
+						<p:panel styleClass="fondoPaneles" style="heigth:547px;">
+							<f:facet name="header">
+								<p:outputPanel style="display:block" styleClass="right">
+									<p:commandButton widgetVar="btnGuardar" actionListener="#{delegacionBackBean.guardarNuevaDelegacion}" icon="ui-icon-disk" 
+										update="formDatosDelegacion" value="#{labelName.btnGuardar}"/>
+								</p:outputPanel>
+								
+							</f:facet>
+							<h:panelGrid columns="2" style="width:100" columnClasses="Wid20, Wid80">
+								<p:outputLabel for="nombreDelegacion" value="Nombre"/>
+								<p:inputText value="#{delegacionBackBean.nombreDelegacion}" label="Nombre" maxlength="25" 
+											 id="nombreDelegacion" required="true" styleClass="Wid80" autocomplete="off"/>
+								<p:outputLabel for="departamentoPertenece" value="Departamento"/>
+								<p:selectOneMenu id="departamentoPertenece" label="Departamento" required="true" >
+									<f:selectItem itemLabel="Seleccione" itemValue="#{null}"/>
+									<f:selectItems value="#{delegacionBackBean.listaDepartamentos}" var="dpto" itemLabel="#{dpto.nombre}" itemValue="#{dpto.id}"/>
+								</p:selectOneMenu>				
+							</h:panelGrid>						
+						</p:panel>
+					
+					</h:form>
+				</div>
+		</div>
+	
+	</ui:define>
+
+
+</ui:composition>

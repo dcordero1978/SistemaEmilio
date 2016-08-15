@@ -15,10 +15,32 @@
 		<div id="ContainerIndent">
 			<div class="Container50 Responsive">
 				<h:form id="formLista" style="width: 99%;">
-					<p:panel styleClass="fondoPaneles"></p:panel>
+					<p:panel styleClass="fondoPaneles">
+						<f:facet name="header">
+							<p:outputPanel style="display" styleClass="left">
+								<p:inputText value="#{empleadoBackBean.txtBusquedaEmpleado}" maxlength="150" placeholder="#{labelName.placeholderBuscar}" autocomplete="off"/>
+								<p:commandButton  icon="ui-icon-search" action="#{empleadoBackBean.buscarEmpleadoByName}"/>
+							</p:outputPanel>
+							<p:outputPanel style="display" styleClass="right">
+								<p:commandButton value="#{labelName.btnAgregar}" icon="ui-icon-circle-plus"/>
+								<p:commandButton value="#{labelName.btnEditar}" icon="ui-icon-pencil"/>
+							</p:outputPanel>
+						</f:facet>
+						<p:outputPanel styleClass="tableClass">
+							
+						</p:outputPanel>
+					</p:panel>
+				</h:form>
+			</div>
+			<!-- FORMULARIO PARA AGREGAR Y EDITAR EL RECURSO -->
+			<div class="Container50 Responsive">
+				<h:form id="formDetalle" style="width:99%">
+					<p:inputText type="hidden" value="#{empleadoBackBean.hfId}"/>
+					<p:panel style="height:547px;" styleClass="fondoPaneles">
+					
+					</p:panel>
 				</h:form>
 			</div>
 		</div>
 	</ui:define>
-
 </ui:composition>

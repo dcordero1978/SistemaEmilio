@@ -310,7 +310,19 @@
                   </dependency>
                 </dependencies>
             </plugin>
-
+			
+			<!-- Para realizar los despligues con wildfly -->
+			 <plugin>
+                <groupId>org.wildfly.plugins</groupId>
+                <artifactId>wildfly-maven-plugin</artifactId>
+                <version>1.1.0.Alpha11</version>
+                <configuration>
+                	<hostname>localhost</hostname>
+                	<username>developer</username>
+                	<password>password</password>
+                	<filename>sisinv-desarrollo.war</filename>
+                </configuration>
+            </plugin>
 
         </plugins>
     </build>

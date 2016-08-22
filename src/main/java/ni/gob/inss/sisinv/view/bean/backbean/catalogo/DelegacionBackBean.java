@@ -53,6 +53,7 @@ public class DelegacionBackBean extends BaseBackBean implements Serializable  {
 	public void init(){
 		this.limpiar();
 		this.cargarListaDepartamentos();
+		this.buscarDelegacionByName();
 	}
 	
 	public void cargarListaDepartamentos(){
@@ -65,6 +66,14 @@ public class DelegacionBackBean extends BaseBackBean implements Serializable  {
 	}
 	
 	public void buscarDelegacionByName(){
+		try{
+			this.listaDelegaciones = oDelegacionService.buscar(this.txtBusquedaDelegacionByNombre);
+			if(this.listaDelegaciones.isEmpty()){
+				mostrarMensajeInfo("No se han encontrado resultados con el criterio de Búsqueda ingresada.");
+			}
+		}catch(Exception e){
+			mostrarMensajeError(this.getClass().getSimpleName(), "buscarDelegacionByName", MessagesResults.ERROR_OBTENER_LISTA, e);
+		}
 		
 	}
 	
@@ -93,14 +102,18 @@ public class DelegacionBackBean extends BaseBackBean implements Serializable  {
 	public void guardar(){
 		try {
 			Delegacion oDelegacion = new Delegacion();
-			//Por ser nueva Delegacion por defecto es activo.
-			oDelegacion.setPasivo(false); 
+			//Por ser nueva Delegacion por defecto es activo.			 
 			oDelegacion.setNombre(this.getNombreDelegacion());
 			oDelegacion.setDepartamentoId(this.getDepartamentoId());
+			oDelegacion.setCreadoPor(this.getUsuarioActual().getId());
+			oDelegacion.setCreadoEl(this.getTimeNow());
+			oDelegacion.setCreadoEnIp(this.getRemoteIp());
+			oDelegacion.setPasivo(false);
 			oDelegacionService.agregar(oDelegacion);
 			mostrarMensajeInfo(MessagesResults.EXITO_GUARDAR);
 		} catch (Exception e) {
-            mostrarMensajeError(this.getClass().getSimpleName(),"guardarNuevaDelegacion",MessagesResults.ERROR_GUARDAR, e);
+			e.printStackTrace();
+			//mostrarMensajeError(this.getClass().getSimpleName(),"guardarNuevaDelegacion",MessagesResults.ERROR_GUARDAR, e);
 
 		} 
 	}

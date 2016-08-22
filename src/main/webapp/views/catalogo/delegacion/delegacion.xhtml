@@ -26,7 +26,21 @@
 										<p:commandButton icon="ui-icon-pencil" action="#{delegacionBackBean.editarDelegacion}" value="#{labelName.btnEditar}"/>
 									</p:outputPanel>
 							</f:facet>
-						</p:panel>
+							<p:outputPanel styleClass="tableClass">
+							<p:dataTable style="width:100%" paginatorPosition="top" selectionMode="single"  scrollable="true" scrollHeight="410" 
+							var="oDelegacion" value="#{delegacionBackBean.listaDelegaciones}" selection="#{delegacionBackBean.delegacionSeleccionada}" 
+							rowKey="#{oDelegacion.id}"
+							paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="12" pageLinks="3"  paginatorTemplate="#{configApplicationBean.paginatorTemplate}"
+							currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
+								<p:column headerText="Delegación">
+									<h:outputText value="#{oDelegacion.nombre}" />
+								</p:column>
+								<p:column headerText="Pasivo" style="text-align:center; width:10%" priority="2">
+									<p:selectBooleanCheckbox value="#{oDelegacion.pasivo}" disabled="true" styleClass="ui-linus-enabled"/>
+								</p:column>
+							</p:dataTable>
+						</p:outputPanel>
+						</p:panel>						
 					</h:form>
 				</div>
 				<div class="Container50 Responsive">
@@ -34,9 +48,10 @@
 						<p:inputText rendered="false" value="#{delegacionBackBean.hfId}" />
 						<p:panel styleClass="fondoPaneles" style="heigth:547px;">
 							<f:facet name="header">
+								<h:outputText value="ID: #{delegacionBackBean.hfId}" rendered="#{!delegacionBackBean.nuevoRegistro}"/>
 								<p:outputPanel style="display:block" styleClass="right">
-									<p:commandButton widgetVar="btnGuardar" actionListener="#{delegacionBackBean.guardarNuevaDelegacion}" icon="ui-icon-disk" 
-										update="formDatosDelegacion" value="#{labelName.btnGuardar}"/>
+									<p:commandButton widgetVar="btnGuardar" actionListener="#{delegacionBackBean.guardarOrActualizar}" icon="ui-icon-disk" 
+										update="formDatosDelegacion" value="#{labelName.btnGuardar}" onstart="PF('btnGuardar').disable();" oncomplete="PF('btnGuardar').enable();"/>
 								</p:outputPanel>
 								
 							</f:facet>
@@ -48,7 +63,12 @@
 								<p:selectOneMenu id="departamentoPertenece" label="Departamento" required="true" >
 									<f:selectItem itemLabel="Seleccione" itemValue="#{null}"/>
 									<f:selectItems value="#{delegacionBackBean.listaDepartamentos}" var="dpto" itemLabel="#{dpto.nombre}" itemValue="#{dpto.id}"/>
-								</p:selectOneMenu>				
+								</p:selectOneMenu>		
+								
+								<p:outputLabel for="pasivo" value="Pasivo:" rendered="#{!delegacionBackBean.nuevoRegistro}"/>
+                            	<p:selectBooleanButton onLabel="Si" offLabel="No" id="pasivo"
+                                                   value="#{delegacionBackBean.pasivo }"
+                                                   rendered="#{!delegacionBackBean.nuevoRegistro}"/>		
 							</h:panelGrid>						
 						</p:panel>
 					

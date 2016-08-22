@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.googlecode.genericdao.search.Search;
+
 import ni.gob.inss.barista.businesslogic.service.BusinessException;
 import ni.gob.inss.barista.model.dao.DAOException;
 import ni.gob.inss.barista.model.dao.EntityNotFoundException;
@@ -17,7 +19,7 @@ import ni.gob.inss.sisinv.model.entity.catalogo.Delegacion;
 public class DelegacionServiceImpl implements DelegacionService{
 	
 	@Autowired
-	DelegacionDAO oDelegacionDAO;
+	private DelegacionDAO oDelegacionDAO;
 
 	@Transactional
 	@Override
@@ -31,13 +33,25 @@ public class DelegacionServiceImpl implements DelegacionService{
 		
 	}
 	
-
+	@SuppressWarnings("unchecked")
+	@Transactional
 	@Override
 	public List<Delegacion> buscar(String txtCriterio) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Delegacion> listaDelegaciones = null;
+		
+		Search oSearch = new Search();
+		oSearch.addFilterILike("nombre", "%"+txtCriterio+"%");
+		oSearch.addSortAsc("nombre");
+		if(txtCriterio==null || "".equalsIgnoreCase(txtCriterio)){
+			listaDelegaciones = oDelegacionDAO.findAll();
+		}else{
+			listaDelegaciones = oDelegacionDAO.search(oSearch);
+		}
+		
+		return listaDelegaciones;		
 	}
 
+	
 	@Override
 	public Delegacion obtener(int id) throws EntityNotFoundException {
 		// TODO Auto-generated method stub

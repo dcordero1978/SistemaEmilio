@@ -80,10 +80,6 @@ public class DelegacionBackBean extends BaseBackBean implements Serializable  {
 		
 	}
 	
-	public void crearDelegacion(){
-	
-	}
-	
 	public void editar(){
 		if(this.getDelegacionSeleccionada()!=null){
 			this.cargarDatosDelegacion(this.getDelegacionSeleccionada().getId());

@@ -28,8 +28,9 @@ public class DelegacionServiceImpl implements DelegacionService{
 	}
 
 	@Override
+	@Transactional
 	public void actualizar(Delegacion oDelegacion) throws DAOException, BusinessException {
-		// TODO Auto-generated method stub
+		oDelegacionDAO.updateUpper(oDelegacion);
 		
 	}
 	
@@ -51,11 +52,10 @@ public class DelegacionServiceImpl implements DelegacionService{
 		return listaDelegaciones;		
 	}
 
-	
+	@Transactional
 	@Override
 	public Delegacion obtener(int id) throws EntityNotFoundException {
-		// TODO Auto-generated method stub
-		return null;
+		return oDelegacionDAO.find(id);		
 	}
 	
 	

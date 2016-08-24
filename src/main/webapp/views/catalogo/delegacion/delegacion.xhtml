@@ -33,7 +33,7 @@
 							rowKey="#{oDelegacion.id}"
 							paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="12" pageLinks="3"  paginatorTemplate="#{configApplicationBean.paginatorTemplate}"
 							currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
-						
+								<p:ajax event="rowSelect" listener="#{delegacionBackBean.editar}" update=":formDatosDelegacion" resetValues="true" />
 								<p:column headerText="Delegación" sortBy="#{oDelegacion.nombre}">
 									<h:outputText value="#{oDelegacion.nombre}" />
 								</p:column>
@@ -48,7 +48,7 @@
 				<div class="Container50 Responsive">
 					<h:form id="formDatosDelegacion" style="width: 99%">
 						<p:inputText rendered="false" value="#{delegacionBackBean.hfId}" />
-						<p:panel styleClass="fondoPaneles">
+						<p:panel styleClass="fondoPaneles" style="height: 547px;">
 							<f:facet name="header">
 								<h:outputText value="ID: #{delegacionBackBean.hfId}" rendered="#{!delegacionBackBean.nuevoRegistro}"/>
 								<p:outputPanel style="display:block" styleClass="right">

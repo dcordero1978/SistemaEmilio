@@ -22,8 +22,9 @@
 										<p:commandButton update="formListaDelegaciones" ajax="true" action="#{delegacionBackBean.buscarDelegacionByName}"  icon="ui-icon-search"/>
 									</p:outputPanel>
 									<p:outputPanel style="display: block;" styleClass="right">
-										<p:commandButton icon="ui-icon-circle-plus" action="#{delegacionBackBean.crearDelegacion}" value="#{labelName.btnAgregar}"/>
-										<p:commandButton icon="ui-icon-pencil" action="#{delegacionBackBean.editarDelegacion}" value="#{labelName.btnEditar}"/>
+										<p:commandButton icon="ui-icon-circle-plus" action="#{delegacionBackBean.limpiar}" value="#{labelName.btnAgregar}"
+										resetValues="true" ajax="true" update=":formDatosDelegacion"/>
+										<p:commandButton icon="ui-icon-pencil" action="#{delegacionBackBean.editar}" value="#{labelName.btnEditar}" resetValues="true" update=":formDatosDelegacion"/>
 									</p:outputPanel>
 							</f:facet>
 							<p:outputPanel styleClass="tableClass">
@@ -32,26 +33,28 @@
 							rowKey="#{oDelegacion.id}"
 							paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="12" pageLinks="3"  paginatorTemplate="#{configApplicationBean.paginatorTemplate}"
 							currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
-								<p:column headerText="Delegación">
+						
+								<p:column headerText="Delegación" sortBy="#{oDelegacion.nombre}">
 									<h:outputText value="#{oDelegacion.nombre}" />
 								</p:column>
-								<p:column headerText="Pasivo" style="text-align:center; width:10%" priority="2">
+								<p:column headerText="Pasivo" style="text-align:center; width:10%" priority="2" sortBy="#{oDelegacion.pasivo}">
 									<p:selectBooleanCheckbox value="#{oDelegacion.pasivo}" disabled="true" styleClass="ui-linus-enabled"/>
 								</p:column>
 							</p:dataTable>
 						</p:outputPanel>
-						</p:panel>						
+						</p:panel>					
 					</h:form>
 				</div>
 				<div class="Container50 Responsive">
 					<h:form id="formDatosDelegacion" style="width: 99%">
 						<p:inputText rendered="false" value="#{delegacionBackBean.hfId}" />
-						<p:panel styleClass="fondoPaneles" style="heigth:547px;">
+						<p:panel styleClass="fondoPaneles">
 							<f:facet name="header">
 								<h:outputText value="ID: #{delegacionBackBean.hfId}" rendered="#{!delegacionBackBean.nuevoRegistro}"/>
 								<p:outputPanel style="display:block" styleClass="right">
 									<p:commandButton widgetVar="btnGuardar" actionListener="#{delegacionBackBean.guardarOrActualizar}" icon="ui-icon-disk" 
-										update="formDatosDelegacion" value="#{labelName.btnGuardar}" onstart="PF('btnGuardar').disable();" oncomplete="PF('btnGuardar').enable();"/>
+										update="formDatosDelegacion :formListaDelegaciones" value="#{labelName.btnGuardar}" onstart="PF('btnGuardar').disable();" oncomplete="PF('btnGuardar').enable();"/>
+									<p:commandButton resetValues="true" ajax="true" update=":formDatosDelegacion" action="#{delegacionBackBean.limpiar}" value="#{labelName.btnCancelar}" icon="ui-icon-cancel" process="@this"/>	
 								</p:outputPanel>
 								
 							</f:facet>
@@ -60,7 +63,7 @@
 								<p:inputText value="#{delegacionBackBean.nombreDelegacion}" label="Nombre" maxlength="25" 
 											 id="nombreDelegacion" required="true" styleClass="Wid80" autocomplete="off"/>
 								<p:outputLabel for="departamentoPertenece" value="Departamento"/>
-								<p:selectOneMenu id="departamentoPertenece" label="Departamento" required="true" >
+								<p:selectOneMenu id="departamentoPertenece" label="Departamento" value="#{delegacionBackBean.departamentoId}" required="true" >
 									<f:selectItem itemLabel="Seleccione" itemValue="#{null}"/>
 									<f:selectItems value="#{delegacionBackBean.listaDepartamentos}" var="dpto" itemLabel="#{dpto.nombre}" itemValue="#{dpto.id}"/>
 								</p:selectOneMenu>		

@@ -11,6 +11,8 @@ import org.springframework.context.annotation.Scope;
 
 import ni.gob.inss.barista.businesslogic.service.catalogos.CatalogoService;
 import ni.gob.inss.barista.businesslogic.service.catalogos.TipoCatalogoService;
+import ni.gob.inss.barista.businesslogic.service.core.auditoria.AuditoriaService;
+import ni.gob.inss.barista.model.dao.EntityNotFoundException;
 import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
 import ni.gob.inss.barista.model.entity.catalogo.TiposCatalogo;
 import ni.gob.inss.barista.view.bean.backbean.BaseBackBean;
@@ -49,6 +51,7 @@ public class DelegacionBackBean extends BaseBackBean implements Serializable  {
 	DelegacionService oDelegacionService;
 	
 	
+	
 	@PostConstruct
 	public void init(){
 		this.limpiar();
@@ -81,13 +84,42 @@ public class DelegacionBackBean extends BaseBackBean implements Serializable  {
 	
 	}
 	
-	public void editarDelegacion(){
+	public void editar(){
+		if(this.getDelegacionSeleccionada()!=null){
+			this.cargarDatosDelegacion(this.getDelegacionSeleccionada().getId());
+		}else{
+			mostrarMensajeError(MessagesResults.SELECCIONE_UN_REGISTRO);
+		}		
+	}
 	
+	public void actualizar(){
+		try {
+			Delegacion oDelegacion = new Delegacion();
+			
+			oDelegacion = oDelegacionService.obtener(this.getHfId());
+			oDelegacion.setNombre(this.getNombreDelegacion());
+			oDelegacion.setPasivo(this.isPasivo());
+			oDelegacion.setModificadoEl(this.getTimeNow());
+			oDelegacion.setModificadoPor(this.getUsuarioActual().getId());
+			oDelegacion.setModificadoEnIp(this.getRemoteIp());
+			
+			oDelegacionService.actualizar(oDelegacion);
+			mostrarMensajeInfo(MessagesResults.EXITO_MODIFICAR);
+			
+		} catch (Exception e) {
+			mostrarMensajeError(this.getClass().getSimpleName(), "actualizar", MessagesResults.ERROR_MODIFICAR, e);
+		}
 	}
 	
 	public void guardarOrActualizar(){
-		//TODO: POR EL MOMENTO SOLO TENEMOS EL METODO GUARDAR, ESTE METODO MANEJARA AMBOS GUARDAR Y ACTUALIZAR
-		this.guardar();
+		if(this.getHfId()==null){
+			this.guardar();
+		}else{
+			this.actualizar();
+		}		
+		this.cargarDatosDelegacion(this.getHfId());
+		this.setTxtBusquedaDelegacionByNombre("");
+		this.buscarDelegacionByName();
 	}
 	
 	public void limpiar(){
@@ -97,6 +129,7 @@ public class DelegacionBackBean extends BaseBackBean implements Serializable  {
 		this.setNombreDelegacion("");
 		this.setDepartamentoId(null);
 		this.setPasivo(false);
+		this.setDelegacionSeleccionada(null);		
 	}
 	
 	public void guardar(){
@@ -110,12 +143,28 @@ public class DelegacionBackBean extends BaseBackBean implements Serializable  {
 			oDelegacion.setCreadoEnIp(this.getRemoteIp());
 			oDelegacion.setPasivo(false);
 			oDelegacionService.agregar(oDelegacion);
-			mostrarMensajeInfo(MessagesResults.EXITO_GUARDAR);
+			mostrarMensajeInfo(MessagesResults.EXITO_GUARDAR);	
+		
+			this.setHfId(oDelegacion.getId());
 		} catch (Exception e) {
-			e.printStackTrace();
-			//mostrarMensajeError(this.getClass().getSimpleName(),"guardarNuevaDelegacion",MessagesResults.ERROR_GUARDAR, e);
+			mostrarMensajeError(this.getClass().getSimpleName(),"guardarNuevaDelegacion",MessagesResults.ERROR_GUARDAR, e);
 
 		} 
+	}
+	
+	public void cargarDatosDelegacion(Integer delegacionId){
+		try {
+			Delegacion oDelegacion = oDelegacionService.obtener(delegacionId);
+			
+			this.setNombreDelegacion(oDelegacion.getNombre());
+			this.setDepartamentoId(oDelegacion.getDepartamentoId());
+			this.setHfId(oDelegacion.getId());
+			this.setPasivo(oDelegacion.getPasivo());
+			this.setNuevoRegistro(false);
+			
+		} catch (Exception e) {
+			mostrarMensajeError(this.getClass().getSimpleName(), "obtenerDelegacion", MessagesResults.ERROR_OBTENER, e);
+		}
 	}
 	
 	

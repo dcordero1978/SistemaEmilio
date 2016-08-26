@@ -41,10 +41,11 @@
         <property name="dataSource">
             <ref bean="dataSource" />
         </property>
-        <property name="packagesToScan" value="ni.gob.inss.barista.model.entity" />
+        <property name="packagesToScan" value="ni.gob.inss.barista.model.entity, ni.gob.inss.sisinv.model.entity" />
         <property name="hibernateProperties">
             <props>
                 <prop key="hibernate.dialect">${jdbc.dialect}</prop>
+				<!--  prop key="hibernate.show_sql">${jdbc.show_sql}</prop-->
 				<prop key="hibernate.show_sql">${jdbc.show_sql}</prop>
 				<!-- JDBC connection pool (use the built-in) -->
         		<prop key="connection.pool_size">10</prop>

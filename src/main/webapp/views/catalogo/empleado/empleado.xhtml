@@ -48,10 +48,37 @@
 			</div>
 			<!-- FORMULARIO PARA AGREGAR Y EDITAR EL RECURSO -->
 			<div class="Container50 Responsive">
-				<h:form id="formDetalle" style="width:99%">
+				<h:form id="formDatosEmpleado" style="width:99%">
 					<p:inputText type="hidden" value="#{empleadoBackBean.hfId}"/>
 					<p:panel style="height:547px;" styleClass="fondoPaneles">
-					
+						<f:facet name="header">
+							<h:outputText value="ID: #{empleadoBackBean.hfId}" rendered="#{!empleadoBackBean.nuevoRegistro}"/>
+							<p:outputPanel style="display:block" styleClass="right">
+								<p:commandButton widgetVar="btnGuardar" actionListener="#{empleadoBackBean.guardarOrActualizar}" icon="ui-icon-disk" 
+								update="formDatosEmpleado :formLista" value="#{labelName.btnGuardar}" onstart="PF('btnGuardar').disable();" oncomplete="PF('btnGuardar').enable();"/>
+								<p:commandButton resetValues="true" ajax="true" update="formDatosEmpleado" action="#{empleadoBackBean.limpiar}" value="#{labelName.btnCancelar}" icon="ui-icon-cancel" process="@this"/>
+							</p:outputPanel>
+						</f:facet>
+						<h:panelGrid columns="2" style="width:100%" columnClasses="Wid30, Wid70">
+							<p:outputLabel for="nombres" value="Nombres" />
+							<p:inputText value="#{empleadoBackBean.nombres}" label="Nombres" maxlength="50" required="true" autocomplete="off" id="nombres" styleClass="Wid80"/>
+							<p:outputLabel for="apellidos" value="Apellidos"/>
+							<p:inputText value="#{empleadoBackBean.nombres}" label="Apellidos" maxlength="50" required="true" autocomplete="off" id="apellidos"  styleClass="Wid80"/>
+							<p:outputLabel for="tipoIdentificacion" value="Tipo Identificación"/>
+							<p:selectOneMenu id="tipoIdentificacion" label="Tipo Identificación" value="#{empleadoBackBean.tipoIdentificacion}" required="true" styleClass="Wid80" >							
+								<f:selectItem itemLabel="Seleccione" value="#{null}" />
+								<f:selectItems value="#{empleadoBackBean.listaTipoIdentificacion}" var="tipoId" itemLabel="#{tipoId.nombre}" itemValue="#{tipoId.id}"/>
+							</p:selectOneMenu>     
+							<p:outputLabel for="numeroIdentificacion" value="No. Identificación" />
+							<p:inputText value="#{empleadoBackBean.nroIdentificacion}" label="No. Identficación" id="numeroIdentificacion" styleClass="Wid80"/>
+							<p:outputLabel for="delegacion" value="Delegación"/>
+							<p:selectOneMenu id="delegacion" label="Delegación" value="#{empleadoBackBean.delegacionId}" required="true" styleClass="Wid80">
+								<f:selectItem itemValue="Seleccione" value="#{null}"/>
+								<f:selectItems var="oDelegacion" value="#{empleadoBackBean.listaDelegaciones}" itemLabel="#{oDelegacion.nombre}" itemValue="#{oDelegacion.id}"/>
+							</p:selectOneMenu>
+							<p:outputLabel for="pasivo" value="Pasivo" rendered="#{!empleadoBackBean.nuevoRegistro}"/>
+							<p:selectBooleanButton offLabel="No" onLabel="Si" id="pasivo"  value="#{empleadoBackBean.pasivo}" rendered="#{!empleadoBackBean.nuevoRegistro}"/>
+						</h:panelGrid>
 					</p:panel>
 				</h:form>
 			</div>

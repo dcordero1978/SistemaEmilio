@@ -9,10 +9,16 @@ import javax.inject.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
+import ni.gob.inss.barista.businesslogic.service.catalogos.TipoCatalogoService;
+import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
+import ni.gob.inss.barista.model.entity.catalogo.TiposCatalogo;
 import ni.gob.inss.barista.view.bean.backbean.BaseBackBean;
 import ni.gob.inss.barista.view.utils.web.MessagesResults;
+import ni.gob.inss.sisinv.bussineslogic.service.DelegacionService;
 import ni.gob.inss.sisinv.bussineslogic.service.EmpleadoService;
+import ni.gob.inss.sisinv.model.entity.catalogo.Delegacion;
 import ni.gob.inss.sisinv.model.entity.catalogo.Empleado;
+import ni.gob.inss.sisinv.util.CatalogoGeneral;
 
 @Named
 @Scope("view")
@@ -23,25 +29,65 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	private String apellidos;	
 	private String txtBusquedaEmpleado;
 	private Integer hfId;
+	private Integer tipoIdentificacion;
+	private String nroIdentificacion;
+	private Integer delegacionId;
+	private boolean pasivo;
 	
 	private List<Empleado> listaEmpleados;
 	private Empleado empleadoSeleccionado;
+	private boolean nuevoRegistro;
+	
+	private List<Catalogo> listaTipoIdentificacion;
+	private List<Delegacion> listaDelegaciones;
 	
 	@Autowired
 	private EmpleadoService oEmpleado;
 	
+	@Autowired
+	TipoCatalogoService oTipoCatalogoService;
+	
+	@Autowired
+	DelegacionService oDelegacionService;
+	
 	@PostConstruct
 	public void init(){
 		this.limpiar();
+		this.cargarListaTipoIdentificacion();
+		this.cargarListaDelegaciones();
 		this.buscar();
 		
+	}
+	
+	public void cargarListaTipoIdentificacion(){
+		try {
+			TiposCatalogo catalogoTipoIdentificacion= oTipoCatalogoService.obtener(CatalogoGeneral.TIPO_IDENTIFICACION.getCatalogoId());
+			this.listaTipoIdentificacion = oTipoCatalogoService.obtenerCatalogos(catalogoTipoIdentificacion);
+		} catch (Exception e) {
+			mostrarMensajeError(this.getClass().getSimpleName(), "cargarListaTipoIdentificacion", MessagesResults.ERROR_OBTENER_LISTA, e);
+			
+		}
+	}
+	
+	public void cargarListaDelegaciones(){
+		try{
+			this.listaDelegaciones =oDelegacionService.buscar("");
+		}catch (Exception e) {
+			mostrarMensajeError(this.getClass().getSimpleName(), "cargarListaDelegaciones", MessagesResults.ERROR_OBTENER_LISTA, e);
+		}
+		 
 	}
 	
 	public void limpiar(){
 		this.setNombres("");
 		this.setApellidos("");
 		this.setTxtBusquedaEmpleado("");
-		this.setEmpleadoSeleccionado(null);		
+		this.setEmpleadoSeleccionado(null);
+		this.setNuevoRegistro(true);
+		this.setTipoIdentificacion(null);
+		this.setNroIdentificacion("");
+		this.setPasivo(false);
+		this.setDelegacionId(null);
 	}
 	
 	public void buscar(){
@@ -54,7 +100,11 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 			mostrarMensajeError(this.getClass().getSimpleName(), "buscar()", MessagesResults.ERROR_OBTENER_LISTA, e);
 		}
 		
-	}	
+	}
+	
+	public void guardarOrActualizar(){
+		
+	}
 
 	public String getNombres() {
 		return nombres;
@@ -104,5 +154,60 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 		this.empleadoSeleccionado = empleadoSeleccionado;
 	}
 
+	public boolean isNuevoRegistro() {
+		return nuevoRegistro;
+	}
+
+	public void setNuevoRegistro(boolean nuevoRegistro) {
+		this.nuevoRegistro = nuevoRegistro;
+	}
+
+	public Integer getTipoIdentificacion() {
+		return tipoIdentificacion;
+	}
+
+	public void setTipoIdentificacion(Integer tipoIdentificacion) {
+		this.tipoIdentificacion = tipoIdentificacion;
+	}
+
+	public List<Catalogo> getListaTipoIdentificacion() {
+		return listaTipoIdentificacion;
+	}
+
+	public void setListaTipoIdentificacion(List<Catalogo> listaTipoIdentificacion) {
+		this.listaTipoIdentificacion = listaTipoIdentificacion;
+	}
+
+	public String getNroIdentificacion() {
+		return nroIdentificacion;
+	}
+
+	public void setNroIdentificacion(String nroIdentificacion) {
+		this.nroIdentificacion = nroIdentificacion;
+	}
+
+	public List<Delegacion> getListaDelegaciones() {
+		return listaDelegaciones;
+	}
+
+	public void setListaDelegaciones(List<Delegacion> listaDelegaciones) {
+		this.listaDelegaciones = listaDelegaciones;
+	}
+
+	public Integer getDelegacionId() {
+		return delegacionId;
+	}
+
+	public void setDelegacionId(Integer delegacionId) {
+		this.delegacionId = delegacionId;
+	}
+
+	public boolean isPasivo() {
+		return pasivo;
+	}
+
+	public void setPasivo(boolean pasivo) {
+		this.pasivo = pasivo;
+	}
 	
 }

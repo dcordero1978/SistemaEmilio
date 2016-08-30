@@ -9,6 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.googlecode.genericdao.search.Filter;
 import com.googlecode.genericdao.search.Search;
 
+import ni.gob.inss.barista.businesslogic.service.BusinessException;
+import ni.gob.inss.barista.model.dao.DAOException;
+import ni.gob.inss.barista.model.dao.EntityNotFoundException;
 import ni.gob.inss.sisinv.bussineslogic.service.EmpleadoService;
 import ni.gob.inss.sisinv.model.dao.EmpleadoDAO;
 import ni.gob.inss.sisinv.model.entity.catalogo.Empleado;
@@ -36,5 +39,19 @@ public class EmpleadoServiceImpl implements EmpleadoService{
 		}
 		return listaEmpleado;
 	}
+	
+	@Transactional
+	@Override
+	public void agregar(Empleado oEmpleado) throws DAOException, BusinessException {
+		oEmpleadoDAO.saveUpper(oEmpleado);
+	}
+
+	@Transactional
+	@Override
+	public Empleado obtener(int empleadoId) throws EntityNotFoundException {
+		return oEmpleadoDAO.find(empleadoId);
+	}
+
+	
 
 }

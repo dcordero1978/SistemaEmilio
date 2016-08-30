@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
 import ni.gob.inss.barista.businesslogic.service.catalogos.TipoCatalogoService;
+import ni.gob.inss.barista.model.dao.EntityNotFoundException;
 import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
 import ni.gob.inss.barista.model.entity.catalogo.TiposCatalogo;
 import ni.gob.inss.barista.view.bean.backbean.BaseBackBean;
@@ -42,7 +43,7 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	private List<Delegacion> listaDelegaciones;
 	
 	@Autowired
-	private EmpleadoService oEmpleado;
+	private EmpleadoService oEmpleadoService;
 	
 	@Autowired
 	TipoCatalogoService oTipoCatalogoService;
@@ -92,7 +93,7 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	
 	public void buscar(){
 		try{
-			this.setListaEmpleados(oEmpleado.buscar(this.getTxtBusquedaEmpleado()));
+			this.setListaEmpleados(oEmpleadoService.buscar(this.getTxtBusquedaEmpleado()));
 			if(this.getListaEmpleados().isEmpty()){
 				mostrarMensajeInfo("No se encontrarón resultados para esta búsqueda");
 			}
@@ -103,7 +104,52 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	}
 	
 	public void guardarOrActualizar(){
+		if(this.getHfId()==null){
+			this.guardar();			
+		}
+		this.cargarDatosEmpleado(this.getHfId());
+		this.setTxtBusquedaEmpleado("");
+		this.buscar();
+	}
+	
+	public void guardar(){
+		Delegacion oDelegacion;
+		try {
+			oDelegacion = oDelegacionService.obtener(this.getDelegacionId());
+			Empleado oEmpleado = new Empleado();
+			oEmpleado.setNombres(this.getNombres());
+			oEmpleado.setApellidos(this.getApellidos());
+			oEmpleado.setTipoIdentificacion(this.getTipoIdentificacion());
+			oEmpleado.setNroIdentificacion(this.getNroIdentificacion());
+			oEmpleado.setDelegacion(oDelegacion);
+			oEmpleado.setCreadoPor(this.getUsuarioActual().getId());
+			oEmpleado.setCreadoEl(this.getTimeNow());
+			oEmpleado.setCreadoEnIp(this.getRemoteIp());
+			oEmpleado.setPasivo(false);
+			oEmpleadoService.agregar(oEmpleado);			
+			mostrarMensajeInfo(MessagesResults.EXITO_GUARDAR);
+			this.setHfId(oEmpleado.getId());
+			
+		} catch (Exception e) {
+			mostrarMensajeError(this.getClass().getSimpleName(), "guardar", MessagesResults.ERROR_GUARDAR, e);
+		}		
 		
+	}
+	
+	public void cargarDatosEmpleado(Integer empleadoId){
+		try {
+			Empleado oEmpleado = oEmpleadoService.obtener(empleadoId);
+			this.setNombres(oEmpleado.getNombres());
+			this.setApellidos(oEmpleado.getApellidos());
+			this.setDelegacionId(oEmpleado.getDelegacion().getId());
+			this.setNroIdentificacion(oEmpleado.getNroIdentificacion());
+			this.setTipoIdentificacion(oEmpleado.getTipoIdentificacion());
+			this.setPasivo(oEmpleado.getPasivo());
+			this.setNuevoRegistro(false);
+			
+		} catch (EntityNotFoundException e) {
+			mostrarMensajeError(this.getClass().getSimpleName(), "cargarDatosEmpleado", MessagesResults.ERROR_OBTENER, e);
+		}
 	}
 
 	public String getNombres() {

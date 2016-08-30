@@ -9,6 +9,7 @@ import javax.inject.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
+import ni.gob.inss.barista.businesslogic.service.catalogos.CatalogoService;
 import ni.gob.inss.barista.businesslogic.service.catalogos.TipoCatalogoService;
 import ni.gob.inss.barista.model.dao.EntityNotFoundException;
 import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
@@ -20,6 +21,7 @@ import ni.gob.inss.sisinv.bussineslogic.service.EmpleadoService;
 import ni.gob.inss.sisinv.model.entity.catalogo.Delegacion;
 import ni.gob.inss.sisinv.model.entity.catalogo.Empleado;
 import ni.gob.inss.sisinv.util.CatalogoGeneral;
+import ni.gob.inss.sisinv.util.RegExpresionExtends;
 
 @Named
 @Scope("view")
@@ -42,6 +44,9 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	private List<Catalogo> listaTipoIdentificacion;
 	private List<Delegacion> listaDelegaciones;
 	
+	private String regExpLetras;
+	
+	
 	@Autowired
 	private EmpleadoService oEmpleadoService;
 	
@@ -51,13 +56,20 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	@Autowired
 	DelegacionService oDelegacionService;
 	
+	@Autowired
+	CatalogoService oCatalogoService;
+	
 	@PostConstruct
 	public void init(){
 		this.limpiar();
 		this.cargarListaTipoIdentificacion();
 		this.cargarListaDelegaciones();
-		this.buscar();
-		
+		this.cargaValidaciones();
+		this.buscar();		
+	}
+	
+	public void cargaValidaciones(){
+		regExpLetras = RegExpresionExtends.regExpSoloLetrasConEspacio;		
 	}
 	
 	public void cargarListaTipoIdentificacion(){
@@ -290,6 +302,10 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 
 	public void setPasivo(boolean pasivo) {
 		this.pasivo = pasivo;
+	}
+
+	public String getRegExpLetras() {
+		return regExpLetras;
 	}
 	
 }

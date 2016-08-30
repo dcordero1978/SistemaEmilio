@@ -62,16 +62,20 @@
 						</f:facet>
 						<h:panelGrid columns="2" style="width:100%" columnClasses="Wid30, Wid70">
 							<p:outputLabel for="nombres" value="Nombres" />
-							<p:inputText value="#{empleadoBackBean.nombres}" label="Nombres" maxlength="50" required="true" autocomplete="off" id="nombres" styleClass="Wid80"/>
+							<p:inputText value="#{empleadoBackBean.nombres}" label="Nombres" maxlength="50" required="true" autocomplete="off" id="nombres" styleClass="Wid80">
+								<pe:keyFilter regEx="/#{empleadoBackBean.regExpLetras}/" />
+							</p:inputText>
 							<p:outputLabel for="apellidos" value="Apellidos"/>
-							<p:inputText value="#{empleadoBackBean.apellidos}" label="Apellidos" maxlength="50" required="true" autocomplete="off" id="apellidos"  styleClass="Wid80"/>
+							<p:inputText value="#{empleadoBackBean.apellidos}" label="Apellidos" maxlength="50" required="true" autocomplete="off" id="apellidos"  styleClass="Wid80">
+								<pe:keyFilter regEx="/#{empleadoBackBean.regExpLetras}/" />
+							</p:inputText>
 							<p:outputLabel for="tipoIdentificacion" value="Tipo Identificación"/>
 							<p:selectOneMenu id="tipoIdentificacion" label="Tipo Identificación" value="#{empleadoBackBean.tipoIdentificacion}" required="true" styleClass="Wid80" >							
 								<f:selectItem itemLabel="Seleccione" itemValue="#{null}" />
 								<f:selectItems value="#{empleadoBackBean.listaTipoIdentificacion}" var="tipoId" itemLabel="#{tipoId.nombre}" itemValue="#{tipoId.id}"/>
 							</p:selectOneMenu>     
 							<p:outputLabel for="numeroIdentificacion" value="No. Identificación" />
-							<p:inputText value="#{empleadoBackBean.nroIdentificacion}" label="No. Identficación" id="numeroIdentificacion" styleClass="Wid80"/>
+							<p:inputMask value="#{empleadoBackBean.nroIdentificacion}" label="No. Identificación" id="numeroIdentificacion" styleClass="Wid80" required="true" maxlength="20" />
 							<p:outputLabel for="delegacion" value="Delegación"/>
 							<p:selectOneMenu id="delegacion" label="Delegación" value="#{empleadoBackBean.delegacionId}" required="true" styleClass="Wid80">
 								<f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
@@ -80,6 +84,8 @@
 							<p:outputLabel for="pasivo" value="Pasivo" rendered="#{!empleadoBackBean.nuevoRegistro}"/>
 							<p:selectBooleanButton offLabel="No" onLabel="Si" id="pasivo"  value="#{empleadoBackBean.pasivo}" rendered="#{!empleadoBackBean.nuevoRegistro}"/>
 						</h:panelGrid>
+						
+						
 					</p:panel>
 				</h:form>
 			</div>

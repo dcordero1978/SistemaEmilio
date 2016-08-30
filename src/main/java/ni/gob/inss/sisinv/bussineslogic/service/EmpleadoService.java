@@ -10,4 +10,5 @@ public interface EmpleadoService {
 	public List<Empleado> buscar(String criterioBusqueda);
 	public void agregar(Empleado oEmpleado) throws DAOException, BusinessException;
 	public Empleado obtener(int empleadoId) throws ni.gob.inss.barista.model.dao.EntityNotFoundException;
+	public void actualizar(Empleado oEmpleado)throws DAOException, BusinessException;
 }

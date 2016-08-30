@@ -52,6 +52,12 @@ public class EmpleadoServiceImpl implements EmpleadoService{
 		return oEmpleadoDAO.find(empleadoId);
 	}
 
+	@Transactional
+	@Override
+	public void actualizar(Empleado oEmpleado) throws DAOException, BusinessException {
+		oEmpleadoDAO.updateUpper(oEmpleado);		
+	}
+
 	
 
 }

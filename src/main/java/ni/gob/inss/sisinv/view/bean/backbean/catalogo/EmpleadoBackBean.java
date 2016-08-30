@@ -106,6 +106,8 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	public void guardarOrActualizar(){
 		if(this.getHfId()==null){
 			this.guardar();			
+		}else{
+			this.actualizar();
 		}
 		this.cargarDatosEmpleado(this.getHfId());
 		this.setTxtBusquedaEmpleado("");
@@ -117,6 +119,31 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 			mostrarMensajeInfo(MessagesResults.SELECCIONE_UN_REGISTRO);
 		}else{
 			cargarDatosEmpleado(empleadoSeleccionado.getId());
+		}
+	}
+	
+	public void actualizar(){
+		Delegacion oDelegacion;
+		try {
+			
+			Empleado oEmpleado = oEmpleadoService.obtener(this.getHfId());
+			oDelegacion = oDelegacionService.obtener(this.getDelegacionId());
+			oEmpleado.setNombres(this.getNombres());
+			oEmpleado.setApellidos(this.getApellidos());
+			oEmpleado.setTipoIdentificacion(this.getTipoIdentificacion());
+			oEmpleado.setNroIdentificacion(this.getNroIdentificacion());
+			oEmpleado.setDelegacion(oDelegacion);
+			oEmpleado.setPasivo(this.isPasivo());
+			oEmpleado.setModificadoEl(this.getTimeNow());
+			oEmpleado.setModificadoEnIp(this.getRemoteIp());
+			oEmpleado.setModificadoPor(this.getUsuarioActual().getId());
+			
+			oEmpleadoService.actualizar(oEmpleado);
+			mostrarMensajeInfo(MessagesResults.EXITO_MODIFICAR);
+			this.setHfId(oEmpleado.getId());			
+		} catch (Exception e) {
+			mostrarMensajeError(this.getClass().getSimpleName(), "actualizar", MessagesResults.ERROR_MODIFICAR, e);
+
 		}
 	}
 	
@@ -154,6 +181,7 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 			this.setTipoIdentificacion(oEmpleado.getTipoIdentificacion());
 			this.setPasivo(oEmpleado.getPasivo());
 			this.setNuevoRegistro(false);
+			this.setHfId(oEmpleado.getId());
 			
 		} catch (EntityNotFoundException e) {
 			mostrarMensajeError(this.getClass().getSimpleName(), "cargarDatosEmpleado", MessagesResults.ERROR_OBTENER, e);

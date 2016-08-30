@@ -112,6 +112,14 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 		this.buscar();
 	}
 	
+	public void editar(){
+		if(empleadoSeleccionado ==null){
+			mostrarMensajeInfo(MessagesResults.SELECCIONE_UN_REGISTRO);
+		}else{
+			cargarDatosEmpleado(empleadoSeleccionado.getId());
+		}
+	}
+	
 	public void guardar(){
 		Delegacion oDelegacion;
 		try {

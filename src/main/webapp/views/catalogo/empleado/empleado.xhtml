@@ -23,15 +23,16 @@
 							</p:outputPanel>
 							<p:outputPanel style="display" styleClass="right">
 								<p:commandButton value="#{labelName.btnAgregar}" icon="ui-icon-circle-plus"/>
-								<p:commandButton value="#{labelName.btnEditar}" icon="ui-icon-pencil"/>
+								<p:commandButton value="#{labelName.btnEditar}" icon="ui-icon-pencil" action="#{empleadoBackBean.editar}" resetValues="true" update=":formDatosEmpleado"/>
 							</p:outputPanel>
 						</f:facet>
 						<p:outputPanel styleClass="tableClass">
 							<p:dataTable style="width:100%" paginatorPosition="top" selectionMode="single" scrollable="true" scrollHeight="410" 
 							var="oEmpleado" value="#{empleadoBackBean.listaEmpleados}" id="listEmpleado" 
-							rowKey="#{oEmpleado.id}"
+							rowKey="#{oEmpleado.id}" selection="#{empleadoBackBean.empleadoSeleccionado}"
 							paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="12" pageLinks="3" 
 							paginatorTemplate="#{configApplicationBean.paginatorTemplate}" currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}"> 
+								<p:ajax event="rowSelect" listener="#{empleadoBackBean.editar}" update=":formDatosEmpleado" resetValues="true" />
 								<p:column headerText="Nombre" >
 									<h:outputText value="#{oEmpleado.nombres}" />
 								</p:column>
@@ -66,14 +67,14 @@
 							<p:inputText value="#{empleadoBackBean.apellidos}" label="Apellidos" maxlength="50" required="true" autocomplete="off" id="apellidos"  styleClass="Wid80"/>
 							<p:outputLabel for="tipoIdentificacion" value="Tipo Identificación"/>
 							<p:selectOneMenu id="tipoIdentificacion" label="Tipo Identificación" value="#{empleadoBackBean.tipoIdentificacion}" required="true" styleClass="Wid80" >							
-								<f:selectItem itemLabel="Seleccione" value="#{null}" />
+								<f:selectItem itemLabel="Seleccione" itemValue="#{null}" />
 								<f:selectItems value="#{empleadoBackBean.listaTipoIdentificacion}" var="tipoId" itemLabel="#{tipoId.nombre}" itemValue="#{tipoId.id}"/>
 							</p:selectOneMenu>     
 							<p:outputLabel for="numeroIdentificacion" value="No. Identificación" />
 							<p:inputText value="#{empleadoBackBean.nroIdentificacion}" label="No. Identficación" id="numeroIdentificacion" styleClass="Wid80"/>
 							<p:outputLabel for="delegacion" value="Delegación"/>
 							<p:selectOneMenu id="delegacion" label="Delegación" value="#{empleadoBackBean.delegacionId}" required="true" styleClass="Wid80">
-								<f:selectItem itemValue="Seleccione" value="#{null}"/>
+								<f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
 								<f:selectItems var="oDelegacion" value="#{empleadoBackBean.listaDelegaciones}" itemLabel="#{oDelegacion.nombre}" itemValue="#{oDelegacion.id}"/>
 							</p:selectOneMenu>
 							<p:outputLabel for="pasivo" value="Pasivo" rendered="#{!empleadoBackBean.nuevoRegistro}"/>

@@ -29,8 +29,8 @@ public class EmpleadoServiceImpl implements EmpleadoService{
 		List<Empleado> listaEmpleado = null;
 		Search oSearch = new Search();
 		oSearch.addFilterOr(
-				Filter.like("nombres", "%"+criterioBusqueda+"%"),
-				Filter.like("apellidos", "%"+criterioBusqueda+"%"));
+				Filter.ilike("nombres", "%"+criterioBusqueda+"%"),
+				Filter.ilike("apellidos", "%"+criterioBusqueda+"%"));
 		oSearch.addSortDesc("nombres");
 		if(criterioBusqueda==null || "".equals(criterioBusqueda)){
 			listaEmpleado = oEmpleadoDAO.findAll(); 

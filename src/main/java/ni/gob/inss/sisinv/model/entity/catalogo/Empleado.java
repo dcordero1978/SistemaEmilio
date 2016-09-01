@@ -4,7 +4,6 @@ package ni.gob.inss.sisinv.model.entity.catalogo;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,6 +22,7 @@ public class Empleado extends EntityBase{
 	private static final long serialVersionUID = 2225725153178619039L;
 	private Integer id;
 	private Delegacion delegacion;
+	private Integer delegacionId;
 	private String nombres;
 	private String apellidos;
 	
@@ -42,7 +42,7 @@ public class Empleado extends EntityBase{
 		this.id = id;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "delegacion_id")
 	public Delegacion getDelegacion() {
 		return this.delegacion;
@@ -98,4 +98,15 @@ public class Empleado extends EntityBase{
 		this.pasivo = pasivo;
 	}
 
+	@Column(name="delegacion_id", insertable=false, updatable=false)
+	public Integer getDelegacionId() {
+		return delegacionId;
+	}
+
+	public void setDelegacionId(Integer delegacionId) {
+		this.delegacionId = delegacionId;
+	}
+	
+	
+	
 }

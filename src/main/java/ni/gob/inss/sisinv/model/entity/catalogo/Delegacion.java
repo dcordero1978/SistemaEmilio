@@ -69,7 +69,7 @@ public class Delegacion extends EntityBase{
 		this.pasivo = pasivo;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "delegacion")
+	@OneToMany(mappedBy = "delegacion")
 	public List<Empleado> getEmpleados() {
 		return this.empleados;
 	}

@@ -103,6 +103,7 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 		this.setNroIdentificacion("");
 		this.setPasivo(false);
 		this.setDelegacionId(null);
+		this.setHfId(null);
 	}
 	
 	public void buscar(){

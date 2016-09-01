@@ -2,6 +2,7 @@ package ni.gob.inss.sisinv.bussineslogic.serviceImpl;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +14,7 @@ import ni.gob.inss.barista.businesslogic.service.BusinessException;
 import ni.gob.inss.barista.model.dao.DAOException;
 import ni.gob.inss.barista.model.dao.EntityNotFoundException;
 import ni.gob.inss.sisinv.bussineslogic.service.EmpleadoService;
+import ni.gob.inss.sisinv.model.dao.DelegacionDAO;
 import ni.gob.inss.sisinv.model.dao.EmpleadoDAO;
 import ni.gob.inss.sisinv.model.entity.catalogo.Empleado;
 
@@ -22,23 +24,8 @@ public class EmpleadoServiceImpl implements EmpleadoService{
 	@Autowired
 	private EmpleadoDAO oEmpleadoDAO;
 	
-	@SuppressWarnings("unchecked")
-	@Transactional
-	@Override
-	public List<Empleado> buscar(String criterioBusqueda) {
-		List<Empleado> listaEmpleado = null;
-		Search oSearch = new Search();
-		oSearch.addFilterOr(
-				Filter.ilike("nombres", "%"+criterioBusqueda+"%"),
-				Filter.ilike("apellidos", "%"+criterioBusqueda+"%"));
-		oSearch.addSortDesc("nombres");
-		if(criterioBusqueda==null || "".equals(criterioBusqueda)){
-			listaEmpleado = oEmpleadoDAO.findAll(); 
-		}else{
-			listaEmpleado = oEmpleadoDAO.search(oSearch);
-		}
-		return listaEmpleado;
-	}
+	@Autowired
+	private DelegacionDAO oDelegacionDAO;
 	
 	@Transactional
 	@Override
@@ -58,6 +45,23 @@ public class EmpleadoServiceImpl implements EmpleadoService{
 		oEmpleadoDAO.updateUpper(oEmpleado);		
 	}
 
+	@SuppressWarnings("unchecked")
+	@Transactional
+	@Override
+	public List<Empleado> buscar(String criterioBusqueda, Integer delegacionId) throws EntityNotFoundException {
+		String txtBusqueda = StringUtils.isEmpty(criterioBusqueda) ? "" : criterioBusqueda;
+		Search oSearch = new Search();
+		
+		if(delegacionId != null){
+			oSearch.addFilter(Filter.equal("delegacionId", delegacionId));
+		}
+		oSearch.addFilterOr(Filter.ilike("nombres", "%"+txtBusqueda+"%"),
+								Filter.ilike("apellidos", "%"+txtBusqueda+"%"));
+		
+		
+		return oEmpleadoDAO.search(oSearch);			
+		
+	}
 	
 
 }

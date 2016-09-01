@@ -37,6 +37,8 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	private Integer delegacionId;
 	private boolean pasivo;
 	
+	private Integer delegacionBusquedaEmpleado;
+	
 	private List<Empleado> listaEmpleados;
 	private Empleado empleadoSeleccionado;
 	private boolean nuevoRegistro;
@@ -105,7 +107,8 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	
 	public void buscar(){
 		try{
-			this.setListaEmpleados(oEmpleadoService.buscar(this.getTxtBusquedaEmpleado()));
+			this.listaEmpleados = oEmpleadoService.buscar(this.getTxtBusquedaEmpleado(), this.getDelegacionBusquedaEmpleado());
+			//this.setListaEmpleados(oEmpleadoService.buscar(this.getTxtBusquedaEmpleado()));
 			if(this.getListaEmpleados().isEmpty()){
 				mostrarMensajeInfo("No se encontrarón resultados para esta búsqueda");
 			}
@@ -307,5 +310,13 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	public String getRegExpLetras() {
 		return regExpLetras;
 	}
+
+	public Integer getDelegacionBusquedaEmpleado() {
+		return delegacionBusquedaEmpleado;
+	}
+
+	public void setDelegacionBusquedaEmpleado(Integer delegacionBusquedaEmpleado) {
+		this.delegacionBusquedaEmpleado = delegacionBusquedaEmpleado;
+	}	
 	
 }

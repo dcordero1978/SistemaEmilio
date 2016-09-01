@@ -7,7 +7,7 @@
                 template="/web/template/innerLayout.xhtml"
                 xmlns:mc="http://java.sun.com/jsf/composite/comps">
                 
-	<ui:param name="backBean" value="#{empleadoBackBean}"/>
+	<ui:param name="paramBackBean" value="#{empleadoBackBean}"/>
 	<ui:define name="headerContent">
 		Administrar Catalogo de Empleados
 	</ui:define>
@@ -19,25 +19,78 @@
 						<f:facet name="header">
 							<p:outputPanel style="display" styleClass="left">
 								<p:inputText value="#{empleadoBackBean.txtBusquedaEmpleado}" maxlength="150" placeholder="#{labelName.placeholderBuscar}" autocomplete="off"/>
-								<p:commandButton  icon="ui-icon-search" action="#{empleadoBackBean.buscarEmpleadoByName}"/>
-							</p:outputPanel>
+								<p:selectOneMenu id="delegacionBusqueda" label="Delegación" value="#{empleadoBackBean.delegacionBusquedaEmpleado}" style="width:200px; left:5px">									
+									<f:selectItem itemValue="#{null}" itemLabel="Seleccione Delegación"/>
+									<f:selectItems var="oDelegacion" value="#{empleadoBackBean.listaDelegaciones}" itemLabel="#{oDelegacion.nombre}" itemValue="#{oDelegacion.id}"/>									
+								</p:selectOneMenu>
+								
+								<p:commandButton  icon="ui-icon-search" action="#{empleadoBackBean.buscar}" ajax="true" update="listEmpleado" style="margin-left:5px;"/>								
+							</p:outputPanel>						
 							<p:outputPanel style="display" styleClass="right">
-								<p:commandButton value="#{labelName.btnAgregar}" icon="ui-icon-circle-plus"/>
-								<p:commandButton value="#{labelName.btnEditar}" icon="ui-icon-pencil"/>
+								<p:commandButton value="#{labelName.btnAgregar}" icon="ui-icon-circle-plus" action="#{empleadoBackBean.limpiar}" resetValues="true" update=":formDatosEmpleado"/>
+								<p:commandButton value="#{labelName.btnEditar}" icon="ui-icon-pencil" action="#{empleadoBackBean.editar}" resetValues="true" update=":formDatosEmpleado"/>
 							</p:outputPanel>
 						</f:facet>
 						<p:outputPanel styleClass="tableClass">
-							
+							<p:dataTable style="width:100%" paginatorPosition="top" selectionMode="single" scrollable="true" scrollHeight="410" 
+							var="oEmpleado" value="#{empleadoBackBean.listaEmpleados}" id="listEmpleado" 
+							rowKey="#{oEmpleado.id}" selection="#{empleadoBackBean.empleadoSeleccionado}"
+							paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="12" pageLinks="3" 
+							paginatorTemplate="#{configApplicationBean.paginatorTemplate}" currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}"> 
+								<p:ajax event="rowSelect" listener="#{empleadoBackBean.editar}" update=":formDatosEmpleado" resetValues="true" />
+								<p:column headerText="Nombre" >
+									<h:outputText value="#{oEmpleado.nombres}" />
+								</p:column>
+								<p:column headerText="Apellido">
+									<h:outputText value="#{oEmpleado.apellidos}"/>
+								</p:column>
+								<p:column headerText="Pasivo" style="text-align:center;" width="10%">
+									<p:selectBooleanCheckbox value="#{oEmpleado.pasivo}" disabled="true" styleClass="ui-linus-enabled"/>
+								</p:column>
+							</p:dataTable>
 						</p:outputPanel>
 					</p:panel>
 				</h:form>
 			</div>
 			<!-- FORMULARIO PARA AGREGAR Y EDITAR EL RECURSO -->
 			<div class="Container50 Responsive">
-				<h:form id="formDetalle" style="width:99%">
+				<h:form id="formDatosEmpleado" style="width:99%">
 					<p:inputText type="hidden" value="#{empleadoBackBean.hfId}"/>
 					<p:panel style="height:547px;" styleClass="fondoPaneles">
-					
+						<f:facet name="header">
+							<h:outputText value="ID: #{empleadoBackBean.hfId}" rendered="#{!empleadoBackBean.nuevoRegistro}"/>
+							<p:outputPanel style="display:block" styleClass="right">
+								<p:commandButton widgetVar="btnGuardar" actionListener="#{empleadoBackBean.guardarOrActualizar}" icon="ui-icon-disk" 
+								update="formDatosEmpleado :formLista" value="#{labelName.btnGuardar}" onstart="PF('btnGuardar').disable();" oncomplete="PF('btnGuardar').enable();"/>
+								<p:commandButton resetValues="true" ajax="true" update="formDatosEmpleado" action="#{empleadoBackBean.limpiar}" value="#{labelName.btnCancelar}" icon="ui-icon-cancel" process="@this"/>
+							</p:outputPanel>
+						</f:facet>
+						<h:panelGrid columns="2" style="width:100%" columnClasses="Wid30, Wid70">
+							<p:outputLabel for="nombres" value="Nombres" />
+							<p:inputText value="#{empleadoBackBean.nombres}" label="Nombres" maxlength="50" required="true" autocomplete="off" id="nombres" styleClass="Wid80">
+								<pe:keyFilter regEx="/#{empleadoBackBean.regExpLetras}/" />
+							</p:inputText>
+							<p:outputLabel for="apellidos" value="Apellidos"/>
+							<p:inputText value="#{empleadoBackBean.apellidos}" label="Apellidos" maxlength="50" required="true" autocomplete="off" id="apellidos"  styleClass="Wid80">
+								<pe:keyFilter regEx="/#{empleadoBackBean.regExpLetras}/" />
+							</p:inputText>
+							<p:outputLabel for="tipoIdentificacion" value="Tipo Identificación"/>
+							<p:selectOneMenu id="tipoIdentificacion" label="Tipo Identificación" value="#{empleadoBackBean.tipoIdentificacion}" required="true" styleClass="Wid80" >							
+								<f:selectItem itemLabel="Seleccione" itemValue="#{null}" />
+								<f:selectItems value="#{empleadoBackBean.listaTipoIdentificacion}" var="tipoId" itemLabel="#{tipoId.nombre}" itemValue="#{tipoId.id}"/>
+							</p:selectOneMenu>     
+							<p:outputLabel for="numeroIdentificacion" value="No. Identificación" />
+							<p:inputMask value="#{empleadoBackBean.nroIdentificacion}" label="No. Identificación" id="numeroIdentificacion" styleClass="Wid80" required="true" maxlength="20" />
+							<p:outputLabel for="delegacion" value="Delegación"/>
+							<p:selectOneMenu id="delegacion" label="Delegación" value="#{empleadoBackBean.delegacionId}" required="true" styleClass="Wid80">
+								<f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
+								<f:selectItems var="oDelegacion" value="#{empleadoBackBean.listaDelegaciones}" itemLabel="#{oDelegacion.nombre}" itemValue="#{oDelegacion.id}"/>
+							</p:selectOneMenu>
+							<p:outputLabel for="pasivo" value="Pasivo" rendered="#{!empleadoBackBean.nuevoRegistro}"/>
+							<p:selectBooleanButton offLabel="No" onLabel="Si" id="pasivo"  value="#{empleadoBackBean.pasivo}" rendered="#{!empleadoBackBean.nuevoRegistro}"/>
+						</h:panelGrid>
+						
+						
 					</p:panel>
 				</h:form>
 			</div>

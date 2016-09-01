@@ -42,7 +42,7 @@ public class DelegacionServiceImpl implements DelegacionService{
 		
 		Search oSearch = new Search();
 		oSearch.addFilterILike("nombre", "%"+txtCriterio+"%");
-		oSearch.addSortAsc("nombre");
+		oSearch.addSortDesc("nombre");
 		if(txtCriterio==null || "".equalsIgnoreCase(txtCriterio)){
 			listaDelegaciones = oDelegacionDAO.findAll();
 		}else{

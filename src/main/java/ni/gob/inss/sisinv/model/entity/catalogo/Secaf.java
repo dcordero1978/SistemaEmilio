@@ -3,7 +3,10 @@ package ni.gob.inss.sisinv.model.entity.catalogo;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import ni.gob.inss.barista.model.entity.EntityBase;
@@ -13,6 +16,7 @@ import ni.gob.inss.barista.model.entity.EntityBase;
  */
 @Entity
 @Table(name = "secaf", schema = "catalogo")
+@SequenceGenerator(name="Secaf_SEQ", sequenceName="catalogo.secaf_id_seq")
 public class Secaf extends EntityBase implements java.io.Serializable {
 
 	
@@ -28,8 +32,8 @@ public class Secaf extends EntityBase implements java.io.Serializable {
 	private boolean pasivo;
 
 	@Id
-
-	@Column(name = "id", unique = true, nullable = false)
+	@Column(name = "id", unique = true, nullable = false, columnDefinition="serial")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="Secaf_SEQ")
 	public Integer getId() {
 		return this.id;
 	}

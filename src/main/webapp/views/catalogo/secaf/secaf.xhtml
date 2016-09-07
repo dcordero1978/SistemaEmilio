@@ -8,5 +8,66 @@
                 xmlns:mc="http://java.sun.com/jsf/composite/comps">
 
 <ui:param name="paramBackBean" value="#{secafBackBean}"/>
+<ui:define name="headerContent">
+	Catalogo SECAF
+</ui:define>
+<ui:define name="content">
+	<div id="ContainerIndent">
+		<div class="Container50 Responsive">
+			<h:form id="formLista" style="width:99%">
+				<p:panel styleClass="fondoPaneles">
+					<f:facet name="header">
+						<p:outputPanel style="display" styleClass="left">
+						<p:inputText placeholder="#{labelName.placeholderBuscar}" autocomplete="off"/>
+						<p:commandButton icon="ui-icon-search"></p:commandButton>
+					</p:outputPanel>
+					<p:outputPanel style="display" styleClass="right">
+						<p:commandButton icon="ui-icon-circle-plus" value="#{labelName.btnAgregar}" />
+						<p:commandButton icon="ui-icon-pencil" value="#{labelName.btnEditar}"/>
+					</p:outputPanel>
+					</f:facet>
+					<p:outputPanel styleClass="tableClass">
+						<p:dataTable style="width:100%" paginatorPosition="top" selectionMode="single" scrollable="true" scrollHeight="410"
+						var="oSecaf" id="listaCatalogoSecaf" rowKey="#{oSecaf.id}"
+						paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="12" pageLinks="3"
+						paginatorTemplate="#{configApplicationBean.paginatorTemplate}" currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}"
+						>
+						
+						</p:dataTable>
+					</p:outputPanel>					
+				</p:panel>
+			</h:form>
+		</div>
+		<div class="Container50 Responsive">			
+				<h:form id="formDatosSecaf" style="width:99%" >
+					<p:panel styleClass="fondoPaneles" style="height:500px;">
+						<f:facet name="header">
+							<h:outputText value="ID: #{secafBackBean.hfId}" rendered="#{!secafBackBean.nuevoRegistro}"/>
+							<p:outputPanel style="display:block" styleClass="right">
+								<p:commandButton widgetVar="btnGuardar" icon="ui-icon-disk" value="#{labelName.btnGuardar}"/>
+								<p:commandButton widgetVar="btnCancelar" icon="ui-icon-cancel" value="#{labelName.btnCancelar}"/>
+							</p:outputPanel>
+						</f:facet>						
+						<h:panelGrid columns="2" style="width:100%" columnClasses="Wid20, Wid80">
+							<h:outputLabel for="noCuenta" value="Cuenta No:" />
+							<p:inputText id="noCuenta" required="true" label="Cuenta No:" styleClass="Wid20" value="#{secafBackBean.noCuenta}"/>
+							<h:outputLabel for="noSubcuenta" value="Subcuenta No:" />
+							<p:inputText id="noSubcuenta" required="true" maxlength="10" styleClass="Wid20" label="Subcuenta No:" value="#{secafBackBean.noSubcuenta}" />			
+							<h:outputLabel for="letra"  value="Letra:"/>
+							<p:inputText id="letra" label="Letra:" maxlength="2"  styleClass="Wid20" value="#{secafBackBean.letra}"/>
+							<h:outputLabel for="descripcion" value="Descripción del Bien"/>
+							<p:inputText id="descripcion" label="Decripción" styleClass="Wid90" maxlength="250" required="true" value="#{secafBackBean.descripcionBien}" />
+							<h:outputLabel for="cbs" value="Codigo CBS" />
+							<p:inputText id="cbs" label="CBS" required="true" value="#{secafBackBean.codigoCbs}"/>
+							<h:outputLabel for="descripcionCbs" value="Descripción CBS"/>
+							<p:inputText  id="descripcionCbs" required="true" label="Descripción CBS" styleClass="Wid90" value="#{secafBackBean.descripcionCbs}"/>
+							<h:outputLabel for="pasivo" value="Pasivo" />
+							<p:selectBooleanButton offLabel="No" onLabel="Si" id="pasivo" value="#{secafBackBean.pasivo}" rendered="#{secafBackBean.nuevoRegistro}"/>
+						</h:panelGrid>
+					</p:panel>
+				</h:form>			
+		</div>
+	</div>
+</ui:define>
 
 </ui:composition>

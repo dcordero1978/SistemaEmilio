@@ -35,6 +35,7 @@ public class SecafBackBean extends BaseBackBean implements Serializable{
 		limpiar();
 	}
 	
+	//Este metodo limpia los datos de pantalla
 	public void limpiar(){
 		this.setNoCuenta(null);
 		this.setNoSubcuenta(null);

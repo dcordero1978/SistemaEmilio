@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.googlecode.genericdao.search.Filter;
 import com.googlecode.genericdao.search.Search;
 
+import ni.gob.inss.barista.businesslogic.service.BusinessException;
+import ni.gob.inss.barista.model.dao.DAOException;
 import ni.gob.inss.barista.model.dao.EntityNotFoundException;
 import ni.gob.inss.sisinv.bussineslogic.service.SecafService;
 import ni.gob.inss.sisinv.model.dao.SecafDAO;
@@ -31,6 +33,24 @@ public class SecafServiceImpl implements SecafService {
 		oSearch.addSortDesc("descripcionBe");
 		
 		return oSecafDAO.search(oSearch);
+	}
+
+	@Transactional
+	@Override
+	public Secaf obtener(int id) throws EntityNotFoundException {
+		return oSecafDAO.find(id);		
+	}
+
+	@Transactional
+	@Override
+	public void agregar(Secaf oSecaf) throws DAOException, BusinessException {
+		oSecafDAO.saveUpper(oSecaf);		
+	}
+	
+	@Transactional
+	@Override
+	public void actualizar(Secaf oSecaf) throws DAOException, BusinessException {
+		oSecafDAO.updateUpper(oSecaf);		
 	}
 
 }

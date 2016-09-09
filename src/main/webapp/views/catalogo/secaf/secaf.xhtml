@@ -22,16 +22,17 @@
 						<p:commandButton icon="ui-icon-search" action="#{secafBackBean.buscar}" ajax="true" update="listaCatalogoSecaf"/>
 					</p:outputPanel>
 					<p:outputPanel style="display" styleClass="right">
-						<p:commandButton icon="ui-icon-circle-plus" value="#{labelName.btnAgregar}" />
-						<p:commandButton icon="ui-icon-pencil" value="#{labelName.btnEditar}"/>
+						<p:commandButton icon="ui-icon-circle-plus" value="#{labelName.btnAgregar}" ajax="true" action="#{secafBackBean.limpiar}" update=":formDatosSecaf"/>
+						<p:commandButton icon="ui-icon-pencil" value="#{labelName.btnEditar}" action="#{secafBackBean.editar}" resetValues="true" update=":formDatosSecaf"/>
 					</p:outputPanel>
 					</f:facet>
 					<p:outputPanel styleClass="tableClass">
 						<p:dataTable style="width:100%" paginatorPosition="top" selectionMode="single" scrollable="true" scrollHeight="410"
-						var="oSecaf" id="listaCatalogoSecaf" rowKey="#{oSecaf.id}"
+						var="oSecaf" id="listaCatalogoSecaf" rowKey="#{oSecaf.id}" selection="#{secafBackBean.catalogoSeleccionado}"
 						paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="12" pageLinks="3"
-						value="#{secafBackBean.listaCatalogoSecaf}"
+						value="#{secafBackBean.listaCatalogoSecaf}" 
 						paginatorTemplate="#{configApplicationBean.paginatorTemplate}" currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}"	>
+							<p:ajax event="rowDblselect" listener="#{secafBackBean.editar}" update=":formDatosSecaf" resetValues="true"/>
 							<f:facet name="header">							
 									Lista de Catalogo de Bienes SECAF																	
 							</f:facet>
@@ -73,8 +74,8 @@
 						<f:facet name="header">
 							<h:outputText value="ID: #{secafBackBean.hfId}" rendered="#{!secafBackBean.nuevoRegistro}"/>
 							<p:outputPanel style="display:block" styleClass="right">
-								<p:commandButton widgetVar="btnGuardar" icon="ui-icon-disk" value="#{labelName.btnGuardar}"/>
-								<p:commandButton widgetVar="btnCancelar" icon="ui-icon-cancel" value="#{labelName.btnCancelar}"/>
+								<p:commandButton widgetVar="btnGuardar" icon="ui-icon-disk" value="#{labelName.btnGuardar}" action="#{secafBackBean.guardarOactualizar}" ajax="true" update=":formLista formDatosSecaf"/>
+								<p:commandButton widgetVar="btnCancelar" icon="ui-icon-cancel" value="#{labelName.btnCancelar}" action="#{secafBackBean.limpiar}" update="formDatosSecaf"/>
 							</p:outputPanel>
 						</f:facet>						
 						<h:panelGrid columns="2" style="width:100%" columnClasses="Wid20, Wid80">
@@ -89,6 +90,10 @@
 							<h:outputLabel for="letra"  value="Letra:"/>
 							<p:inputText id="letra" label="Letra:" maxlength="2"  styleClass="Wid20" value="#{secafBackBean.letra}">
 								<pe:keyFilter regEx="/#{secafBackBean.regExpLetras}/"/>
+							</p:inputText>
+							<h:outputLabel for="objeto" value="Objeto:" />
+							<p:inputText id="objeto" label="Objeto" styleClass="Wid20" maxlength="10" value="#{secafBackBean.codigoObjeto}" >
+								<pe:keyFilter regEx="/#{secafBackBean.regExpNumeros}/"/>
 							</p:inputText>
 							<h:outputLabel for="descripcion" value="Descripción del Bien"/>
 							<p:inputText id="descripcion" label="Decripción" styleClass="Wid90" maxlength="250" required="true" value="#{secafBackBean.descripcionBien}" />

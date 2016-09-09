@@ -32,33 +32,36 @@
 						paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="12" pageLinks="3"
 						value="#{secafBackBean.listaCatalogoSecaf}"
 						paginatorTemplate="#{configApplicationBean.paginatorTemplate}" currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}"	>
-							<f:facet name="header">								
-									Lista de Catalogo de Bienes SECAF
-									<p:commandButton id="mostrarOcultarColumnas" type="button" value="Columnas" style="float: right;margin: -3px" icon="ui-icon-calculator" />
-									<p:columnToggler datasource="listaCatalogoSecaf" trigger="mostrarOcultarColumnas" />								
+							<f:facet name="header">							
+									Lista de Catalogo de Bienes SECAF																	
 							</f:facet>
-							
-							<p:column visible="false" headerText="Cuenta" width="10%" style="text-align:center" priority="5">
-								<h:outputText value="#{oSecaf.cuenta}" />
-							</p:column>
-							<p:column visible="false" headerText="SubCuenta" width="10%"  style="text-align:center" priority="4">
-								<h:outputText value="#{oSecaf.subcuenta}"/>
-							</p:column>
-							<p:column visible="false" headerText="Letra" width="10%" style="text-align:center" priority="3">
-								<h:outputText value="#{oSecaf.letra}"/>
-							</p:column>
-							<p:column headerText="Objeto" width="10%" style="text-align:center" priority="2">
-								<h:outputText value="#{oSecaf.objeto}"/>
-							</p:column>
-							<p:column headerText="Descripción Bien" width="50%" priority="1">
-								<h:outputText value="#{oSecaf.descripcionBe}"/>
-							</p:column>
+							<p:column style="width:10px">
+								<p:rowToggler/>
+							</p:column>											
 							<p:column headerText="Código CBS" style="text-align:center" width="20%" priority="2">
 								<h:outputText value="#{oSecaf.cbs}" />
 							</p:column>
-							<p:column headerText="Pasivo" width="10%">
+							<p:column headerText="Descripción CBS" width="50%" priority="1">
+								<h:outputText value="#{oSecaf.descripcionCbs}"/>
+							</p:column>										
+							
+							<p:column headerText="Pasivo" width="10%" style="text-align:center">
 								<p:selectBooleanCheckbox value="#{oSecaf.pasivo}" disabled="true" styleClass="ui-linus-enabled"/>
 							</p:column>						
+							
+							<p:rowExpansion>
+								<p:panelGrid>
+									<p:row>
+										<p:column colspan="4" style="text-align:center"><h:outputText style="font-weight:bold" value="Descripción Bien:"/><h:outputText value="#{oSecaf.descripcionBe}"/></p:column>										
+									</p:row>									
+									<p:row>
+										<p:column><h:outputText style="font-weight: bold" value="No. Cuenta: " /><h:outputText value="#{oSecaf.cuenta}"/> </p:column>
+										<p:column><h:outputText style="font-weight: bold" value="No. Subcuenta: " /><h:outputText value="#{oSecaf.subcuenta}"/></p:column>
+										<p:column><h:outputText style="font-weight: bold" value="Letra: " /><h:outputText value="#{oSecaf.letra}"/></p:column>
+										<p:column><h:outputText style="font-weight: bold" value="Objeto: " /><h:outputText value="#{oSecaf.objeto}"/></p:column>
+									</p:row>								
+								</p:panelGrid>												
+							</p:rowExpansion>
 						</p:dataTable>
 					</p:outputPanel>					
 				</p:panel>

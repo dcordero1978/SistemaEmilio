@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.googlecode.genericdao.search.Filter;
 import com.googlecode.genericdao.search.Search;
 
 import ni.gob.inss.barista.model.dao.EntityNotFoundException;
@@ -25,9 +26,8 @@ public class SecafServiceImpl implements SecafService {
 	public List<Secaf> buscar(String txtCriterio) throws EntityNotFoundException {
 		String txtBusqueda = StringUtils.isEmpty(txtCriterio) ? "" : txtCriterio;
 		
-		Search oSearch = new Search();
-		oSearch.addFilterILike("descripcionBe", "%"+txtBusqueda+"%");
-		oSearch.addFilterILike("descripcionCbs", "%"+txtBusqueda+"%");
+		Search oSearch = new Search();		
+		oSearch.addFilterOr(Filter.ilike("descripcionCbs", "%"+txtBusqueda+"%"),Filter.ilike("descripcionBe", "%"+txtBusqueda+"%"));		
 		oSearch.addSortDesc("descripcionBe");
 		
 		return oSecafDAO.search(oSearch);

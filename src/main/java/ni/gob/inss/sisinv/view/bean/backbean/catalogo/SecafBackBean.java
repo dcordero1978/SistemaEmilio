@@ -1,13 +1,19 @@
 package ni.gob.inss.sisinv.view.bean.backbean.catalogo;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
+import ni.gob.inss.barista.model.dao.EntityNotFoundException;
 import ni.gob.inss.barista.view.bean.backbean.BaseBackBean;
+import ni.gob.inss.sisinv.bussineslogic.service.SecafService;
+import ni.gob.inss.sisinv.model.entity.catalogo.Secaf;
+import ni.gob.inss.sisinv.util.RegExpresionExtends;
 
 /**
  * 
@@ -20,6 +26,8 @@ public class SecafBackBean extends BaseBackBean implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
+	private String txtBusquedaCatalogoSecaf;
+	
 	private String hfId;
 	private Integer noCuenta;
 	private Integer noSubcuenta;
@@ -30,12 +38,21 @@ public class SecafBackBean extends BaseBackBean implements Serializable{
 	private Boolean pasivo;
 	private Boolean nuevoRegistro;
 	
+	private String regExpLetras;
+	private String regExpNumeros;
+	
+	private List<Secaf> listaCatalogoSecaf;
+	
+	@Autowired
+	private SecafService oSecafService;
+	
 	@PostConstruct
 	public void init(){
 		limpiar();
+		this.cargarExpresionesRegulares();
+		this.buscar();
 	}
 	
-	//Este metodo limpia los datos de pantalla
 	public void limpiar(){
 		this.setNoCuenta(null);
 		this.setNoSubcuenta(null);
@@ -46,6 +63,20 @@ public class SecafBackBean extends BaseBackBean implements Serializable{
 		this.setPasivo(null);
 		this.setNuevoRegistro(true);
 		this.setHfId(null);
+		this.setTxtBusquedaCatalogoSecaf("");
+	}
+	
+	private void cargarExpresionesRegulares(){
+		regExpLetras = RegExpresionExtends.regExpSoloLetrasConEspacio;
+		regExpNumeros = RegExpresionExtends.regExpSoloNumeros;
+	}
+	
+	public void buscar(){
+		try {
+			this.setListaCatalogoSecaf(oSecafService.buscar(this.getTxtBusquedaCatalogoSecaf()));	;
+		} catch (EntityNotFoundException e) {
+			mostrarMensajeError(this.getClass().getSimpleName(), "buscar",e.getMessage(), e);
+		}
 	}
 	
 	public Boolean getNuevoRegistro() {
@@ -55,8 +86,6 @@ public class SecafBackBean extends BaseBackBean implements Serializable{
 	public void setNuevoRegistro(Boolean nuevoRegistro) {
 		this.nuevoRegistro = nuevoRegistro;
 	}
-
-
 
 	public String getHfId() {
 		return hfId;
@@ -106,8 +135,31 @@ public class SecafBackBean extends BaseBackBean implements Serializable{
 	public void setPasivo(Boolean pasivo) {
 		this.pasivo = pasivo;
 	}
+
+	public List<Secaf> getListaCatalogoSecaf() {
+		return listaCatalogoSecaf;
+	}
+
+	public void setListaCatalogoSecaf(List<Secaf> listaCatalogoSecaf) {
+		this.listaCatalogoSecaf = listaCatalogoSecaf;
+	}
+
+	public String getTxtBusquedaCatalogoSecaf() {
+		return txtBusquedaCatalogoSecaf;
+	}
+
+	public void setTxtBusquedaCatalogoSecaf(String txtBusquedaCatalogoSecaf) {
+		this.txtBusquedaCatalogoSecaf = txtBusquedaCatalogoSecaf;
+	}
+
+	public String getRegExpLetras() {
+		return regExpLetras;
+	}
+
+	public String getRegExpNumeros() {
+		return regExpNumeros;
+	}
 	
 	
-	
-	
+
 }

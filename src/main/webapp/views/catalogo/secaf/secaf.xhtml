@@ -15,11 +15,11 @@
 	<div id="ContainerIndent">
 		<div class="Container50 Responsive">
 			<h:form id="formLista" style="width:99%">
-				<p:panel styleClass="fondoPaneles">
+				<p:panel styleClass="fondoPaneles" style="height:550px;">
 					<f:facet name="header">
 						<p:outputPanel style="display" styleClass="left">
-						<p:inputText placeholder="#{labelName.placeholderBuscar}" autocomplete="off"/>
-						<p:commandButton icon="ui-icon-search"></p:commandButton>
+						<p:inputText placeholder="#{labelName.placeholderBuscar}" autocomplete="off" value="#{secafBackBean.txtBusquedaCatalogoSecaf}"/>
+						<p:commandButton icon="ui-icon-search" action="#{secafBackBean.buscar}" ajax="true" update="listaCatalogoSecaf"/>
 					</p:outputPanel>
 					<p:outputPanel style="display" styleClass="right">
 						<p:commandButton icon="ui-icon-circle-plus" value="#{labelName.btnAgregar}" />
@@ -30,17 +30,43 @@
 						<p:dataTable style="width:100%" paginatorPosition="top" selectionMode="single" scrollable="true" scrollHeight="410"
 						var="oSecaf" id="listaCatalogoSecaf" rowKey="#{oSecaf.id}"
 						paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="12" pageLinks="3"
-						paginatorTemplate="#{configApplicationBean.paginatorTemplate}" currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}"
-						>
-						
+						value="#{secafBackBean.listaCatalogoSecaf}"
+						paginatorTemplate="#{configApplicationBean.paginatorTemplate}" currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}"	>
+							<f:facet name="header">								
+									Lista de Catalogo de Bienes SECAF
+									<p:commandButton id="mostrarOcultarColumnas" type="button" value="Columnas" style="float: right;margin: -3px" icon="ui-icon-calculator" />
+									<p:columnToggler datasource="listaCatalogoSecaf" trigger="mostrarOcultarColumnas" />								
+							</f:facet>
+							
+							<p:column visible="false" headerText="Cuenta" width="10%" style="text-align:center" priority="5">
+								<h:outputText value="#{oSecaf.cuenta}" />
+							</p:column>
+							<p:column visible="false" headerText="SubCuenta" width="10%"  style="text-align:center" priority="4">
+								<h:outputText value="#{oSecaf.subcuenta}"/>
+							</p:column>
+							<p:column visible="false" headerText="Letra" width="10%" style="text-align:center" priority="3">
+								<h:outputText value="#{oSecaf.letra}"/>
+							</p:column>
+							<p:column headerText="Objeto" width="10%" style="text-align:center" priority="2">
+								<h:outputText value="#{oSecaf.objeto}"/>
+							</p:column>
+							<p:column headerText="Descripción Bien" width="50%" priority="1">
+								<h:outputText value="#{oSecaf.descripcionBe}"/>
+							</p:column>
+							<p:column headerText="Código CBS" style="text-align:center" width="20%" priority="2">
+								<h:outputText value="#{oSecaf.cbs}" />
+							</p:column>
+							<p:column headerText="Pasivo" width="10%">
+								<p:selectBooleanCheckbox value="#{oSecaf.pasivo}" disabled="true" styleClass="ui-linus-enabled"/>
+							</p:column>						
 						</p:dataTable>
 					</p:outputPanel>					
 				</p:panel>
 			</h:form>
 		</div>
 		<div class="Container50 Responsive">			
-				<h:form id="formDatosSecaf" style="width:99%" >
-					<p:panel styleClass="fondoPaneles" style="height:500px;">
+				<h:form id="formDatosSecaf" style="width:99%">
+					<p:panel styleClass="fondoPaneles" style="height:550px;">
 						<f:facet name="header">
 							<h:outputText value="ID: #{secafBackBean.hfId}" rendered="#{!secafBackBean.nuevoRegistro}"/>
 							<p:outputPanel style="display:block" styleClass="right">
@@ -50,19 +76,25 @@
 						</f:facet>						
 						<h:panelGrid columns="2" style="width:100%" columnClasses="Wid20, Wid80">
 							<h:outputLabel for="noCuenta" value="Cuenta No:" />
-							<p:inputText id="noCuenta" required="true" label="Cuenta No:" styleClass="Wid20" value="#{secafBackBean.noCuenta}"/>
+							<p:inputText id="noCuenta" required="true" label="Cuenta No:" maxlength="10" styleClass="Wid20" value="#{secafBackBean.noCuenta}">
+								<pe:keyFilter regEx="/#{secafBackBean.regExpNumeros}/"/>
+							</p:inputText>
 							<h:outputLabel for="noSubcuenta" value="Subcuenta No:" />
-							<p:inputText id="noSubcuenta" required="true" maxlength="10" styleClass="Wid20" label="Subcuenta No:" value="#{secafBackBean.noSubcuenta}" />			
+							<p:inputText id="noSubcuenta" required="true" maxlength="10" styleClass="Wid20" label="Subcuenta No:" value="#{secafBackBean.noSubcuenta}" >
+								<pe:keyFilter regEx="/#{secafBackBean.regExpNumeros}/"/>
+							</p:inputText>			
 							<h:outputLabel for="letra"  value="Letra:"/>
-							<p:inputText id="letra" label="Letra:" maxlength="2"  styleClass="Wid20" value="#{secafBackBean.letra}"/>
+							<p:inputText id="letra" label="Letra:" maxlength="2"  styleClass="Wid20" value="#{secafBackBean.letra}">
+								<pe:keyFilter regEx="/#{secafBackBean.regExpLetras}/"/>
+							</p:inputText>
 							<h:outputLabel for="descripcion" value="Descripción del Bien"/>
 							<p:inputText id="descripcion" label="Decripción" styleClass="Wid90" maxlength="250" required="true" value="#{secafBackBean.descripcionBien}" />
 							<h:outputLabel for="cbs" value="Codigo CBS" />
-							<p:inputText id="cbs" label="CBS" required="true" value="#{secafBackBean.codigoCbs}"/>
+							<p:inputText id="cbs" label="CBS" maxlength="20" required="true" value="#{secafBackBean.codigoCbs}"/>
 							<h:outputLabel for="descripcionCbs" value="Descripción CBS"/>
-							<p:inputText  id="descripcionCbs" required="true" label="Descripción CBS" styleClass="Wid90" value="#{secafBackBean.descripcionCbs}"/>
-							<h:outputLabel for="pasivo" value="Pasivo" />
-							<p:selectBooleanButton offLabel="No" onLabel="Si" id="pasivo" value="#{secafBackBean.pasivo}" rendered="#{secafBackBean.nuevoRegistro}"/>
+							<p:inputText  id="descripcionCbs" maxlength="250" required="true" label="Descripción CBS" styleClass="Wid90" value="#{secafBackBean.descripcionCbs}"/>
+							<h:outputLabel for="pasivo" value="Pasivo"  rendered="#{!secafBackBean.nuevoRegistro}"/>
+							<p:selectBooleanButton offLabel="No" onLabel="Si" id="pasivo" value="#{secafBackBean.pasivo}" rendered="#{!secafBackBean.nuevoRegistro}"/>
 						</h:panelGrid>
 					</p:panel>
 				</h:form>			

@@ -1,10 +1,36 @@
 package ni.gob.inss.sisinv.bussineslogic.serviceImpl;
 
-import org.springframework.stereotype.Service;
+import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.googlecode.genericdao.search.Search;
+
+import ni.gob.inss.barista.model.dao.EntityNotFoundException;
 import ni.gob.inss.sisinv.bussineslogic.service.SecafService;
+import ni.gob.inss.sisinv.model.dao.SecafDAO;
+import ni.gob.inss.sisinv.model.entity.catalogo.Secaf;
 
 @Service
 public class SecafServiceImpl implements SecafService {
+
+	@Autowired
+	private SecafDAO oSecafDAO;
+	
+	@Transactional
+	@Override
+	public List<Secaf> buscar(String txtCriterio) throws EntityNotFoundException {
+		String txtBusqueda = StringUtils.isEmpty(txtCriterio) ? "" : txtCriterio;
+		
+		Search oSearch = new Search();
+		oSearch.addFilterILike("descripcionBe", "%"+txtBusqueda+"%");
+		oSearch.addFilterILike("descripcionCbs", "%"+txtBusqueda+"%");
+		oSearch.addSortDesc("descripcionBe");
+		
+		return oSecafDAO.search(oSearch);
+	}
 
 }

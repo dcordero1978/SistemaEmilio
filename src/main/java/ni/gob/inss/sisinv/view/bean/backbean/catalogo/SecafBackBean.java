@@ -96,7 +96,8 @@ public class SecafBackBean extends BaseBackBean implements Serializable{
 			this.setLetra(oSecaf.getLetra());
 			this.setCodigoObjeto(oSecaf.getObjeto());
 			this.setDescripcionBien(oSecaf.getDescripcionBe());
-			this.setCodigoCbs(oSecaf.getDescripcionCbs());
+			this.setCodigoCbs(oSecaf.getCbs());
+			this.setDescripcionCbs(oSecaf.getDescripcionCbs());
 			this.setPasivo(oSecaf.isPasivo());
 			this.setNuevoRegistro(false);
 		} catch (EntityNotFoundException e) {
@@ -107,7 +108,6 @@ public class SecafBackBean extends BaseBackBean implements Serializable{
 		
 	}
 	
-	//TODO: POR IMPLEMENTAR
 	private void guardar(){
 		Secaf oSecaf =this.obtieneCatalogoSecafPreparado();
 		try {

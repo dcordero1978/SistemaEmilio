@@ -53,7 +53,9 @@
 							<p:rowExpansion>
 								<p:panelGrid>
 									<p:row>
-										<p:column colspan="4" style="text-align:center"><h:outputText style="font-weight:bold" value="Descripción Bien:"/><h:outputText value="#{oSecaf.descripcionBe}"/></p:column>										
+									<!-- TODO: SE REQUIERE LUEGO RELACIONAR LA DESCRIPCION DEL BIEN  
+										<p:column colspan="4" style="text-align:center"><h:outputText style="font-weight:bold" value="Descripción Bien:"/><h:outputText value="#{oSecaf.descripcionBe}"/></p:column>
+									-->										
 									</p:row>									
 									<p:row>
 										<p:column><h:outputText style="font-weight: bold" value="No. Cuenta: " /><h:outputText value="#{oSecaf.cuenta}"/> </p:column>
@@ -95,8 +97,12 @@
 							<p:inputText id="objeto" label="Objeto" styleClass="Wid20" maxlength="10" value="#{secafBackBean.codigoObjeto}" >
 								<pe:keyFilter regEx="/#{secafBackBean.regExpNumeros}/"/>
 							</p:inputText>
-							<h:outputLabel for="descripcion" value="Descripción del Bien"/>
-							<p:inputText id="descripcion" label="Decripción" styleClass="Wid90" maxlength="250" required="true" value="#{secafBackBean.descripcionBien}" />
+							<h:outputLabel for="tipoBien" value="Tipo de Bien"/>
+							<p:selectOneMenu id="tipoBien" label="Descripción Bien" value="#{secafBackBean.tipoBien}" required="true" style="width:90%" filter="true" filterMatchMode="contains">
+								<f:selectItem itemLabel="Seleccione Tipo Bien" itemValue="#{null}" />
+								<f:selectItems var="oTipoBien" value="#{secafBackBean.listaTipoBienes}" itemLabel="#{oTipoBien.nombre}" itemValue="#{oTipoBien.id}" />
+							</p:selectOneMenu>
+							<!--   <p:inputText id="descripcion" label="Decripción" styleClass="Wid90" maxlength="250" required="true" value="#{secafBackBean.descripcionBien}" />-->
 							<h:outputLabel for="cbs" value="Codigo CBS" />
 							<p:inputText id="cbs" label="CBS" maxlength="20" required="true" value="#{secafBackBean.codigoCbs}"/>
 							<h:outputLabel for="descripcionCbs" value="Descripción CBS"/>

@@ -27,7 +27,7 @@ public class Secaf extends EntityBase implements java.io.Serializable {
 	private Integer subcuenta;
 	private String letra;
 	private Integer objeto;
-	private String descripcionBe;
+	private Integer tipoBien;
 	private String cbs;
 	private String descripcionCbs;	
 	private boolean pasivo;
@@ -79,15 +79,6 @@ public class Secaf extends EntityBase implements java.io.Serializable {
 		this.objeto = objeto;
 	}
 
-	@Column(name = "descripcion_be", nullable = false, length = 250)
-	public String getDescripcionBe() {
-		return this.descripcionBe;
-	}
-
-	public void setDescripcionBe(String descripcionBe) {
-		this.descripcionBe = descripcionBe;
-	}
-
 	@Column(name = "cbs", nullable = false, length = 20, unique=true)
 	public String getCbs() {
 		return this.cbs;
@@ -115,5 +106,16 @@ public class Secaf extends EntityBase implements java.io.Serializable {
 	public void setPasivo(boolean pasivo) {
 		this.pasivo = pasivo;
 	}
+
+	@Column(name="tipo_bien", nullable=false)
+	public Integer getTipoBien() {
+		return tipoBien;
+	}
+
+	public void setTipoBien(Integer tipoBien) {
+		this.tipoBien = tipoBien;
+	}
+	
+	
 
 }

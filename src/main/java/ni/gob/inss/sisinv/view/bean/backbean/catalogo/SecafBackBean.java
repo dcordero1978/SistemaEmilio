@@ -101,8 +101,7 @@ public class SecafBackBean extends BaseBackBean implements Serializable{
 			this.setPasivo(oSecaf.isPasivo());
 			this.setNuevoRegistro(false);
 		} catch (EntityNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			mostrarMensajeError(this.getClass().getSimpleName(), "cargarDatosSecaf", MessagesResults.ERROR_OBTENER, e);
 		}
 		
 		

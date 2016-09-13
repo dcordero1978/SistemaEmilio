@@ -1,0 +1,119 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                template="/web/template/innerLayout.xhtml"
+                xmlns:mc="http://java.sun.com/jsf/composite/comps">
+
+<ui:param name="paramBackBean" value="#{secafBackBean}"/>
+<ui:define name="headerContent">
+	Catalogo SECAF
+</ui:define>
+<ui:define name="content">
+	<div id="ContainerIndent">
+		<div class="Container50 Responsive">
+			<h:form id="formLista" style="width:99%">
+				<p:panel styleClass="fondoPaneles" style="height:550px;">
+					<f:facet name="header">
+						<p:outputPanel style="display" styleClass="left">
+						<p:inputText placeholder="#{labelName.placeholderBuscar}" autocomplete="off" value="#{secafBackBean.txtBusquedaCatalogoSecaf}"/>
+						<p:commandButton icon="ui-icon-search" action="#{secafBackBean.buscar}" ajax="true" update="listaCatalogoSecaf"/>
+					</p:outputPanel>
+					<p:outputPanel style="display" styleClass="right">
+						<p:commandButton icon="ui-icon-circle-plus" value="#{labelName.btnAgregar}" ajax="true" action="#{secafBackBean.limpiar}" update=":formDatosSecaf"/>
+						<p:commandButton icon="ui-icon-pencil" value="#{labelName.btnEditar}" action="#{secafBackBean.editar}" resetValues="true" update=":formDatosSecaf"/>
+					</p:outputPanel>
+					</f:facet>
+					<p:outputPanel styleClass="tableClass">
+						<p:dataTable style="width:100%" paginatorPosition="top" selectionMode="single" scrollable="true" scrollHeight="410"
+						var="oSecaf" id="listaCatalogoSecaf" rowKey="#{oSecaf.id}" selection="#{secafBackBean.catalogoSeleccionado}"
+						paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="12" pageLinks="3"
+						value="#{secafBackBean.listaCatalogoSecaf}" 
+						paginatorTemplate="#{configApplicationBean.paginatorTemplate}" currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}"	>
+							<p:ajax event="rowDblselect" listener="#{secafBackBean.editar}" update=":formDatosSecaf" resetValues="true"/>
+							<f:facet name="header">							
+									Lista de Catalogo de Bienes SECAF																	
+							</f:facet>
+							<p:column style="width:10px">
+								<p:rowToggler/>
+							</p:column>											
+							<p:column headerText="Código CBS" style="text-align:center" width="20%" priority="2">
+								<h:outputText value="#{oSecaf.cbs}" />
+							</p:column>
+							<p:column headerText="Descripción CBS" width="50%" priority="1">
+								<h:outputText value="#{oSecaf.descripcionCbs}"/>
+							</p:column>										
+							
+							<p:column headerText="Pasivo" width="10%" style="text-align:center">
+								<p:selectBooleanCheckbox value="#{oSecaf.pasivo}" disabled="true" styleClass="ui-linus-enabled"/>
+							</p:column>						
+							
+							<p:rowExpansion>
+								<p:panelGrid>
+									<p:row>
+									<!-- TODO: SE REQUIERE LUEGO RELACIONAR LA DESCRIPCION DEL BIEN  
+										<p:column colspan="4" style="text-align:center"><h:outputText style="font-weight:bold" value="Descripción Bien:"/><h:outputText value="#{oSecaf.descripcionBe}"/></p:column>
+									-->										
+									</p:row>									
+									<p:row>
+										<p:column><h:outputText style="font-weight: bold" value="No. Cuenta: " /><h:outputText value="#{oSecaf.cuenta}"/> </p:column>
+										<p:column><h:outputText style="font-weight: bold" value="No. Subcuenta: " /><h:outputText value="#{oSecaf.subcuenta}"/></p:column>
+										<p:column><h:outputText style="font-weight: bold" value="Letra: " /><h:outputText value="#{oSecaf.letra}"/></p:column>
+										<p:column><h:outputText style="font-weight: bold" value="Objeto: " /><h:outputText value="#{oSecaf.objeto}"/></p:column>
+									</p:row>								
+								</p:panelGrid>												
+							</p:rowExpansion>
+						</p:dataTable>
+					</p:outputPanel>					
+				</p:panel>
+			</h:form>
+		</div>
+		<div class="Container50 Responsive">			
+				<h:form id="formDatosSecaf" style="width:99%">
+					<p:panel styleClass="fondoPaneles" style="height:550px;">
+						<f:facet name="header">
+							<h:outputText value="ID: #{secafBackBean.hfId}" rendered="#{!secafBackBean.nuevoRegistro}"/>
+							<p:outputPanel style="display:block" styleClass="right">
+								<p:commandButton widgetVar="btnGuardar" icon="ui-icon-disk" value="#{labelName.btnGuardar}" action="#{secafBackBean.guardarOactualizar}" ajax="true" update=":formLista formDatosSecaf"/>
+								<p:commandButton widgetVar="btnCancelar" icon="ui-icon-cancel" value="#{labelName.btnCancelar}" action="#{secafBackBean.limpiar}" update="formDatosSecaf"/>
+							</p:outputPanel>
+						</f:facet>						
+						<h:panelGrid columns="2" style="width:100%" columnClasses="Wid20, Wid80">
+							<h:outputLabel for="noCuenta" value="Cuenta No:" />
+							<p:inputText id="noCuenta" required="true" label="Cuenta No:" maxlength="10" styleClass="Wid20" value="#{secafBackBean.noCuenta}">
+								<pe:keyFilter regEx="/#{secafBackBean.regExpNumeros}/"/>
+							</p:inputText>
+							<h:outputLabel for="noSubcuenta" value="Subcuenta No:" />
+							<p:inputText id="noSubcuenta" required="true" maxlength="10" styleClass="Wid20" label="Subcuenta No:" value="#{secafBackBean.noSubcuenta}" >
+								<pe:keyFilter regEx="/#{secafBackBean.regExpNumeros}/"/>
+							</p:inputText>			
+							<h:outputLabel for="letra"  value="Letra:"/>
+							<p:inputText id="letra" label="Letra:" maxlength="2"  styleClass="Wid20" value="#{secafBackBean.letra}">
+								<pe:keyFilter regEx="/#{secafBackBean.regExpLetras}/"/>
+							</p:inputText>
+							<h:outputLabel for="objeto" value="Objeto:" />
+							<p:inputText id="objeto" label="Objeto" styleClass="Wid20" maxlength="10" value="#{secafBackBean.codigoObjeto}" >
+								<pe:keyFilter regEx="/#{secafBackBean.regExpNumeros}/"/>
+							</p:inputText>
+							<h:outputLabel for="tipoBien" value="Tipo de Bien"/>
+							<p:selectOneMenu id="tipoBien" label="Descripción Bien" value="#{secafBackBean.tipoBien}" required="true" style="width:90%" filter="true" filterMatchMode="contains">
+								<f:selectItem itemLabel="Seleccione Tipo Bien" itemValue="#{null}" />
+								<f:selectItems var="oTipoBien" value="#{secafBackBean.listaTipoBienes}" itemLabel="#{oTipoBien.nombre}" itemValue="#{oTipoBien.id}" />
+							</p:selectOneMenu>
+							<!--   <p:inputText id="descripcion" label="Decripción" styleClass="Wid90" maxlength="250" required="true" value="#{secafBackBean.descripcionBien}" />-->
+							<h:outputLabel for="cbs" value="Codigo CBS" />
+							<p:inputText id="cbs" label="CBS" maxlength="20" required="true" value="#{secafBackBean.codigoCbs}"/>
+							<h:outputLabel for="descripcionCbs" value="Descripción CBS"/>
+							<p:inputText  id="descripcionCbs" maxlength="250" required="true" label="Descripción CBS" styleClass="Wid90" value="#{secafBackBean.descripcionCbs}"/>
+							<h:outputLabel for="pasivo" value="Pasivo"  rendered="#{!secafBackBean.nuevoRegistro}"/>
+							<p:selectBooleanButton offLabel="No" onLabel="Si" id="pasivo" value="#{secafBackBean.pasivo}" rendered="#{!secafBackBean.nuevoRegistro}"/>
+						</h:panelGrid>
+					</p:panel>
+				</h:form>			
+		</div>
+	</div>
+</ui:define>
+
+</ui:composition>

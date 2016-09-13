@@ -9,7 +9,9 @@ import javax.inject.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
+import ni.gob.inss.barista.businesslogic.service.BusinessException;
 import ni.gob.inss.barista.businesslogic.service.catalogos.TipoCatalogoService;
+import ni.gob.inss.barista.model.dao.DAOException;
 import ni.gob.inss.barista.model.dao.EntityNotFoundException;
 import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
 import ni.gob.inss.barista.model.entity.catalogo.TiposCatalogo;
@@ -89,14 +91,20 @@ public class SecafBackBean extends BaseBackBean implements Serializable{
 	}
 	
 	public void guardarOactualizar(){
-		if(this.getHfId()==null){
-			guardar();
-		}else{
-			actualizar();
+		try{
+			if(this.getHfId()==null){
+				guardar();
+			}else{
+				actualizar();
+			}
+			this.cargarDatosSecaf(this.getHfId());
+			this.setTxtBusquedaCatalogoSecaf("");
+			this.buscar();
+		}catch(BusinessException e){
+			mostrarMensajeError(e.getMessage());
+		}catch (DAOException e) {
+			mostrarMensajeError(this.getClass().getSimpleName(), "guardarOactualizar", MessagesResults.ERROR_GUARDAR, e);
 		}
-		this.cargarDatosSecaf(this.getHfId());
-		this.setTxtBusquedaCatalogoSecaf("");
-		this.buscar();
 	}
 	
 	public void editar(){
@@ -128,7 +136,7 @@ public class SecafBackBean extends BaseBackBean implements Serializable{
 		
 	}
 	
-	private void guardar(){
+	private void guardar() throws BusinessException, DAOException{
 		Secaf oSecaf =this.obtieneCatalogoSecafPreparado();
 		try {
 			oSecaf.setPasivo(false);
@@ -138,13 +146,15 @@ public class SecafBackBean extends BaseBackBean implements Serializable{
 			oSecafService.agregar(oSecaf);
 			mostrarMensajeInfo(MessagesResults.EXITO_GUARDAR);
 			this.setHfId(oSecaf.getId());
-		} catch (Exception e) {
-			mostrarMensajeError(this.getClass().getSimpleName(), "guardar", MessagesResults.ERROR_GUARDAR, e); 
+		} catch (BusinessException e) {
+			throw e;			 
+		}catch(DAOException e){
+			throw e;			
 		}
 		
 	}
 	
-	private void actualizar(){
+	private void actualizar() throws BusinessException, DAOException{
 		Secaf oSecaf = obtieneCatalogoSecafPreparado();
 		try {
 			oSecaf.setPasivo(this.getPasivo());
@@ -154,8 +164,10 @@ public class SecafBackBean extends BaseBackBean implements Serializable{
 			oSecafService.actualizar(oSecaf);
 			mostrarMensajeInfo(MessagesResults.EXITO_MODIFICAR);
 			this.setHfId(oSecaf.getId());
-		} catch (Exception e) {
-			mostrarMensajeError(this.getClass().getSimpleName(), "actualizar", MessagesResults.ERROR_MODIFICAR, e);			
+		}catch (BusinessException e) {
+			throw e;			 
+		}catch(DAOException e){
+			throw e;
 		}
 	}
 	

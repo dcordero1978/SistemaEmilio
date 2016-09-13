@@ -44,6 +44,8 @@ public class SecafServiceImpl implements SecafService {
 	@Transactional
 	@Override
 	public void agregar(Secaf oSecaf) throws DAOException, BusinessException {
+		validaCodigoCbsUnico(oSecaf.getCbs());
+		validaCatalogoPropiedadesUnicas(oSecaf.getCuenta(), oSecaf.getSubcuenta(), oSecaf.getLetra(), oSecaf.getObjeto());
 		oSecafDAO.saveUpper(oSecaf);		
 	}
 	
@@ -51,6 +53,36 @@ public class SecafServiceImpl implements SecafService {
 	@Override
 	public void actualizar(Secaf oSecaf) throws DAOException, BusinessException {
 		oSecafDAO.updateUpper(oSecaf);		
+	}
+	
+	public void validaCodigoCbsUnico(String codigoCbs) throws BusinessException{
+		if(obtieneCatalogoCodigoCbsUnico(codigoCbs)!=null){
+			throw new BusinessException("Ya existe un registro con el Codigo CBS digitado");
+		}
+	}
+	
+	public void validaCatalogoPropiedadesUnicas(int noCuenta, int noSubcuenta, String letra, int codigoObjeto) throws BusinessException{
+		if(obtieneCatalogoSecafUnico(noCuenta, noSubcuenta, letra, codigoObjeto) != null){
+			throw new BusinessException("Ya existe un registro con las propiedades No.Cuenta,Subcuenta No,Letra, Objeto");
+		}
+	}
+	
+	@Transactional
+	private Secaf obtieneCatalogoSecafUnico(int noCuenta, int noSubCuenta, String letra, int codObjeto){
+		Search oSearch = new Search();
+		Filter unicoObjeto = Filter.and(Filter.equal("cuenta", noCuenta),
+							Filter.equal("subcuenta",noSubCuenta),
+							Filter.equal("letra", letra),
+							Filter.equal("objeto", codObjeto));
+		oSearch.addFilter(unicoObjeto);
+		return (Secaf) oSecafDAO.searchUnique(oSearch);	
+	}
+	
+	@Transactional
+	private Secaf obtieneCatalogoCodigoCbsUnico(String codigoCbs){
+		Search oSearch = new Search();
+		oSearch.addFilter(Filter.equal("cbs", codigoCbs));
+		return (Secaf) oSecafDAO.searchUnique(oSearch);
 	}
 
 }

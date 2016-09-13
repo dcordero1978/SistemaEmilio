@@ -42,6 +42,7 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	private List<Delegacion> listaDelegaciones;
 	
 	private String regExpLetras;
+	private String regExpCedula;
 	
 	
 	@Autowired
@@ -65,7 +66,8 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	}
 	
 	public void cargaValidaciones(){
-		regExpLetras = RegExpresionExtends.regExpSoloLetrasConEspacio;		
+		regExpLetras = RegExpresionExtends.regExpSoloLetrasConEspacio;	
+		regExpCedula = RegExpresionExtends.regExpCedula;
 	}
 	
 	public void cargarListaDelegaciones(){
@@ -283,6 +285,10 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 
 	public void setDelegacionBusquedaEmpleado(Integer delegacionBusquedaEmpleado) {
 		this.delegacionBusquedaEmpleado = delegacionBusquedaEmpleado;
+	}
+
+	public String getRegExpCedula() {
+		return regExpCedula;
 	}	
 	
 }

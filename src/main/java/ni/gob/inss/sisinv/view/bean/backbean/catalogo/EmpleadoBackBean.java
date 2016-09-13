@@ -12,15 +12,12 @@ import org.springframework.context.annotation.Scope;
 import ni.gob.inss.barista.businesslogic.service.catalogos.CatalogoService;
 import ni.gob.inss.barista.businesslogic.service.catalogos.TipoCatalogoService;
 import ni.gob.inss.barista.model.dao.EntityNotFoundException;
-import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
-import ni.gob.inss.barista.model.entity.catalogo.TiposCatalogo;
 import ni.gob.inss.barista.view.bean.backbean.BaseBackBean;
 import ni.gob.inss.barista.view.utils.web.MessagesResults;
 import ni.gob.inss.sisinv.bussineslogic.service.DelegacionService;
 import ni.gob.inss.sisinv.bussineslogic.service.EmpleadoService;
 import ni.gob.inss.sisinv.model.entity.catalogo.Delegacion;
 import ni.gob.inss.sisinv.model.entity.catalogo.Empleado;
-import ni.gob.inss.sisinv.util.CatalogoGeneral;
 import ni.gob.inss.sisinv.util.RegExpresionExtends;
 
 @Named
@@ -32,7 +29,6 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	private String apellidos;	
 	private String txtBusquedaEmpleado;
 	private Integer hfId;
-	private Integer tipoIdentificacion;
 	private String nroIdentificacion;
 	private Integer delegacionId;
 	private boolean pasivo;
@@ -43,7 +39,6 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	private Empleado empleadoSeleccionado;
 	private boolean nuevoRegistro;
 	
-	private List<Catalogo> listaTipoIdentificacion;
 	private List<Delegacion> listaDelegaciones;
 	
 	private String regExpLetras;
@@ -64,7 +59,6 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	@PostConstruct
 	public void init(){
 		this.limpiar();
-		this.cargarListaTipoIdentificacion();
 		this.cargarListaDelegaciones();
 		this.cargaValidaciones();
 		this.buscar();		
@@ -72,16 +66,6 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	
 	public void cargaValidaciones(){
 		regExpLetras = RegExpresionExtends.regExpSoloLetrasConEspacio;		
-	}
-	
-	public void cargarListaTipoIdentificacion(){
-		try {
-			TiposCatalogo catalogoTipoIdentificacion= oTipoCatalogoService.obtener(CatalogoGeneral.TIPO_IDENTIFICACION.getCatalogoId());
-			this.listaTipoIdentificacion = oTipoCatalogoService.obtenerCatalogos(catalogoTipoIdentificacion);
-		} catch (Exception e) {
-			mostrarMensajeError(this.getClass().getSimpleName(), "cargarListaTipoIdentificacion", MessagesResults.ERROR_OBTENER_LISTA, e);
-			
-		}
 	}
 	
 	public void cargarListaDelegaciones(){
@@ -99,7 +83,6 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 		this.setTxtBusquedaEmpleado("");
 		this.setEmpleadoSeleccionado(null);
 		this.setNuevoRegistro(true);
-		this.setTipoIdentificacion(null);
 		this.setNroIdentificacion("");
 		this.setPasivo(false);
 		this.setDelegacionId(null);
@@ -146,7 +129,6 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 			oDelegacion = oDelegacionService.obtener(this.getDelegacionId());
 			oEmpleado.setNombres(this.getNombres());
 			oEmpleado.setApellidos(this.getApellidos());
-			oEmpleado.setTipoIdentificacion(this.getTipoIdentificacion());
 			oEmpleado.setNroIdentificacion(this.getNroIdentificacion());
 			oEmpleado.setDelegacion(oDelegacion);
 			oEmpleado.setPasivo(this.isPasivo());
@@ -170,7 +152,6 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 			Empleado oEmpleado = new Empleado();
 			oEmpleado.setNombres(this.getNombres());
 			oEmpleado.setApellidos(this.getApellidos());
-			oEmpleado.setTipoIdentificacion(this.getTipoIdentificacion());
 			oEmpleado.setNroIdentificacion(this.getNroIdentificacion());
 			oEmpleado.setDelegacion(oDelegacion);
 			oEmpleado.setCreadoPor(this.getUsuarioActual().getId());
@@ -193,8 +174,7 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 			this.setNombres(oEmpleado.getNombres());
 			this.setApellidos(oEmpleado.getApellidos());
 			this.setDelegacionId(oEmpleado.getDelegacion().getId());
-			this.setNroIdentificacion(oEmpleado.getNroIdentificacion());
-			this.setTipoIdentificacion(oEmpleado.getTipoIdentificacion());
+			this.setNroIdentificacion(oEmpleado.getNroIdentificacion());			
 			this.setPasivo(oEmpleado.getPasivo());
 			this.setNuevoRegistro(false);
 			this.setHfId(oEmpleado.getId());
@@ -260,21 +240,6 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 		this.nuevoRegistro = nuevoRegistro;
 	}
 
-	public Integer getTipoIdentificacion() {
-		return tipoIdentificacion;
-	}
-
-	public void setTipoIdentificacion(Integer tipoIdentificacion) {
-		this.tipoIdentificacion = tipoIdentificacion;
-	}
-
-	public List<Catalogo> getListaTipoIdentificacion() {
-		return listaTipoIdentificacion;
-	}
-
-	public void setListaTipoIdentificacion(List<Catalogo> listaTipoIdentificacion) {
-		this.listaTipoIdentificacion = listaTipoIdentificacion;
-	}
 
 	public String getNroIdentificacion() {
 		return nroIdentificacion;

@@ -73,12 +73,7 @@
 							<p:outputLabel for="apellidos" value="Apellidos"/>
 							<p:inputText value="#{empleadoBackBean.apellidos}" label="Apellidos" maxlength="50" required="true" autocomplete="off" id="apellidos"  styleClass="Wid80">
 								<pe:keyFilter regEx="/#{empleadoBackBean.regExpLetras}/" />
-							</p:inputText>
-							<p:outputLabel for="tipoIdentificacion" value="Tipo Identificación"/>
-							<p:selectOneMenu id="tipoIdentificacion" label="Tipo Identificación" value="#{empleadoBackBean.tipoIdentificacion}" required="true" styleClass="Wid80" >							
-								<f:selectItem itemLabel="Seleccione" itemValue="#{null}" />
-								<f:selectItems value="#{empleadoBackBean.listaTipoIdentificacion}" var="tipoId" itemLabel="#{tipoId.nombre}" itemValue="#{tipoId.id}"/>
-							</p:selectOneMenu>     
+							</p:inputText>							     
 							<p:outputLabel for="numeroIdentificacion" value="No. Identificación" />
 							<p:inputMask value="#{empleadoBackBean.nroIdentificacion}" label="No. Identificación" id="numeroIdentificacion" styleClass="Wid80" required="true" maxlength="20" />
 							<p:outputLabel for="delegacion" value="Delegación"/>

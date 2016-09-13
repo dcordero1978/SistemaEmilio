@@ -26,7 +26,6 @@ public class Empleado extends EntityBase{
 	private String nombres;
 	private String apellidos;
 	
-	private Integer tipoIdentificacion;
 	private String nroIdentificacion;
 	private Boolean pasivo;
 
@@ -68,16 +67,6 @@ public class Empleado extends EntityBase{
 
 	public void setApellidos(String apellidos) {
 		this.apellidos= apellidos;
-	}
-
-	
-	@Column(name = "tipo_identificacion", nullable = false)
-	public Integer getTipoIdentificacion() {
-		return this.tipoIdentificacion;
-	}
-
-	public void setTipoIdentificacion(Integer tipoIdentificacion) {
-		this.tipoIdentificacion = tipoIdentificacion;
 	}
 
 	@Column(name = "nro_identificacion", nullable = false, length = 20)

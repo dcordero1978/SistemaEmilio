@@ -36,7 +36,7 @@
 							currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
 								<p:ajax event="rowSelect" listener="#{delegacionBackBean.editar}" update=":formDatosDelegacion" resetValues="true" />
 								<p:column headerText="Delegación" sortBy="#{oDelegacion.descripcionDelegacion}">
-									<h:outputText value="#{oDelegacion.descripcionDelegacion}" />
+									<h:outputText value="#{oDelegacion.descripcion}" />
 								</p:column>
 								<p:column headerText="Pasivo" style="text-align:center; width:10%" priority="2" sortBy="#{oDelegacion.pasivo}">
 									<p:selectBooleanCheckbox value="#{oDelegacion.pasivo}" disabled="true" styleClass="ui-linus-enabled"/>

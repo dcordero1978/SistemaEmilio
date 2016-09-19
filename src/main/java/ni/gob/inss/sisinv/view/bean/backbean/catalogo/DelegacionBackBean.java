@@ -10,15 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
 import ni.gob.inss.barista.businesslogic.service.catalogos.CatalogoService;
-import ni.gob.inss.barista.businesslogic.service.catalogos.TipoCatalogoService;
-import ni.gob.inss.barista.businesslogic.service.core.auditoria.AuditoriaService;
-import ni.gob.inss.barista.model.dao.EntityNotFoundException;
 import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
 import ni.gob.inss.barista.model.entity.catalogo.TiposCatalogo;
 import ni.gob.inss.barista.view.bean.backbean.BaseBackBean;
 import ni.gob.inss.barista.view.utils.web.MessagesResults;
 import ni.gob.inss.sisinv.bussineslogic.service.DelegacionService;
+import ni.gob.inss.sisinv.bussineslogic.service.TipoCatalogoExtService;
 import ni.gob.inss.sisinv.model.entity.catalogo.Delegacion;
+import ni.gob.inss.sisinv.util.CatalogoGeneral;
 
 @Named
 @Scope("view")
@@ -39,11 +38,9 @@ public class DelegacionBackBean extends BaseBackBean implements Serializable  {
 	private boolean pasivo;
 	private Integer departamentoId;
 	
-	private final static int CATALOGO_DEPARTAMENTO = 1;
-	
 	@Autowired
-	TipoCatalogoService oTipoCatalogoService;
-	
+	TipoCatalogoExtService oTipoCatalogoExtService;
+		
 	@Autowired
 	CatalogoService oCatalogoService;
 	
@@ -60,8 +57,8 @@ public class DelegacionBackBean extends BaseBackBean implements Serializable  {
 	
 	public void cargarListaDepartamentos(){
 		try {
-				this.catalogoDepartamento = oTipoCatalogoService.obtener(CATALOGO_DEPARTAMENTO);				
-				this.listaDepartamentos = oTipoCatalogoService.obtenerCatalogos(this.catalogoDepartamento); 								
+				this.catalogoDepartamento = oTipoCatalogoExtService.obtenerTipoCatalogoPorCodigo(CatalogoGeneral.DEPARTAMENTOS.getCodigoCatalogo());									
+				this.listaDepartamentos = oTipoCatalogoExtService.obtenerCatalogos(this.catalogoDepartamento); 								
 			} catch (Exception e) {
             	mostrarMensajeError(this.getClass().getSimpleName(),"cargarListaDepartamentos(Catalogo oCatalogo)",MessagesResults.ERROR_OBTENER_LISTA, e);
 			}

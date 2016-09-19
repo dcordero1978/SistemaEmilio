@@ -35,8 +35,8 @@
 							paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="12" pageLinks="3"  paginatorTemplate="#{configApplicationBean.paginatorTemplate}"
 							currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
 								<p:ajax event="rowSelect" listener="#{delegacionBackBean.editar}" update=":formDatosDelegacion" resetValues="true" />
-								<p:column headerText="Delegación" sortBy="#{oDelegacion.nombre}">
-									<h:outputText value="#{oDelegacion.nombre}" />
+								<p:column headerText="Delegación" sortBy="#{oDelegacion.descripcionDelegacion}">
+									<h:outputText value="#{oDelegacion.descripcionDelegacion}" />
 								</p:column>
 								<p:column headerText="Pasivo" style="text-align:center; width:10%" priority="2" sortBy="#{oDelegacion.pasivo}">
 									<p:selectBooleanCheckbox value="#{oDelegacion.pasivo}" disabled="true" styleClass="ui-linus-enabled"/>
@@ -61,7 +61,7 @@
 							</f:facet>
 							<h:panelGrid columns="2" style="width:100" columnClasses="Wid20, Wid80">
 								<p:outputLabel for="nombreDelegacion" value="Nombre"/>
-								<p:inputText value="#{delegacionBackBean.nombreDelegacion}" label="Nombre" maxlength="25" 
+								<p:inputText value="#{delegacionBackBean.descripcionDelegacion}" label="Nombre" maxlength="25" 
 											 id="nombreDelegacion" required="true" styleClass="Wid80" autocomplete="off"/>
 								<p:outputLabel for="departamentoPertenece" value="Departamento"/>
 								<p:selectOneMenu id="departamentoPertenece" label="Departamento" value="#{delegacionBackBean.departamentoId}" required="true" >

@@ -41,8 +41,8 @@ public class DelegacionServiceImpl implements DelegacionService{
 		List<Delegacion> listaDelegaciones = null;
 		
 		Search oSearch = new Search();
-		oSearch.addFilterILike("nombre", "%"+txtCriterio+"%");
-		oSearch.addSortDesc("nombre");
+		oSearch.addFilterILike("descripcion", "%"+txtCriterio+"%");
+		oSearch.addSortDesc("descripcion");
 		if(txtCriterio==null || "".equalsIgnoreCase(txtCriterio)){
 			listaDelegaciones = oDelegacionDAO.findAll();
 		}else{

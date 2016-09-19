@@ -73,6 +73,10 @@
 							<p:outputLabel for="apellidos" value="Apellidos"/>
 							<p:inputText value="#{empleadoBackBean.apellidos}" label="Apellidos" maxlength="50" required="true" autocomplete="off" id="apellidos"  styleClass="Wid80">
 								<pe:keyFilter regEx="/#{empleadoBackBean.regExpLetras}/" />
+							</p:inputText>
+							<p:outputLabel for="numeroEmpleado" value="No. Empleado" />
+							<p:inputText value="#{empleadoBackBean.numeroEmpleado}" label="No. Empleado" required="true" autocomplete="false" id="numeroEmpleado" styleClass="Wid80">
+								<pe:keyFilter regEx="/#{empleadoBackBean.regExpSoloNumeros}/"/>
 							</p:inputText>							     
 							<p:outputLabel for="numeroCedula" value="No. Cédula" />
 							<p:inputMask value="#{empleadoBackBean.nroIdentificacion}" label="No. Identificación" id="numeroCedula" styleClass="Wid80" required="true" maxlength="14" mask="9999999999999a" />

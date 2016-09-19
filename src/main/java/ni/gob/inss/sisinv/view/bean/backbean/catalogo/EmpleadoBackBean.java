@@ -31,6 +31,7 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	private Integer hfId;
 	private String nroIdentificacion;
 	private Integer delegacionId;
+	private Integer numeroEmpleado;
 	private boolean pasivo;
 	
 	private Integer delegacionBusquedaEmpleado;
@@ -43,7 +44,7 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	
 	private String regExpLetras;
 	private String regExpCedula;
-	
+	private String regExpSoloNumeros;
 	
 	@Autowired
 	private EmpleadoService oEmpleadoService;
@@ -68,6 +69,7 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	public void cargaValidaciones(){
 		regExpLetras = RegExpresionExtends.regExpSoloLetrasConEspacio;	
 		regExpCedula = RegExpresionExtends.regExpCedula;
+		regExpSoloNumeros = RegExpresionExtends.regExpSoloNumeros;
 	}
 	
 	public void cargarListaDelegaciones(){
@@ -88,6 +90,7 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 		this.setNroIdentificacion("");
 		this.setPasivo(false);
 		this.setDelegacionId(null);
+		this.setNumeroEmpleado(null);
 		this.setHfId(null);
 	}
 	
@@ -132,6 +135,7 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 			oEmpleado.setNombres(this.getNombres());
 			oEmpleado.setApellidos(this.getApellidos());
 			oEmpleado.setNroIdentificacion(this.getNroIdentificacion());
+			oEmpleado.setNumeroEmpleado(this.getNumeroEmpleado());
 			oEmpleado.setDelegacion(oDelegacion);
 			oEmpleado.setPasivo(this.isPasivo());
 			oEmpleado.setModificadoEl(this.getTimeNow());
@@ -155,9 +159,10 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 			oEmpleado.setNombres(this.getNombres());
 			oEmpleado.setApellidos(this.getApellidos());
 			oEmpleado.setNroIdentificacion(this.getNroIdentificacion());
+			oEmpleado.setNumeroEmpleado(this.getNumeroEmpleado());
 			oEmpleado.setDelegacion(oDelegacion);
 			oEmpleado.setCreadoPor(this.getUsuarioActual().getId());
-			oEmpleado.setCreadoEl(this.getTimeNow());
+			oEmpleado.setCreadoEl(this.getTimeNow());			
 			oEmpleado.setCreadoEnIp(this.getRemoteIp());
 			oEmpleado.setPasivo(false);
 			oEmpleadoService.agregar(oEmpleado);			
@@ -177,6 +182,7 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 			this.setApellidos(oEmpleado.getApellidos());
 			this.setDelegacionId(oEmpleado.getDelegacion().getId());
 			this.setNroIdentificacion(oEmpleado.getNroIdentificacion());			
+			this.setNumeroEmpleado(oEmpleado.getNumeroEmpleado());
 			this.setPasivo(oEmpleado.getPasivo());
 			this.setNuevoRegistro(false);
 			this.setHfId(oEmpleado.getId());
@@ -289,6 +295,20 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 
 	public String getRegExpCedula() {
 		return regExpCedula;
-	}	
+	}
+
+	public Integer getNumeroEmpleado() {
+		return numeroEmpleado;
+	}
+
+	public void setNumeroEmpleado(Integer numeroEmpleado) {
+		this.numeroEmpleado = numeroEmpleado;
+	}
+
+	public String getRegExpSoloNumeros() {
+		return regExpSoloNumeros;
+	}
+	
+	
 	
 }

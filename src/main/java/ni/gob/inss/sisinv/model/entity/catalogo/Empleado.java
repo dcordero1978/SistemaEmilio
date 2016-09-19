@@ -25,7 +25,7 @@ public class Empleado extends EntityBase{
 	private Integer delegacionId;
 	private String nombres;
 	private String apellidos;
-	
+	private Integer numeroEmpleado;	
 	private String nroIdentificacion;
 	private Boolean pasivo;
 
@@ -94,6 +94,15 @@ public class Empleado extends EntityBase{
 
 	public void setDelegacionId(Integer delegacionId) {
 		this.delegacionId = delegacionId;
+	}
+
+	@Column(name="numero_empleado", nullable= false)
+	public Integer getNumeroEmpleado() {
+		return numeroEmpleado;
+	}
+
+	public void setNumeroEmpleado(Integer numeroEmpleado) {
+		this.numeroEmpleado = numeroEmpleado;
 	}
 	
 	

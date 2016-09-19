@@ -21,7 +21,7 @@
 								<p:inputText value="#{empleadoBackBean.txtBusquedaEmpleado}" maxlength="150" placeholder="#{labelName.placeholderBuscar}" autocomplete="off"/>
 								<p:selectOneMenu id="delegacionBusqueda" label="Delegación" value="#{empleadoBackBean.delegacionBusquedaEmpleado}" style="width:200px; left:5px">									
 									<f:selectItem itemValue="#{null}" itemLabel="Seleccione Delegación"/>
-									<f:selectItems var="oDelegacion" value="#{empleadoBackBean.listaDelegaciones}" itemLabel="#{oDelegacion.nombre}" itemValue="#{oDelegacion.id}"/>									
+									<f:selectItems var="oDelegacion" value="#{empleadoBackBean.listaDelegaciones}" itemLabel="#{oDelegacion.descripcion}" itemValue="#{oDelegacion.id}"/>									
 								</p:selectOneMenu>
 								
 								<p:commandButton  icon="ui-icon-search" action="#{empleadoBackBean.buscar}" ajax="true" update="listEmpleado" style="margin-left:5px;"/>								
@@ -39,10 +39,10 @@
 							paginatorTemplate="#{configApplicationBean.paginatorTemplate}" currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}"> 
 								<p:ajax event="rowSelect" listener="#{empleadoBackBean.editar}" update=":formDatosEmpleado" resetValues="true" />
 								<p:column headerText="Nombre" >
-									<h:outputText value="#{oEmpleado.nombres}" />
+									<h:outputText value="#{oEmpleado.primerNombre} #{oEmpleado.segundoNombre}" />
 								</p:column>
 								<p:column headerText="Apellido">
-									<h:outputText value="#{oEmpleado.apellidos}"/>
+									<h:outputText value="#{oEmpleado.primerApellido} #{oEmpleado.segundoApellido}"/>
 								</p:column>
 								<p:column headerText="Pasivo" style="text-align:center;" width="10%">
 									<p:selectBooleanCheckbox value="#{oEmpleado.pasivo}" disabled="true" styleClass="ui-linus-enabled"/>
@@ -66,16 +66,25 @@
 							</p:outputPanel>
 						</f:facet>
 						<h:panelGrid columns="2" style="width:100%" columnClasses="Wid30, Wid70">
-							<p:outputLabel for="nombres" value="Nombres" />
-							<p:inputText value="#{empleadoBackBean.nombres}" label="Nombres" maxlength="50" required="true" autocomplete="off" id="nombres" styleClass="Wid80">
+							<p:outputLabel for="primerNombre" value="Primer Nombre" />
+							<p:inputText value="#{empleadoBackBean.primerNombre}" label="Nombres" maxlength="25" required="true" autocomplete="off" id="primerNombre" styleClass="Wid80">
 								<pe:keyFilter regEx="/#{empleadoBackBean.regExpLetras}/" />
 							</p:inputText>
-							<p:outputLabel for="apellidos" value="Apellidos"/>
-							<p:inputText value="#{empleadoBackBean.apellidos}" label="Apellidos" maxlength="50" required="true" autocomplete="off" id="apellidos"  styleClass="Wid80">
+							<p:outputLabel for="segundoNombre" value="Segundo Nombre" />
+							<p:inputText value="#{empleadoBackBean.segundoNombre}" label="SegundoNombre" maxlength="25" autocomplete="off" id="segundoNombre" styleClass="Wid80">
+								<pe:keyFilter regEx="/#{empleadoBackBean.regExpLetras}/" />
+							</p:inputText>
+													
+							<p:outputLabel for="primerApellido" value="Primer Apellido"/>
+							<p:inputText value="#{empleadoBackBean.primerApellido}" label="Apellidos" maxlength="25" required="true" autocomplete="off" id="primerApellido"  styleClass="Wid80">
+								<pe:keyFilter regEx="/#{empleadoBackBean.regExpLetras}/" />
+							</p:inputText>
+							<p:outputLabel for="segundoApellido" value="Segundo Apellido"/>
+							<p:inputText value="#{empleadoBackBean.segundoApellido}" label="Apellidos" maxlength="25" autocomplete="off" id="segundoApellido"  styleClass="Wid80">
 								<pe:keyFilter regEx="/#{empleadoBackBean.regExpLetras}/" />
 							</p:inputText>
 							<p:outputLabel for="numeroEmpleado" value="No. Empleado" />
-							<p:inputText value="#{empleadoBackBean.numeroEmpleado}" label="No. Empleado" required="true" autocomplete="false" id="numeroEmpleado" styleClass="Wid80">
+							<p:inputText value="#{empleadoBackBean.numeroEmpleado}" label="No. Empleado" required="true" autocomplete="false" id="numeroEmpleado" styleClass="Wid80" maxlength="8">
 								<pe:keyFilter regEx="/#{empleadoBackBean.regExpSoloNumeros}/"/>
 							</p:inputText>							     
 							<p:outputLabel for="numeroCedula" value="No. Cédula" />
@@ -83,7 +92,7 @@
 							<p:outputLabel for="delegacion" value="Delegación"/>
 							<p:selectOneMenu id="delegacion" label="Delegación" value="#{empleadoBackBean.delegacionId}" required="true" style="width:80%">
 								<f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
-								<f:selectItems var="oDelegacion" value="#{empleadoBackBean.listaDelegaciones}" itemLabel="#{oDelegacion.nombre}" itemValue="#{oDelegacion.id}"/>
+								<f:selectItems var="oDelegacion" value="#{empleadoBackBean.listaDelegaciones}" itemLabel="#{oDelegacion.descripcion}" itemValue="#{oDelegacion.id}"/>
 							</p:selectOneMenu>
 							<p:outputLabel for="pasivo" value="Pasivo" rendered="#{!empleadoBackBean.nuevoRegistro}"/>
 							<p:selectBooleanButton offLabel="No" onLabel="Si" id="pasivo"  value="#{empleadoBackBean.pasivo}" rendered="#{!empleadoBackBean.nuevoRegistro}"/>

@@ -14,7 +14,6 @@ import ni.gob.inss.barista.businesslogic.service.BusinessException;
 import ni.gob.inss.barista.model.dao.DAOException;
 import ni.gob.inss.barista.model.dao.EntityNotFoundException;
 import ni.gob.inss.sisinv.bussineslogic.service.EmpleadoService;
-import ni.gob.inss.sisinv.model.dao.DelegacionDAO;
 import ni.gob.inss.sisinv.model.dao.EmpleadoDAO;
 import ni.gob.inss.sisinv.model.entity.catalogo.Empleado;
 
@@ -23,9 +22,7 @@ public class EmpleadoServiceImpl implements EmpleadoService{
 
 	@Autowired
 	private EmpleadoDAO oEmpleadoDAO;
-	
-	@Autowired
-	private DelegacionDAO oDelegacionDAO;
+
 	
 	@Transactional
 	@Override
@@ -55,8 +52,10 @@ public class EmpleadoServiceImpl implements EmpleadoService{
 		if(delegacionId != null){
 			oSearch.addFilter(Filter.equal("delegacionId", delegacionId));
 		}
-		oSearch.addFilterOr(Filter.ilike("nombres", "%"+txtBusqueda+"%"),
-								Filter.ilike("apellidos", "%"+txtBusqueda+"%"));
+		oSearch.addFilterOr(Filter.ilike("primerNombre", "%"+txtBusqueda+"%"),
+								Filter.ilike("segundoNombre", "%"+txtBusqueda+"%"),
+								Filter.ilike("primerApellido", "%"+txtBusqueda+"%"),
+								Filter.ilike("segundoApellido", "%"+txtBusqueda+"%"));
 		
 		
 		return oEmpleadoDAO.search(oSearch);			

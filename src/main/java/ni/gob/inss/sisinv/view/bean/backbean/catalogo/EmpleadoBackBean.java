@@ -10,12 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
 import ni.gob.inss.barista.businesslogic.service.catalogos.CatalogoService;
-import ni.gob.inss.barista.businesslogic.service.catalogos.TipoCatalogoService;
 import ni.gob.inss.barista.model.dao.EntityNotFoundException;
 import ni.gob.inss.barista.view.bean.backbean.BaseBackBean;
 import ni.gob.inss.barista.view.utils.web.MessagesResults;
 import ni.gob.inss.sisinv.bussineslogic.service.DelegacionService;
 import ni.gob.inss.sisinv.bussineslogic.service.EmpleadoService;
+import ni.gob.inss.sisinv.bussineslogic.service.TipoCatalogoExtService;
 import ni.gob.inss.sisinv.model.entity.catalogo.Delegacion;
 import ni.gob.inss.sisinv.model.entity.catalogo.Empleado;
 import ni.gob.inss.sisinv.util.RegExpresionExtends;
@@ -25,8 +25,12 @@ import ni.gob.inss.sisinv.util.RegExpresionExtends;
 public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
-	private String nombres;
-	private String apellidos;	
+	
+	private String primerNombre;
+	private String segundoNombre;
+	private String primerApellido;
+	private String segundoApellido;
+	
 	private String txtBusquedaEmpleado;
 	private Integer hfId;
 	private String nroIdentificacion;
@@ -50,7 +54,7 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	private EmpleadoService oEmpleadoService;
 	
 	@Autowired
-	TipoCatalogoService oTipoCatalogoService;
+	TipoCatalogoExtService oTipoCatalogoService;
 	
 	@Autowired
 	DelegacionService oDelegacionService;
@@ -82,8 +86,11 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	}
 	
 	public void limpiar(){
-		this.setNombres("");
-		this.setApellidos("");
+		this.setPrimerNombre("");
+		this.setSegundoNombre("");
+		this.setPrimerApellido("");
+		this.setSegundoApellido("");
+		
 		this.setTxtBusquedaEmpleado("");
 		this.setEmpleadoSeleccionado(null);
 		this.setNuevoRegistro(true);
@@ -96,8 +103,7 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	
 	public void buscar(){
 		try{
-			this.listaEmpleados = oEmpleadoService.buscar(this.getTxtBusquedaEmpleado(), this.getDelegacionBusquedaEmpleado());
-			//this.setListaEmpleados(oEmpleadoService.buscar(this.getTxtBusquedaEmpleado()));
+			this.listaEmpleados = oEmpleadoService.buscar(this.getTxtBusquedaEmpleado(), this.getDelegacionBusquedaEmpleado());			
 			if(this.getListaEmpleados().isEmpty()){
 				mostrarMensajeInfo("No se encontrarón resultados para esta búsqueda");
 			}
@@ -132,8 +138,10 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 			
 			Empleado oEmpleado = oEmpleadoService.obtener(this.getHfId());
 			oDelegacion = oDelegacionService.obtener(this.getDelegacionId());
-			oEmpleado.setNombres(this.getNombres());
-			oEmpleado.setApellidos(this.getApellidos());
+			oEmpleado.setPrimerNombre(this.getPrimerNombre());
+			oEmpleado.setSegundoNombre(this.getSegundoNombre());
+			oEmpleado.setPrimerApellido(this.getPrimerApellido());
+			oEmpleado.setSegundoApellido(this.getSegundoApellido());
 			oEmpleado.setNroIdentificacion(this.getNroIdentificacion());
 			oEmpleado.setNumeroEmpleado(this.getNumeroEmpleado());
 			oEmpleado.setDelegacion(oDelegacion);
@@ -156,8 +164,10 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 		try {
 			oDelegacion = oDelegacionService.obtener(this.getDelegacionId());
 			Empleado oEmpleado = new Empleado();
-			oEmpleado.setNombres(this.getNombres());
-			oEmpleado.setApellidos(this.getApellidos());
+			oEmpleado.setPrimerNombre(this.getPrimerNombre());
+			oEmpleado.setSegundoNombre(this.getSegundoNombre());
+			oEmpleado.setPrimerApellido(this.getPrimerApellido());
+			oEmpleado.setSegundoApellido(this.getSegundoApellido());
 			oEmpleado.setNroIdentificacion(this.getNroIdentificacion());
 			oEmpleado.setNumeroEmpleado(this.getNumeroEmpleado());
 			oEmpleado.setDelegacion(oDelegacion);
@@ -178,8 +188,10 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	public void cargarDatosEmpleado(Integer empleadoId){
 		try {
 			Empleado oEmpleado = oEmpleadoService.obtener(empleadoId);
-			this.setNombres(oEmpleado.getNombres());
-			this.setApellidos(oEmpleado.getApellidos());
+			this.setPrimerNombre(oEmpleado.getPrimerNombre());
+			this.setSegundoNombre(oEmpleado.getSegundoNombre());
+			this.setPrimerApellido(oEmpleado.getPrimerApellido());
+			this.setSegundoApellido(oEmpleado.getSegundoApellido());
 			this.setDelegacionId(oEmpleado.getDelegacion().getId());
 			this.setNroIdentificacion(oEmpleado.getNroIdentificacion());			
 			this.setNumeroEmpleado(oEmpleado.getNumeroEmpleado());
@@ -192,21 +204,6 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 		}
 	}
 
-	public String getNombres() {
-		return nombres;
-	}
-
-	public void setNombres(String nombres) {
-		this.nombres = nombres;
-	}
-
-	public String getApellidos() {
-		return apellidos;
-	}
-
-	public void setApellidos(String apellidos) {
-		this.apellidos = apellidos;
-	}
 
 	public String getTxtBusquedaEmpleado() {
 		return txtBusquedaEmpleado;
@@ -308,7 +305,40 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	public String getRegExpSoloNumeros() {
 		return regExpSoloNumeros;
 	}
+
+	public String getPrimerNombre() {
+		return primerNombre;
+	}
+
+	public void setPrimerNombre(String primerNombre) {
+		this.primerNombre = primerNombre;
+	}
+
+	public String getSegundoNombre() {
+		return segundoNombre;
+	}
+
+	public void setSegundoNombre(String segundoNombre) {
+		this.segundoNombre = segundoNombre;
+	}
+
+	public String getPrimerApellido() {
+		return primerApellido;
+	}
+
+	public void setPrimerApellido(String primerApellido) {
+		this.primerApellido = primerApellido;
+	}
+
+	public String getSegundoApellido() {
+		return segundoApellido;
+	}
+
+	public void setSegundoApellido(String segundoApellido) {
+		this.segundoApellido = segundoApellido;
+	}
 	
+
 	
 	
 }

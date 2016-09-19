@@ -23,8 +23,12 @@ public class Empleado extends EntityBase{
 	private Integer id;
 	private Delegacion delegacion;
 	private Integer delegacionId;
-	private String nombres;
-	private String apellidos;
+	
+	private String primerNombre;
+	private String segundoNombre;
+	private String primerApellido;
+	private String segundoApellido;
+	
 	private Integer numeroEmpleado;	
 	private String nroIdentificacion;
 	private Boolean pasivo;
@@ -51,22 +55,40 @@ public class Empleado extends EntityBase{
 		this.delegacion = delegacion;
 	}
 
-	@Column(name = "nombres", nullable = false, length = 50)
-	public String getNombres() {
-		return this.nombres;
+	@Column(name="primer_nombre", length=25, nullable = false)
+	public String getPrimerNombre() {
+		return primerNombre;
 	}
 
-	public void setNombres(String nombres) {
-		this.nombres = nombres;
+	public void setPrimerNombre(String primerNombre) {
+		this.primerNombre = primerNombre;
 	}
 
-	@Column(name = "apellidos", length = 50, nullable=false)
-	public String getApellidos() {
-		return this.apellidos;
+	@Column(name="segundo_nombre", length=25)
+	public String getSegundoNombre() {
+		return segundoNombre;
 	}
 
-	public void setApellidos(String apellidos) {
-		this.apellidos= apellidos;
+	public void setSegundoNombre(String segundoNombre) {
+		this.segundoNombre = segundoNombre;
+	}
+
+	@Column(name="primer_apellido", length=25, nullable = false)
+	public String getPrimerApellido() {
+		return primerApellido;
+	}
+
+	public void setPrimerApellido(String primerApellido) {
+		this.primerApellido = primerApellido;
+	}
+
+	@Column(name="segundo_apellido", length=25)
+	public String getSegundoApellido() {
+		return segundoApellido;
+	}
+
+	public void setSegundoApellido(String segundoApellido) {
+		this.segundoApellido = segundoApellido;
 	}
 
 	@Column(name = "nro_identificacion", nullable = false, length = 20)
@@ -96,7 +118,7 @@ public class Empleado extends EntityBase{
 		this.delegacionId = delegacionId;
 	}
 
-	@Column(name="numero_empleado", nullable= false)
+	@Column(name="numero_empleado", nullable= false, length=8)
 	public Integer getNumeroEmpleado() {
 		return numeroEmpleado;
 	}

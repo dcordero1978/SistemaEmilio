@@ -91,7 +91,7 @@ public class Empleado extends EntityBase{
 		this.segundoApellido = segundoApellido;
 	}
 
-	@Column(name = "nro_identificacion", nullable = false, length = 20)
+	@Column(name = "numero_identificacion", nullable = false, length = 20)
 	public String getNroIdentificacion() {
 		return this.nroIdentificacion;
 	}

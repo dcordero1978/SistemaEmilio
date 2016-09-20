@@ -9,7 +9,9 @@ import javax.inject.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
+import ni.gob.inss.barista.businesslogic.service.BusinessException;
 import ni.gob.inss.barista.businesslogic.service.catalogos.CatalogoService;
+import ni.gob.inss.barista.model.dao.DAOException;
 import ni.gob.inss.barista.model.dao.EntityNotFoundException;
 import ni.gob.inss.barista.view.bean.backbean.BaseBackBean;
 import ni.gob.inss.barista.view.utils.web.MessagesResults;
@@ -35,7 +37,7 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	private Integer hfId;
 	private String nroIdentificacion;
 	private Integer delegacionId;
-	private Integer numeroEmpleado;
+	private String numeroEmpleado;
 	private boolean pasivo;
 	
 	private Integer delegacionBusquedaEmpleado;
@@ -114,14 +116,21 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	}
 	
 	public void guardarOrActualizar(){
-		if(this.getHfId()==null){
-			this.guardar();			
-		}else{
-			this.actualizar();
+		try{
+			if(this.getHfId()==null){
+				this.guardar();			
+			}else{
+				this.actualizar();
+			}
+			this.cargarDatosEmpleado(this.getHfId());
+			this.setTxtBusquedaEmpleado("");
+			this.buscar();
+		}catch(BusinessException e){
+			mostrarMensajeError(e.getMessage());
+		}catch(DAOException e){
+			mostrarMensajeError(this.getClass().getSimpleName(), "guardarOrActualizar", MessagesResults.ERROR_GUARDAR, e);
 		}
-		this.cargarDatosEmpleado(this.getHfId());
-		this.setTxtBusquedaEmpleado("");
-		this.buscar();
+		
 	}
 	
 	public void editar(){
@@ -159,9 +168,9 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 		}
 	}
 	
-	public void guardar(){
+	public void guardar() throws DAOException, BusinessException{
 		Delegacion oDelegacion;
-		try {
+		
 			oDelegacion = oDelegacionService.obtener(this.getDelegacionId());
 			Empleado oEmpleado = new Empleado();
 			oEmpleado.setPrimerNombre(this.getPrimerNombre());
@@ -177,11 +186,7 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 			oEmpleado.setPasivo(false);
 			oEmpleadoService.agregar(oEmpleado);			
 			mostrarMensajeInfo(MessagesResults.EXITO_GUARDAR);
-			this.setHfId(oEmpleado.getId());
-			
-		} catch (Exception e) {
-			mostrarMensajeError(this.getClass().getSimpleName(), "guardar", MessagesResults.ERROR_GUARDAR, e);
-		}		
+			this.setHfId(oEmpleado.getId());		
 		
 	}
 	
@@ -294,11 +299,11 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 		return regExpCedula;
 	}
 
-	public Integer getNumeroEmpleado() {
+	public String getNumeroEmpleado() {
 		return numeroEmpleado;
 	}
 
-	public void setNumeroEmpleado(Integer numeroEmpleado) {
+	public void setNumeroEmpleado(String numeroEmpleado) {
 		this.numeroEmpleado = numeroEmpleado;
 	}
 

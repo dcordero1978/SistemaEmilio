@@ -29,7 +29,7 @@ public class Empleado extends EntityBase{
 	private String primerApellido;
 	private String segundoApellido;
 	
-	private Integer numeroEmpleado;	
+	private String numeroEmpleado;	
 	private String nroIdentificacion;
 	private Boolean pasivo;
 
@@ -119,11 +119,11 @@ public class Empleado extends EntityBase{
 	}
 
 	@Column(name="numero_empleado", nullable= false, length=8)
-	public Integer getNumeroEmpleado() {
+	public String getNumeroEmpleado() {
 		return numeroEmpleado;
 	}
 
-	public void setNumeroEmpleado(Integer numeroEmpleado) {
+	public void setNumeroEmpleado(String numeroEmpleado) {
 		this.numeroEmpleado = numeroEmpleado;
 	}
 	

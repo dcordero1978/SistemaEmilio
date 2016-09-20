@@ -27,6 +27,7 @@ public class EmpleadoServiceImpl implements EmpleadoService{
 	@Transactional
 	@Override
 	public void agregar(Empleado oEmpleado) throws DAOException, BusinessException {
+		validaEmpleado(oEmpleado);
 		oEmpleadoDAO.saveUpper(oEmpleado);
 	}
 
@@ -62,5 +63,26 @@ public class EmpleadoServiceImpl implements EmpleadoService{
 		
 	}
 	
+	public void validaEmpleado(Empleado oEmpleado) throws BusinessException{
+		if(this.obtieneEmpleadoPorNumeroEmpleado(oEmpleado.getNumeroEmpleado())!=null){
+			throw new BusinessException("Ya existe un empleado con este número");
+		}else if(this.obtieneEmpleadoPorCedula(oEmpleado.getNroIdentificacion())!=null){
+			throw new BusinessException("Ya existe un empleado con este Número de Cedula");
+		}
+	}
+	
+	@Transactional
+	private Empleado obtieneEmpleadoPorNumeroEmpleado(String numeroEmpleado){
+		Search oSearch = new Search();
+		oSearch.addFilter(Filter.equal("numeroEmpleado", numeroEmpleado));
+		return  (Empleado) oEmpleadoDAO.searchUnique(oSearch);		
+	}
+	
+	@Transactional
+	private Empleado obtieneEmpleadoPorCedula(String numeroCedula){
+		Search oSearch = new Search();
+		oSearch.addFilter(Filter.equal("nroIdentificacion", numeroCedula));
+		return (Empleado) oEmpleadoDAO.searchUnique(oSearch);	
+	}
 
 }

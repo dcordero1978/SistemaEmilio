@@ -1,17 +1,16 @@
 package ni.gob.inss.sisinv.util;
 
 public enum CatalogoGeneral {
-	DEPARTAMENTOS(1),
-	TIPO_IDENTIFICACION(2),
-	TIPO_BIENES(3);
+	DEPARTAMENTOS("DEP"),
+	TIPO_BIENES("TBI");
 	
-	private final int catalogo ;
+	private final String catalogo ;
 	
-	CatalogoGeneral(int catalogo){
+	CatalogoGeneral(String catalogo){
 		this.catalogo = catalogo;
 	}
 	
-	public int getCatalogoId(){
+	public String getCodigoCatalogo(){
 		return this.catalogo;
 	}
 }

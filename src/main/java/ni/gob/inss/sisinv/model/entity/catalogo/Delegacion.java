@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -25,7 +24,7 @@ public class Delegacion extends EntityBase{
 
 	private static final long serialVersionUID = 1L;
 	private Integer id;
-	private String nombre;
+	private String descripcion;
 	private Integer departamentoId;
 	private Boolean pasivo;
 	private List<Empleado> empleados = new ArrayList<Empleado>();
@@ -42,13 +41,13 @@ public class Delegacion extends EntityBase{
 		this.id = id;
 	}
 
-	@Column(name = "nombre", nullable = false, length = 25)
-	public String getNombre() {
-		return this.nombre;
+	@Column(name = "descripcion", nullable = false, length = 25)
+	public String getDescripcion() {
+		return this.descripcion;
 	}
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
+	public void setDescripcion(String nombre) {
+		this.descripcion = nombre;
 	}
 
 	@Column(name = "departamento_id", nullable = false)

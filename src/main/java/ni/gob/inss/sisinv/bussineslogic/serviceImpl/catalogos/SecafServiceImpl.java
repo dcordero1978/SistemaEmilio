@@ -1,4 +1,4 @@
-package ni.gob.inss.sisinv.bussineslogic.serviceImpl;
+package ni.gob.inss.sisinv.bussineslogic.serviceImpl.catalogos;
 
 import java.util.List;
 
@@ -13,8 +13,8 @@ import com.googlecode.genericdao.search.Search;
 import ni.gob.inss.barista.businesslogic.service.BusinessException;
 import ni.gob.inss.barista.model.dao.DAOException;
 import ni.gob.inss.barista.model.dao.EntityNotFoundException;
-import ni.gob.inss.sisinv.bussineslogic.service.SecafService;
-import ni.gob.inss.sisinv.model.dao.SecafDAO;
+import ni.gob.inss.sisinv.bussineslogic.service.catalogos.SecafService;
+import ni.gob.inss.sisinv.model.dao.catalogos.SecafDAO;
 import ni.gob.inss.sisinv.model.entity.catalogo.Secaf;
 
 @Service
@@ -45,7 +45,7 @@ public class SecafServiceImpl implements SecafService {
 	@Override
 	public void agregar(Secaf oSecaf) throws DAOException, BusinessException {
 		validaCodigoCbsUnico(oSecaf.getCbs());
-		validaCatalogoPropiedadesUnicas(oSecaf.getCuenta(), oSecaf.getSubcuenta(), oSecaf.getLetra(), oSecaf.getObjeto());
+		validaCatalogoPropiedadesUnicas(oSecaf.getCuenta(), oSecaf.getSubcuenta(), oSecaf.getDigitoAuxiliar(), oSecaf.getObjeto());
 		oSecafDAO.saveUpper(oSecaf);		
 	}
 	
@@ -61,8 +61,8 @@ public class SecafServiceImpl implements SecafService {
 		}
 	}
 	
-	public void validaCatalogoPropiedadesUnicas(int noCuenta, int noSubcuenta, String letra, int codigoObjeto) throws BusinessException{
-		if(obtieneCatalogoSecafUnico(noCuenta, noSubcuenta, letra, codigoObjeto) != null){
+	public void validaCatalogoPropiedadesUnicas(int noCuenta, int noSubcuenta, String digitoAuxiliar, int codigoObjeto) throws BusinessException{
+		if(obtieneCatalogoSecafUnico(noCuenta, noSubcuenta, digitoAuxiliar, codigoObjeto) != null){
 			throw new BusinessException("Ya existe un registro con las propiedades No.Cuenta,Subcuenta No,Letra, Objeto");
 		}
 	}
@@ -72,7 +72,7 @@ public class SecafServiceImpl implements SecafService {
 		Search oSearch = new Search();
 		Filter unicoObjeto = Filter.and(Filter.equal("cuenta", noCuenta),
 							Filter.equal("subcuenta",noSubCuenta),
-							Filter.equal("letra", letra),
+							Filter.equal("digitoAuxiliar", letra),
 							Filter.equal("objeto", codObjeto));
 		oSearch.addFilter(unicoObjeto);
 		return (Secaf) oSecafDAO.searchUnique(oSearch);	

@@ -9,18 +9,17 @@ import javax.inject.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
+import ni.gob.inss.barista.businesslogic.service.BusinessException;
 import ni.gob.inss.barista.businesslogic.service.catalogos.CatalogoService;
-import ni.gob.inss.barista.businesslogic.service.catalogos.TipoCatalogoService;
+import ni.gob.inss.barista.model.dao.DAOException;
 import ni.gob.inss.barista.model.dao.EntityNotFoundException;
-import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
-import ni.gob.inss.barista.model.entity.catalogo.TiposCatalogo;
 import ni.gob.inss.barista.view.bean.backbean.BaseBackBean;
 import ni.gob.inss.barista.view.utils.web.MessagesResults;
-import ni.gob.inss.sisinv.bussineslogic.service.DelegacionService;
-import ni.gob.inss.sisinv.bussineslogic.service.EmpleadoService;
+import ni.gob.inss.sisinv.bussineslogic.service.catalogos.DelegacionService;
+import ni.gob.inss.sisinv.bussineslogic.service.catalogos.EmpleadoService;
+import ni.gob.inss.sisinv.bussineslogic.service.catalogos.TipoCatalogoExtService;
 import ni.gob.inss.sisinv.model.entity.catalogo.Delegacion;
 import ni.gob.inss.sisinv.model.entity.catalogo.Empleado;
-import ni.gob.inss.sisinv.util.CatalogoGeneral;
 import ni.gob.inss.sisinv.util.RegExpresionExtends;
 
 @Named
@@ -28,13 +27,17 @@ import ni.gob.inss.sisinv.util.RegExpresionExtends;
 public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
-	private String nombres;
-	private String apellidos;	
+	
+	private String primerNombre;
+	private String segundoNombre;
+	private String primerApellido;
+	private String segundoApellido;
+	
 	private String txtBusquedaEmpleado;
 	private Integer hfId;
-	private Integer tipoIdentificacion;
 	private String nroIdentificacion;
 	private Integer delegacionId;
+	private String numeroEmpleado;
 	private boolean pasivo;
 	
 	private Integer delegacionBusquedaEmpleado;
@@ -43,17 +46,17 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	private Empleado empleadoSeleccionado;
 	private boolean nuevoRegistro;
 	
-	private List<Catalogo> listaTipoIdentificacion;
 	private List<Delegacion> listaDelegaciones;
 	
 	private String regExpLetras;
-	
+	private String regExpCedula;
+	private String regExpSoloNumeros;
 	
 	@Autowired
 	private EmpleadoService oEmpleadoService;
 	
 	@Autowired
-	TipoCatalogoService oTipoCatalogoService;
+	TipoCatalogoExtService oTipoCatalogoService;
 	
 	@Autowired
 	DelegacionService oDelegacionService;
@@ -64,24 +67,15 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	@PostConstruct
 	public void init(){
 		this.limpiar();
-		this.cargarListaTipoIdentificacion();
 		this.cargarListaDelegaciones();
 		this.cargaValidaciones();
 		this.buscar();		
 	}
 	
 	public void cargaValidaciones(){
-		regExpLetras = RegExpresionExtends.regExpSoloLetrasConEspacio;		
-	}
-	
-	public void cargarListaTipoIdentificacion(){
-		try {
-			TiposCatalogo catalogoTipoIdentificacion= oTipoCatalogoService.obtener(CatalogoGeneral.TIPO_IDENTIFICACION.getCatalogoId());
-			this.listaTipoIdentificacion = oTipoCatalogoService.obtenerCatalogos(catalogoTipoIdentificacion);
-		} catch (Exception e) {
-			mostrarMensajeError(this.getClass().getSimpleName(), "cargarListaTipoIdentificacion", MessagesResults.ERROR_OBTENER_LISTA, e);
-			
-		}
+		regExpLetras = RegExpresionExtends.regExpSoloLetrasConEspacio;	
+		regExpCedula = RegExpresionExtends.regExpCedula;
+		regExpSoloNumeros = RegExpresionExtends.regExpSoloNumeros;
 	}
 	
 	public void cargarListaDelegaciones(){
@@ -94,22 +88,24 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	}
 	
 	public void limpiar(){
-		this.setNombres("");
-		this.setApellidos("");
+		this.setPrimerNombre("");
+		this.setSegundoNombre("");
+		this.setPrimerApellido("");
+		this.setSegundoApellido("");
+		
 		this.setTxtBusquedaEmpleado("");
 		this.setEmpleadoSeleccionado(null);
 		this.setNuevoRegistro(true);
-		this.setTipoIdentificacion(null);
 		this.setNroIdentificacion("");
 		this.setPasivo(false);
 		this.setDelegacionId(null);
+		this.setNumeroEmpleado(null);
 		this.setHfId(null);
 	}
 	
 	public void buscar(){
 		try{
-			this.listaEmpleados = oEmpleadoService.buscar(this.getTxtBusquedaEmpleado(), this.getDelegacionBusquedaEmpleado());
-			//this.setListaEmpleados(oEmpleadoService.buscar(this.getTxtBusquedaEmpleado()));
+			this.listaEmpleados = oEmpleadoService.buscar(this.getTxtBusquedaEmpleado(), this.getDelegacionBusquedaEmpleado());			
 			if(this.getListaEmpleados().isEmpty()){
 				mostrarMensajeInfo("No se encontrarón resultados para esta búsqueda");
 			}
@@ -120,14 +116,21 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	}
 	
 	public void guardarOrActualizar(){
-		if(this.getHfId()==null){
-			this.guardar();			
-		}else{
-			this.actualizar();
+		try{
+			if(this.getHfId()==null){
+				this.guardar();			
+			}else{
+				this.actualizar();
+			}
+			this.cargarDatosEmpleado(this.getHfId());
+			this.setTxtBusquedaEmpleado("");
+			this.buscar();
+		}catch(BusinessException e){
+			mostrarMensajeError(e.getMessage());
+		}catch(DAOException e){
+			mostrarMensajeError(this.getClass().getSimpleName(), "guardarOrActualizar", MessagesResults.ERROR_GUARDAR, e);
 		}
-		this.cargarDatosEmpleado(this.getHfId());
-		this.setTxtBusquedaEmpleado("");
-		this.buscar();
+		
 	}
 	
 	public void editar(){
@@ -144,10 +147,12 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 			
 			Empleado oEmpleado = oEmpleadoService.obtener(this.getHfId());
 			oDelegacion = oDelegacionService.obtener(this.getDelegacionId());
-			oEmpleado.setNombres(this.getNombres());
-			oEmpleado.setApellidos(this.getApellidos());
-			oEmpleado.setTipoIdentificacion(this.getTipoIdentificacion());
+			oEmpleado.setPrimerNombre(this.getPrimerNombre());
+			oEmpleado.setSegundoNombre(this.getSegundoNombre());
+			oEmpleado.setPrimerApellido(this.getPrimerApellido());
+			oEmpleado.setSegundoApellido(this.getSegundoApellido());
 			oEmpleado.setNroIdentificacion(this.getNroIdentificacion());
+			oEmpleado.setNumeroEmpleado(this.getNumeroEmpleado());
 			oEmpleado.setDelegacion(oDelegacion);
 			oEmpleado.setPasivo(this.isPasivo());
 			oEmpleado.setModificadoEl(this.getTimeNow());
@@ -163,38 +168,38 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 		}
 	}
 	
-	public void guardar(){
+	public void guardar() throws DAOException, BusinessException{
 		Delegacion oDelegacion;
-		try {
+		
 			oDelegacion = oDelegacionService.obtener(this.getDelegacionId());
 			Empleado oEmpleado = new Empleado();
-			oEmpleado.setNombres(this.getNombres());
-			oEmpleado.setApellidos(this.getApellidos());
-			oEmpleado.setTipoIdentificacion(this.getTipoIdentificacion());
+			oEmpleado.setPrimerNombre(this.getPrimerNombre());
+			oEmpleado.setSegundoNombre(this.getSegundoNombre());
+			oEmpleado.setPrimerApellido(this.getPrimerApellido());
+			oEmpleado.setSegundoApellido(this.getSegundoApellido());
 			oEmpleado.setNroIdentificacion(this.getNroIdentificacion());
+			oEmpleado.setNumeroEmpleado(this.getNumeroEmpleado());
 			oEmpleado.setDelegacion(oDelegacion);
 			oEmpleado.setCreadoPor(this.getUsuarioActual().getId());
-			oEmpleado.setCreadoEl(this.getTimeNow());
+			oEmpleado.setCreadoEl(this.getTimeNow());			
 			oEmpleado.setCreadoEnIp(this.getRemoteIp());
 			oEmpleado.setPasivo(false);
 			oEmpleadoService.agregar(oEmpleado);			
 			mostrarMensajeInfo(MessagesResults.EXITO_GUARDAR);
-			this.setHfId(oEmpleado.getId());
-			
-		} catch (Exception e) {
-			mostrarMensajeError(this.getClass().getSimpleName(), "guardar", MessagesResults.ERROR_GUARDAR, e);
-		}		
+			this.setHfId(oEmpleado.getId());		
 		
 	}
 	
 	public void cargarDatosEmpleado(Integer empleadoId){
 		try {
 			Empleado oEmpleado = oEmpleadoService.obtener(empleadoId);
-			this.setNombres(oEmpleado.getNombres());
-			this.setApellidos(oEmpleado.getApellidos());
+			this.setPrimerNombre(oEmpleado.getPrimerNombre());
+			this.setSegundoNombre(oEmpleado.getSegundoNombre());
+			this.setPrimerApellido(oEmpleado.getPrimerApellido());
+			this.setSegundoApellido(oEmpleado.getSegundoApellido());
 			this.setDelegacionId(oEmpleado.getDelegacion().getId());
-			this.setNroIdentificacion(oEmpleado.getNroIdentificacion());
-			this.setTipoIdentificacion(oEmpleado.getTipoIdentificacion());
+			this.setNroIdentificacion(oEmpleado.getNroIdentificacion());			
+			this.setNumeroEmpleado(oEmpleado.getNumeroEmpleado());
 			this.setPasivo(oEmpleado.getPasivo());
 			this.setNuevoRegistro(false);
 			this.setHfId(oEmpleado.getId());
@@ -204,21 +209,6 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 		}
 	}
 
-	public String getNombres() {
-		return nombres;
-	}
-
-	public void setNombres(String nombres) {
-		this.nombres = nombres;
-	}
-
-	public String getApellidos() {
-		return apellidos;
-	}
-
-	public void setApellidos(String apellidos) {
-		this.apellidos = apellidos;
-	}
 
 	public String getTxtBusquedaEmpleado() {
 		return txtBusquedaEmpleado;
@@ -260,21 +250,6 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 		this.nuevoRegistro = nuevoRegistro;
 	}
 
-	public Integer getTipoIdentificacion() {
-		return tipoIdentificacion;
-	}
-
-	public void setTipoIdentificacion(Integer tipoIdentificacion) {
-		this.tipoIdentificacion = tipoIdentificacion;
-	}
-
-	public List<Catalogo> getListaTipoIdentificacion() {
-		return listaTipoIdentificacion;
-	}
-
-	public void setListaTipoIdentificacion(List<Catalogo> listaTipoIdentificacion) {
-		this.listaTipoIdentificacion = listaTipoIdentificacion;
-	}
 
 	public String getNroIdentificacion() {
 		return nroIdentificacion;
@@ -318,6 +293,57 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 
 	public void setDelegacionBusquedaEmpleado(Integer delegacionBusquedaEmpleado) {
 		this.delegacionBusquedaEmpleado = delegacionBusquedaEmpleado;
-	}	
+	}
+
+	public String getRegExpCedula() {
+		return regExpCedula;
+	}
+
+	public String getNumeroEmpleado() {
+		return numeroEmpleado;
+	}
+
+	public void setNumeroEmpleado(String numeroEmpleado) {
+		this.numeroEmpleado = numeroEmpleado;
+	}
+
+	public String getRegExpSoloNumeros() {
+		return regExpSoloNumeros;
+	}
+
+	public String getPrimerNombre() {
+		return primerNombre;
+	}
+
+	public void setPrimerNombre(String primerNombre) {
+		this.primerNombre = primerNombre;
+	}
+
+	public String getSegundoNombre() {
+		return segundoNombre;
+	}
+
+	public void setSegundoNombre(String segundoNombre) {
+		this.segundoNombre = segundoNombre;
+	}
+
+	public String getPrimerApellido() {
+		return primerApellido;
+	}
+
+	public void setPrimerApellido(String primerApellido) {
+		this.primerApellido = primerApellido;
+	}
+
+	public String getSegundoApellido() {
+		return segundoApellido;
+	}
+
+	public void setSegundoApellido(String segundoApellido) {
+		this.segundoApellido = segundoApellido;
+	}
+	
+
+	
 	
 }

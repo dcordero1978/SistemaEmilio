@@ -1,0 +1,208 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                template="/web/template/innerLayout.xhtml"
+                xmlns:mc="http://java.sun.com/jsf/composite/comps">
+
+
+    <ui:param name="paramBackBean" value="#{catalogoBackBean}"/>
+
+    <ui:define name="headerContent">
+        Catálogos <mc:textoReplica servidorReplicacion="#{catalogoBackBean.servidorReplicacion}"/>
+    </ui:define>
+    <ui:define name="content">
+        <div class="ContainerIndent">
+            <div class="Container50 Responsive">
+                <h:form id="formLista" style="width: 99%;">
+                    <p:panel styleClass="fondoPaneles">
+                        <f:facet name="header">
+                            <p:outputPanel style="display: block" styleClass="left">
+                                    <p:inputText maxlength="150"
+                                                 autocomplete="off"
+                                                 placeholder="#{labelName.placeholderBuscar}"
+                                                 value="#{catalogoBackBean.txtBuscar}"/>
+
+                                    <p:commandButton icon="ui-icon-search" ajax="true"
+                                                     update="formLista" action="#{catalogoBackBean.cargarLista}"/>
+
+                            </p:outputPanel>
+                            <p:selectOneMenu id="tipoCatalogoBusqueda" label="Tipo Catálogo"
+                                             style="width: 200px"
+                                             value="#{catalogoBackBean.selectedTipoCatalogo}"
+                                             valueChangeListener="#{catalogoBackBean.tipoCatalogoBuscarEvent}">
+                                <p:ajax event="change" update="formLista" process="@form"/>
+
+                                <f:selectItem itemLabel="Seleccione Uno" itemValue="#{null}"/>
+                                <f:selectItems var="c" value="#{catalogoBackBean.listaTiposCatalogosActivos}"
+                                               itemLabel="#{c.nombre}" itemValue="#{c.codigo}"/>
+                            </p:selectOneMenu>
+                            <p:outputPanel style="display: block" styleClass="right">
+                                <p:commandButton icon="ui-icon-circle-plus" value="#{labelName.btnAgregar}" ajax="true"
+                                                 resetValues="true"
+                                                 update=":formDetalle" action="#{catalogoBackBean.limpiar}"/>
+                                <p:commandButton icon="ui-icon-pencil" value="#{labelName.btnEditar}" ajax="true"
+                                                 resetValues="true"
+                                                 update=":formDetalle" action="#{catalogoBackBean.editar}"/>
+                            </p:outputPanel>
+                        </f:facet>
+                        <p:outputPanel styleClass="tableClass">
+                            <p:dataTable style="width: 100%" var="r"
+                                         value="#{catalogoBackBean.listaCatalogos}"
+                                         paginatorPosition="top"
+                                         selectionMode="single"
+                                         scrollable="true"
+                                         scrollHeight="410"
+                                         selection="#{catalogoBackBean.selectedRow}"
+                                         rowKey="#{r.id}"
+                                         paginator="true"
+                                         emptyMessage="#{labelName.tableEmptyMessage}"
+                                         rows="12"
+                                         pageLinks="3"
+                                         paginatorTemplate="#{configApplicationBean.paginatorTemplate}"
+                                         currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
+
+                                <!-- Evento doble click sobre una fila -->
+                                <p:ajax event="rowSelect" listener="#{catalogoBackBean.editar}"
+                                        update=":formDetalle" resetValues="true"/>
+
+                                <p:column headerText="Código" style="width: 10%" priority="1">
+                                    <h:outputText value="#{r.codigo}"/>
+                                </p:column>
+
+                                <p:column headerText="Nombre" style="width: 60%" priority="2">
+                                    <h:outputText value="#{r.nombre}"/>
+                                </p:column>
+
+                                <p:column headerText="Pasivo" style="text-align: center; width: 10%" priority="3">
+                                    <p:selectBooleanCheckbox value="#{r.pasivo}" disabled="true"
+                                                             styleClass="ui-linus-enabled"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:outputPanel>
+                    </p:panel>
+                </h:form>
+            </div>
+            <div class="Container50 Responsive">
+                <h:form id="formDetalle" style="width: 99%;">
+                    <p:inputText type="hidden" value="#{catalogoBackBean.hfId}"/>
+                    <p:panel style="height: 547px" styleClass="fondoPaneles">
+                        <f:facet name="header">
+                            <h:outputText value="ID: #{catalogoBackBean.hfId}"
+                                          rendered="#{!catalogoBackBean.nuevoRegistro}"/>
+                            <p:outputPanel style="display: block" styleClass="right">
+                                <p:commandButton widgetVar="btnGuardar" onstart="PF('btnGuardar').disable();"
+                                                 oncomplete="PF('btnGuardar').enable();" icon="ui-icon-disk"
+                                                 value="#{labelName.btnGuardar}"
+                                                 actionListener="#{catalogoBackBean.guardar}"
+                                                 update="formDetalle :formLista"
+                                                 rendered="#{catalogoBackBean.btnGuardarVisible}"/>
+
+                                <p:commandButton immediate="true" widgetVar="btnEliminar" icon="ui-icon-trash"
+                                                 value="#{labelName.btnEliminar}"
+                                                 actionListener="#{catalogoBackBean.elminar}"
+                                                 update="formDetalle :formLista"
+                                                 resetValues="true"
+                                                 rendered="#{catalogoBackBean.btnElminiarVisible}">
+
+                                    <p:confirm header="#{dialogText.deleteConfirmationTextHeader}"
+                                               message="#{dialogText.deleteConfirmationTextContent}"
+                                               icon="ui-icon-alert"/>
+                                </p:commandButton>
+
+                                <p:commandButton icon="ui-icon-cancel" value="#{labelName.btnCancelar}"
+                                                 actionListener="#{catalogoBackBean.limpiar}"
+                                                 immediate="true"
+                                                 resetValues="true"
+                                                 update="formDetalle" process="@this"/>
+
+                                <p:commandButton icon="ui-icon-clipboard" value="#{labelName.btnAuditoria}"
+                                                 oncomplete="PF('tipoCatalogoAuditWV').show();" process="@this"
+                                                 update="tipoCatalogoAudit"
+                                                 rendered="#{catalogoBackBean.btnAuditoriaVisible}"
+                                                 action="#{catalogoBackBean.cargarAuditoria}"/>
+                            </p:outputPanel>
+                        </f:facet>
+                        <h:panelGrid columns="2" styleClass="Wid100" columnClasses="Wid20, Wid80">
+
+                            <p:outputLabel for="tipoCatalogo" value="Tipo Catálogo:"/>
+                            <p:selectOneMenu id="tipoCatalogo" label="Tipo Catálogo"
+                                             required="true"
+                                             disabled="#{!catalogoBackBean.nuevoRegistro}"
+                                             value="#{catalogoBackBean.txtRefTipoCatalogo}">
+                                <f:selectItem itemLabel="Seleccione Uno" itemValue="#{null}"/>
+                                <f:selectItems var="c" value="#{catalogoBackBean.listaTiposCatalogos}"
+                                               itemLabel="#{c.nombre}" itemValue="#{c.codigo}"/>
+                            </p:selectOneMenu>
+
+                            <p:outputLabel for="codigo" value="Código:"/>
+                            <p:inputText maxlength="15" id="codigo" label="Código"
+                                         required="true" styleClass="Wid80"
+                                         autocomplete="off"
+                                         value="#{catalogoBackBean.txtCodigo}"
+                                         disabled="#{!catalogoBackBean.nuevoRegistro}">
+                                <f:validateRegex pattern="#{catalogoBackBean.regExpCodigo}"/>
+                                <f:validateLength minimum="0" maximum="20"/>
+                            </p:inputText>
+
+                            <p:outputLabel for="codigoAlterno" value="Código Alterno:"/>
+                            <p:inputText maxlength="10" id="codigoAlterno" label="Código Alterno"
+                                         autocomplete="off" styleClass="Wid80"
+                                         value="#{catalogoBackBean.txtCodigoAlterno}">
+                                <f:validateRegex pattern="#{catalogoBackBean.regExpCodigoAlterno}"/>
+                                <f:validateLength minimum="0" maximum="10"/>
+                            </p:inputText>
+
+                            <p:outputLabel for="nombre" value="Nombre:"/>
+                            <p:inputText maxlength="100" id="nombre" styleClass="Wid80"
+                                         autocomplete="off"
+                                         value="#{catalogoBackBean.txtNombre}" label="nombre" required="true">
+                                <f:validateRegex pattern="#{catalogoBackBean.regExpNombre}"/>
+                                <f:validateLength minimum="0" maximum="100"/>
+                            </p:inputText>
+
+                            <p:outputLabel for="descripcion" value="Descripción:"/>
+                            <p:inputTextarea maxlength="500"
+                                             scrollHeight="60"
+                                             id="descripcion" styleClass="Wid80"
+                                             autoResize="false"
+                                             autocomplete="off"
+                                             value="#{catalogoBackBean.txtDescripcion}" label="Descripción">
+                                <f:validateRegex pattern="#{catalogoBackBean.regExpDescripcion}"/>
+                                <f:validateLength minimum="0" maximum="500"/>
+                            </p:inputTextarea>
+
+                            <p:outputLabel for="orden" value="Orden:"/>
+                            <p:inputText maxlength="3" id="orden"
+                                         autocomplete="off"
+                                         value="#{catalogoBackBean.txtOrden}" label="orden" required="true">
+                                <f:validateLength minimum="0" maximum="3"/>
+                            </p:inputText>
+
+                            <p:outputLabel for="pasivo" value="Pasivo:" rendered="#{!catalogoBackBean.nuevoRegistro}"/>
+                            <p:selectBooleanButton onLabel="Si" offLabel="No" id="pasivo"
+                                                   value="#{catalogoBackBean.rbPasivo}"
+                                                   rendered="#{!catalogoBackBean.nuevoRegistro}"/>
+                        </h:panelGrid>
+
+                        <pe:keyFilter for="codigo" regEx="/#{catalogoBackBean.regExpCodigo}/"/>
+                        <pe:keyFilter for="codigoAlterno" regEx="/#{catalogoBackBean.regExpCodigoAlterno}/"/>
+                        <pe:keyFilter for="nombre" regEx="/#{catalogoBackBean.regExpNombre}/"/>
+                        <pe:keyFilter for="orden" regEx="/#{catalogoBackBean.regExpOrden}/"/>
+                        <pe:keyFilter for="descripcion" regEx="/#{catalogoBackBean.regExpDescripcion}/"/>
+                    </p:panel>
+
+                    <mc:dialogAuditoria id="tipoCatalogoAudit"
+                                        auditoriaId="tipoCatalogoAuditWV"
+                                        auditoriaList="#{catalogoBackBean.listaAuditoria}"/>
+
+                </h:form>
+            </div>
+        </div>
+
+
+    </ui:define>
+
+</ui:composition>

@@ -1,4 +1,4 @@
-package ni.gob.inss.sisinv.bussineslogic.serviceImpl;
+package ni.gob.inss.sisinv.bussineslogic.serviceImpl.catalogos;
 
 import java.util.List;
 
@@ -11,8 +11,8 @@ import com.googlecode.genericdao.search.Search;
 import ni.gob.inss.barista.businesslogic.service.BusinessException;
 import ni.gob.inss.barista.model.dao.DAOException;
 import ni.gob.inss.barista.model.dao.EntityNotFoundException;
-import ni.gob.inss.sisinv.bussineslogic.service.DelegacionService;
-import ni.gob.inss.sisinv.model.dao.DelegacionDAO;
+import ni.gob.inss.sisinv.bussineslogic.service.catalogos.DelegacionService;
+import ni.gob.inss.sisinv.model.dao.catalogos.DelegacionDAO;
 import ni.gob.inss.sisinv.model.entity.catalogo.Delegacion;
 
 @Service
@@ -41,8 +41,8 @@ public class DelegacionServiceImpl implements DelegacionService{
 		List<Delegacion> listaDelegaciones = null;
 		
 		Search oSearch = new Search();
-		oSearch.addFilterILike("nombre", "%"+txtCriterio+"%");
-		oSearch.addSortDesc("nombre");
+		oSearch.addFilterILike("descripcion", "%"+txtCriterio+"%");
+		oSearch.addSortDesc("descripcion");
 		if(txtCriterio==null || "".equalsIgnoreCase(txtCriterio)){
 			listaDelegaciones = oDelegacionDAO.findAll();
 		}else{

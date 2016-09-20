@@ -10,15 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
 import ni.gob.inss.barista.businesslogic.service.catalogos.CatalogoService;
-import ni.gob.inss.barista.businesslogic.service.catalogos.TipoCatalogoService;
-import ni.gob.inss.barista.businesslogic.service.core.auditoria.AuditoriaService;
-import ni.gob.inss.barista.model.dao.EntityNotFoundException;
 import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
 import ni.gob.inss.barista.model.entity.catalogo.TiposCatalogo;
 import ni.gob.inss.barista.view.bean.backbean.BaseBackBean;
 import ni.gob.inss.barista.view.utils.web.MessagesResults;
-import ni.gob.inss.sisinv.bussineslogic.service.DelegacionService;
+import ni.gob.inss.sisinv.bussineslogic.service.catalogos.DelegacionService;
+import ni.gob.inss.sisinv.bussineslogic.service.catalogos.TipoCatalogoExtService;
 import ni.gob.inss.sisinv.model.entity.catalogo.Delegacion;
+import ni.gob.inss.sisinv.util.CatalogoGeneral;
 
 @Named
 @Scope("view")
@@ -34,22 +33,19 @@ public class DelegacionBackBean extends BaseBackBean implements Serializable  {
 	private List<Delegacion> listaDelegaciones;
 	private Delegacion delegacionSeleccionada;
 	
-	private String nombreDelegacion;
+	private String descripcionDelegacion;
 	private Integer hfId;
 	private boolean pasivo;
 	private Integer departamentoId;
 	
-	private final static int CATALOGO_DEPARTAMENTO = 1;
-	
 	@Autowired
-	TipoCatalogoService oTipoCatalogoService;
-	
+	TipoCatalogoExtService oTipoCatalogoExtService;
+		
 	@Autowired
 	CatalogoService oCatalogoService;
 	
 	@Autowired
 	DelegacionService oDelegacionService;
-	
 	
 	
 	@PostConstruct
@@ -61,8 +57,8 @@ public class DelegacionBackBean extends BaseBackBean implements Serializable  {
 	
 	public void cargarListaDepartamentos(){
 		try {
-				this.catalogoDepartamento = oTipoCatalogoService.obtener(CATALOGO_DEPARTAMENTO);
-				this.listaDepartamentos = oTipoCatalogoService.obtenerCatalogos(this.catalogoDepartamento); 								
+				this.catalogoDepartamento = oTipoCatalogoExtService.obtenerTipoCatalogoPorCodigo(CatalogoGeneral.DEPARTAMENTOS.getCodigoCatalogo());									
+				this.listaDepartamentos = oTipoCatalogoExtService.obtenerCatalogos(this.catalogoDepartamento); 								
 			} catch (Exception e) {
             	mostrarMensajeError(this.getClass().getSimpleName(),"cargarListaDepartamentos(Catalogo oCatalogo)",MessagesResults.ERROR_OBTENER_LISTA, e);
 			}
@@ -93,7 +89,7 @@ public class DelegacionBackBean extends BaseBackBean implements Serializable  {
 			Delegacion oDelegacion = new Delegacion();
 			
 			oDelegacion = oDelegacionService.obtener(this.getHfId());
-			oDelegacion.setNombre(this.getNombreDelegacion());
+			oDelegacion.setDescripcion(this.getDescripcionDelegacion());
 			oDelegacion.setPasivo(this.isPasivo());
 			oDelegacion.setModificadoEl(this.getTimeNow());
 			oDelegacion.setModificadoPor(this.getUsuarioActual().getId());
@@ -122,7 +118,7 @@ public class DelegacionBackBean extends BaseBackBean implements Serializable  {
 		this.setTxtBusquedaDelegacionByNombre("");
 		this.setNuevoRegistro(true);
 		this.setHfId(null);
-		this.setNombreDelegacion("");
+		this.setDescripcionDelegacion("");
 		this.setDepartamentoId(null);
 		this.setPasivo(false);
 		this.setDelegacionSeleccionada(null);		
@@ -132,7 +128,7 @@ public class DelegacionBackBean extends BaseBackBean implements Serializable  {
 		try {
 			Delegacion oDelegacion = new Delegacion();
 			//Por ser nueva Delegacion por defecto es activo.			 
-			oDelegacion.setNombre(this.getNombreDelegacion());
+			oDelegacion.setDescripcion(this.getDescripcionDelegacion());
 			oDelegacion.setDepartamentoId(this.getDepartamentoId());
 			oDelegacion.setCreadoPor(this.getUsuarioActual().getId());
 			oDelegacion.setCreadoEl(this.getTimeNow());
@@ -152,7 +148,7 @@ public class DelegacionBackBean extends BaseBackBean implements Serializable  {
 		try {
 			Delegacion oDelegacion = oDelegacionService.obtener(delegacionId);
 			
-			this.setNombreDelegacion(oDelegacion.getNombre());
+			this.setDescripcionDelegacion(oDelegacion.getDescripcion());
 			this.setDepartamentoId(oDelegacion.getDepartamentoId());
 			this.setHfId(oDelegacion.getId());
 			this.setPasivo(oDelegacion.getPasivo());
@@ -182,12 +178,12 @@ public class DelegacionBackBean extends BaseBackBean implements Serializable  {
 		this.delegacionSeleccionada = delegacionSeleccionada;
 	}
 
-	public String getNombreDelegacion() {
-		return nombreDelegacion;
+	public String getDescripcionDelegacion() {
+		return descripcionDelegacion;
 	}
 
-	public void setNombreDelegacion(String nombreDelegacion) {
-		this.nombreDelegacion = nombreDelegacion;
+	public void setDescripcionDelegacion(String descripcionDelegacion) {
+		this.descripcionDelegacion = descripcionDelegacion;
 	}
 
 	public String getTxtBusquedaDelegacionByNombre() {

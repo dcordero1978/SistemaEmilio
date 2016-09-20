@@ -1,4 +1,4 @@
-package ni.gob.inss.sisinv.bussineslogic.service;
+package ni.gob.inss.sisinv.bussineslogic.service.catalogos;
 
 import ni.gob.inss.barista.businesslogic.service.BusinessException;
 import ni.gob.inss.barista.businesslogic.service.catalogos.TipoCatalogoService;

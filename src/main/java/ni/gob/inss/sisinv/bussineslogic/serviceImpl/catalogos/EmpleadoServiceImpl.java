@@ -1,4 +1,4 @@
-package ni.gob.inss.sisinv.bussineslogic.serviceImpl;
+package ni.gob.inss.sisinv.bussineslogic.serviceImpl.catalogos;
 
 import java.util.List;
 
@@ -13,8 +13,8 @@ import com.googlecode.genericdao.search.Search;
 import ni.gob.inss.barista.businesslogic.service.BusinessException;
 import ni.gob.inss.barista.model.dao.DAOException;
 import ni.gob.inss.barista.model.dao.EntityNotFoundException;
-import ni.gob.inss.sisinv.bussineslogic.service.EmpleadoService;
-import ni.gob.inss.sisinv.model.dao.EmpleadoDAO;
+import ni.gob.inss.sisinv.bussineslogic.service.catalogos.EmpleadoService;
+import ni.gob.inss.sisinv.model.dao.catalogos.EmpleadoDAO;
 import ni.gob.inss.sisinv.model.entity.catalogo.Empleado;
 
 @Service

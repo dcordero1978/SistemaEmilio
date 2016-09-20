@@ -1,4 +1,4 @@
-package ni.gob.inss.sisinv.bussineslogic.service;
+package ni.gob.inss.sisinv.bussineslogic.service.catalogos;
 
 import java.util.List;
 

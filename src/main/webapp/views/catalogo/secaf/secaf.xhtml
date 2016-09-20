@@ -60,7 +60,7 @@
 									<p:row>
 										<p:column><h:outputText style="font-weight: bold" value="No. Cuenta: " /><h:outputText value="#{oSecaf.cuenta}"/> </p:column>
 										<p:column><h:outputText style="font-weight: bold" value="No. Subcuenta: " /><h:outputText value="#{oSecaf.subcuenta}"/></p:column>
-										<p:column><h:outputText style="font-weight: bold" value="Letra: " /><h:outputText value="#{oSecaf.letra}"/></p:column>
+										<p:column><h:outputText style="font-weight: bold" value="Digito Auxiliar: " /><h:outputText value="#{oSecaf.digitoAuxiliar}"/></p:column>
 										<p:column><h:outputText style="font-weight: bold" value="Objeto: " /><h:outputText value="#{oSecaf.objeto}"/></p:column>
 									</p:row>								
 								</p:panelGrid>												
@@ -89,12 +89,16 @@
 							<p:inputText id="noSubcuenta" required="true" maxlength="10" styleClass="Wid20" label="Subcuenta No:" value="#{secafBackBean.noSubcuenta}" >
 								<pe:keyFilter regEx="/#{secafBackBean.regExpNumeros}/"/>
 							</p:inputText>			
-							<h:outputLabel for="letra"  value="Letra:"/>
-							<p:inputText id="letra" label="Letra:" maxlength="2"  styleClass="Wid20" value="#{secafBackBean.letra}">
+							<h:outputLabel for="digitoAuxiliar"  value="Digito Auxiliar:"/>
+							<p:inputText id="digitoAuxiliar" label="Digito Auxiliar:" maxlength="1"  styleClass="Wid20" value="#{secafBackBean.digitoAuxiliar}">
 								<pe:keyFilter regEx="/#{secafBackBean.regExpLetras}/"/>
 							</p:inputText>
-							<h:outputLabel for="objeto" value="Objeto:" />
-							<p:inputText id="objeto" label="Objeto" styleClass="Wid20" maxlength="10" value="#{secafBackBean.codigoObjeto}" >
+							<h:outputLabel for="codigoObjeto" value="Código Objeto:" />
+							<p:inputText id="codigoObjeto" label="Codigo Objeto" styleClass="Wid20" maxlength="10" value="#{secafBackBean.codigoObjeto}" >
+								<pe:keyFilter regEx="/#{secafBackBean.regExpNumeros}/"/>
+							</p:inputText>
+							<h:outputLabel for="gasto" value="Gasto"/>
+							<p:inputText id="gasto" label="Gasto" styleClass="Wid20" value="#{secafBackBean.gasto}">
 								<pe:keyFilter regEx="/#{secafBackBean.regExpNumeros}/"/>
 							</p:inputText>
 							<h:outputLabel for="tipoBien" value="Tipo de Bien"/>

@@ -10,14 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
 import ni.gob.inss.barista.businesslogic.service.BusinessException;
-import ni.gob.inss.barista.businesslogic.service.catalogos.TipoCatalogoService;
 import ni.gob.inss.barista.model.dao.DAOException;
 import ni.gob.inss.barista.model.dao.EntityNotFoundException;
 import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
 import ni.gob.inss.barista.model.entity.catalogo.TiposCatalogo;
 import ni.gob.inss.barista.view.bean.backbean.BaseBackBean;
 import ni.gob.inss.barista.view.utils.web.MessagesResults;
-import ni.gob.inss.sisinv.bussineslogic.service.SecafService;
+import ni.gob.inss.sisinv.bussineslogic.service.catalogos.SecafService;
+import ni.gob.inss.sisinv.bussineslogic.service.catalogos.TipoCatalogoExtService;
 import ni.gob.inss.sisinv.model.entity.catalogo.Secaf;
 import ni.gob.inss.sisinv.util.CatalogoGeneral;
 import ni.gob.inss.sisinv.util.RegExpresionExtends;
@@ -38,13 +38,14 @@ public class SecafBackBean extends BaseBackBean implements Serializable{
 	private Integer hfId;
 	private Integer noCuenta;
 	private Integer noSubcuenta;
-	private String letra;
+	private String 	digitoAuxiliar;
 	private String codigoCbs;
 	private String DescripcionCbs;
 	private Boolean pasivo;
 	private Integer codigoObjeto;
 	private Boolean nuevoRegistro;
 	private Integer tipoBien;
+	private Integer gasto;
 	
 	private Secaf catalogoSeleccionado; 
 	
@@ -58,7 +59,7 @@ public class SecafBackBean extends BaseBackBean implements Serializable{
 	private SecafService oSecafService;
 	
 	@Autowired
-	private TipoCatalogoService oTipoCatalogoService;
+	private TipoCatalogoExtService oTipoCatalogoService;
 	
 	@PostConstruct
 	public void init(){
@@ -71,7 +72,7 @@ public class SecafBackBean extends BaseBackBean implements Serializable{
 	public void limpiar(){
 		this.setNoCuenta(null);
 		this.setNoSubcuenta(null);
-		this.setLetra("");
+		this.setDigitoAuxiliar("");
 		this.setCodigoCbs("");
 		this.setDescripcionCbs("");
 		this.setTipoBien(null);
@@ -79,11 +80,13 @@ public class SecafBackBean extends BaseBackBean implements Serializable{
 		this.setNuevoRegistro(true);
 		this.setHfId(null);
 		this.setTxtBusquedaCatalogoSecaf("");
+		this.setCodigoObjeto(null);
+		this.setGasto(null);
 	}
 	
 	public void cargarListaCatalogo(){		
 		try {
-			TiposCatalogo catalogoTipoBienes = oTipoCatalogoService.obtener(CatalogoGeneral.TIPO_BIENES.getCatalogoId());
+			TiposCatalogo catalogoTipoBienes = oTipoCatalogoService.obtenerTipoCatalogoPorCodigo(CatalogoGeneral.TIPO_BIENES.getCodigoCatalogo());
 			this.listaTipoBienes = oTipoCatalogoService.obtenerCatalogos(catalogoTipoBienes);				
 		} catch (Exception e) {
 			mostrarMensajeError(this.getClass().getSimpleName(), "cargarListaCatalogo", MessagesResults.ERROR_OBTENER_LISTA, e);
@@ -122,12 +125,13 @@ public class SecafBackBean extends BaseBackBean implements Serializable{
 			this.setHfId(oSecaf.getId());
 			this.setNoCuenta(oSecaf.getCuenta());
 			this.setNoSubcuenta(oSecaf.getSubcuenta());
-			this.setLetra(oSecaf.getLetra());
+			this.setDigitoAuxiliar(oSecaf.getDigitoAuxiliar());
 			this.setCodigoObjeto(oSecaf.getObjeto());
 			this.setCodigoCbs(oSecaf.getCbs());
 			this.setTipoBien(oSecaf.getTipoBien());
 			this.setDescripcionCbs(oSecaf.getDescripcionCbs());
 			this.setPasivo(oSecaf.isPasivo());
+			this.setGasto(oSecaf.getGasto());
 			this.setNuevoRegistro(false);
 		} catch (EntityNotFoundException e) {
 			mostrarMensajeError(this.getClass().getSimpleName(), "cargarDatosSecaf", MessagesResults.ERROR_OBTENER, e);
@@ -181,11 +185,12 @@ public class SecafBackBean extends BaseBackBean implements Serializable{
 			}
 			oSecaf.setCuenta(this.getNoCuenta());
 			oSecaf.setSubcuenta(this.getNoSubcuenta());
-			oSecaf.setLetra(this.getLetra());
+			oSecaf.setDigitoAuxiliar(this.getDigitoAuxiliar());
 			oSecaf.setObjeto(this.getCodigoObjeto());			
 			oSecaf.setCbs(this.getCodigoCbs());
 			oSecaf.setTipoBien(this.getTipoBien());
 			oSecaf.setDescripcionCbs(this.getDescripcionCbs());
+			oSecaf.setGasto(this.getGasto());
 		} catch (Exception e) {
 			mostrarMensajeError(this.getClass().getSimpleName(), "obtieneCatalogoSecafPreparado", MessagesResults.ERROR_OBTENER, e);
 		}
@@ -236,12 +241,15 @@ public class SecafBackBean extends BaseBackBean implements Serializable{
 	public void setNoSubcuenta(Integer noSubcuenta) {
 		this.noSubcuenta = noSubcuenta;
 	}
-	public String getLetra() {
-		return letra;
+	
+	public String getDigitoAuxiliar() {
+		return digitoAuxiliar;
 	}
-	public void setLetra(String letra) {
-		this.letra = letra;
+
+	public void setDigitoAuxiliar(String digitoAuxiliar) {
+		this.digitoAuxiliar = digitoAuxiliar;
 	}
+
 	public String getCodigoCbs() {
 		return codigoCbs;
 	}
@@ -315,6 +323,14 @@ public class SecafBackBean extends BaseBackBean implements Serializable{
 
 	public void setTipoBien(Integer tipoBien) {
 		this.tipoBien = tipoBien;
+	}
+
+	public Integer getGasto() {
+		return gasto;
+	}
+
+	public void setGasto(Integer gasto) {
+		this.gasto = gasto;
 	}	
 	
 }

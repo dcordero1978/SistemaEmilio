@@ -33,7 +33,7 @@
 						</f:facet>
 						<p:outputPanel styleClass="tableClass">
 							<p:dataTable style="width:100%" paginatorPosition="top" selectionMode="single" scrollable="true" scrollHeight="410" 
-							var="oEmpleado" value="#{empleadoBackBean.listaEmpleados}" id="listEmpleado" 
+							var="oEmpleado" value="#{empleadoBackBean.listaEmpleados}" id="listEmpleado"  sortBy="#{oEmpleado.primerNombre}"
 							rowKey="#{oEmpleado.id}" selection="#{empleadoBackBean.empleadoSeleccionado}"
 							paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="12" pageLinks="3" 
 							paginatorTemplate="#{configApplicationBean.paginatorTemplate}" currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}"> 

@@ -14,8 +14,8 @@ import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
 import ni.gob.inss.barista.model.entity.catalogo.TiposCatalogo;
 import ni.gob.inss.barista.view.bean.backbean.BaseBackBean;
 import ni.gob.inss.barista.view.utils.web.MessagesResults;
-import ni.gob.inss.sisinv.bussineslogic.service.DelegacionService;
-import ni.gob.inss.sisinv.bussineslogic.service.TipoCatalogoExtService;
+import ni.gob.inss.sisinv.bussineslogic.service.catalogos.DelegacionService;
+import ni.gob.inss.sisinv.bussineslogic.service.catalogos.TipoCatalogoExtService;
 import ni.gob.inss.sisinv.model.entity.catalogo.Delegacion;
 import ni.gob.inss.sisinv.util.CatalogoGeneral;
 

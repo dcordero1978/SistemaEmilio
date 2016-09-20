@@ -2,7 +2,7 @@ package ni.gob.inss.sisinv.util;
 
 public enum CatalogoGeneral {
 	DEPARTAMENTOS("DEP"),
-	TIPO_BIENES("TIPBI");
+	TIPO_BIENES("TBI");
 	
 	private final String catalogo ;
 	

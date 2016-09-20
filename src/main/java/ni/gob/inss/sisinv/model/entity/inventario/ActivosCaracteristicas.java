@@ -25,7 +25,7 @@ public class ActivosCaracteristicas extends EntityBase  implements java.io.Seria
      @EmbeddedId
      @AttributeOverrides( {
         @AttributeOverride(name="activoId", column=@Column(name="activo_id", nullable=false) ), 
-        @AttributeOverride(name="caracteristcaId", column=@Column(name="caracteristca_id", nullable=false) ) } )
+        @AttributeOverride(name="caracteristicaId", column=@Column(name="caracteristca_id", nullable=false) ) } )
     public ActivosCaracteristicasId getId() {
         return this.id;
     }

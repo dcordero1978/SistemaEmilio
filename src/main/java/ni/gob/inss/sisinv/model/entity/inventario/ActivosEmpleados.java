@@ -3,14 +3,13 @@ package ni.gob.inss.sisinv.model.entity.inventario;
 
 
 import java.util.Date;
+
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import ni.gob.inss.barista.model.entity.EntityBase;
 
@@ -50,7 +49,6 @@ public class ActivosEmpleados  extends EntityBase implements java.io.Serializabl
     }
 
     
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name="fecha_asignacion", nullable=false, length=29)
     public Date getFechaAsignacion() {
         return this.fechaAsignacion;

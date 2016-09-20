@@ -2,10 +2,13 @@
 <!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
 
 <hibernate-reverse-engineering>
-<type-mapping>
-	<sql-type jdbc-type="INTEGER" hibernate-type="Integer"></sql-type>
-	<sql-type jdbc-type="VARCHAR" hibernate-type="String"></sql-type>
-	<sql-type jdbc-type="BOOLEAN" hibernate-type="Boolean"></sql-type>
-</type-mapping>
-<table-filter match-name="secaf" match-schema="catalogo"></table-filter>
+	<type-mapping>
+		<sql-type jdbc-type="INTEGER" hibernate-type="Integer"></sql-type>
+		<sql-type jdbc-type="VARCHAR" hibernate-type="String"></sql-type>
+		<sql-type jdbc-type="BOOLEAN" hibernate-type="Boolean"></sql-type>
+	</type-mapping>
+	<table-filter match-name="secaf" exclude="true"
+		match-schema="catalogo">
+	</table-filter>
+	<table-filter match-schema="inventario" match-name=".*" exclude="true"/>
 </hibernate-reverse-engineering>

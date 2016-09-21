@@ -23,15 +23,16 @@
 										<p:commandButton  icon="ui-icon-search" ajax="true" style="margin-left:5px;" resetValues="true" update="formListaEmpleados" actionListener="#{registroActivosBackBean.cargarListaEmpleados}"/>								
 								</p:outputPanel>
 								<p:outputPanel style="display" styleClass="right">
-									<p:commandButton value="Asociar activos" icon="ui-icon-suitcase" resetValues="true"/>									
-							</p:outputPanel>
+									<p:commandButton value="Asociar activos" icon="ui-icon-suitcase" resetValues="true" update=":formDatosGenerales" actionListener="#{registroActivosBackBean.cargarDatos}"/>									
+								</p:outputPanel>
 							</f:facet>
 							<p:outputPanel styleClass="tableClass">
-							<p:dataTable style="width:100%" paginatorPosition="top" selectionMode="single" scrollable="true" scrollHeight="410" 
+							<p:dataTable style="width:100%" paginatorPosition="top" selectionMode="single" scrollable="true" scrollHeight="400" 
 							var="oEmpleado" id="listEmpleado"  sortBy="#{oEmpleado.primerNombre}"
-							rowKey="#{oEmpleado.id}" value="#{registroActivosBackBean.listaEmpleados}"
+							rowKey="#{oEmpleado.id}" value="#{registroActivosBackBean.listaEmpleados}" selection="#{registroActivosBackBean.empleadoSeleccionado}"
 							paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="12" pageLinks="3" 
 							paginatorTemplate="#{configApplicationBean.paginatorTemplate}" currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
+								<p:ajax event="rowDblselect" listener="#{registroActivosBackBean.cargarDatos}" update=":formDatosGenerales" resetValues="true"/>
 								<p:column headerText="Nombre" >
 									<h:outputText value="#{oEmpleado.primerNombre} #{oEmpleado.segundoNombre}" />
 								</p:column>
@@ -48,7 +49,38 @@
 				</div>
 				<!-- FORMULARIO PARA LOS DATOS Y ASOCIACION DE ACTIVOS -->
 				<div class="Container50 Responsive">
-					<h:form id="formDatosRegistro" style="width:99%">
+					<h:form id="formDatosGenerales" style="width:99%">
+						<p:panel style="height:550px;" styleClass="fondoPaneles">
+							<f:facet name="header">
+								<h:outputText value="ID: #{registroActivosBackBean.hfId}" />
+								<p:outputPanel style="display:block" styleClass="right">							
+									<p:commandButton resetValues="true" ajax="true" update="formDatosGenerales" action="#{registroActivosBackBean.limpiar}" value="#{labelName.btnCancelar}" icon="ui-icon-cancel" process="@this"/>
+								</p:outputPanel>							
+							</f:facet>
+							<h:panelGrid columns="2" style="width:100%" columnClasses="Wid30, Wid70">
+								<h:outputLabel for="nombreCompleto" value="Nombre completo:"/>
+								<p:inputText id="nombreCompleto" disabled="true" value="#{registroActivosBackBean.nombreCompleto}" label="Nombre"  styleClass="Wid90"/>
+								<h:outputLabel for="numeroEmpleado" value="No. Empleado:"/>
+								<p:inputText id="numeroEmpleado" disabled="true" value="#{registroActivosBackBean.numeroEmpleado}" styleClass="Wid90"/>
+							</h:panelGrid>
+							<p:outputPanel styleClass="tableClass">
+								<p:dataTable style="width:100%" paginatorPosition="top" selectionMode="single" scrollable="true" scrollHeight="410"
+								var="oActivo" id="listaActivos" rowKey="#{oActivo.id}"
+								paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="12" pageLinks="3"
+								paginatorTemplate="#{configApplicationBean.paginatorTemplate}" currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
+									<f:facet name="header">							
+										Lista de Activos asociados 																	
+									</f:facet>
+									<p:column headerText="Código" style="text-align:center" width="20%" priority="2">
+									
+									</p:column>
+									<p:column headerText="Descripción" style="text-align:center" width="20%" priority="2">
+									
+									</p:column>	
+								
+								</p:dataTable>
+							</p:outputPanel>
+						</p:panel>
 						
 					</h:form>
 				</div>

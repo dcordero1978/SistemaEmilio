@@ -1,0 +1,58 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                template="/web/template/innerLayout.xhtml"
+                xmlns:mc="http://java.sun.com/jsf/composite/comps">
+
+	<ui:param name="paramBackBean" value="#{registroActivosBackBean}"/>
+	<ui:define name="headerContent">
+		Registro de Activos
+	</ui:define>
+	<ui:define name="content">
+		<div id="ContainerIndent">
+			<div id="ContainerIndent">
+				<div class="Container50 Responsive">
+					<h:form id="formListaEmpleados" style="width:99%">
+						<p:panel styleClass="fondoPaneles">
+							<f:facet name="header">
+								<p:outputPanel style="display" styleClass="left">
+										<p:inputText maxlength="150" placeholder="#{labelName.placeholderBuscar}" value="#{registroActivosBackBean.busquedaEmpleado}" autocomplete="off"/>										
+										<p:commandButton  icon="ui-icon-search" ajax="true" style="margin-left:5px;" resetValues="true" update="formListaEmpleados" actionListener="#{registroActivosBackBean.cargarListaEmpleados}"/>								
+								</p:outputPanel>
+								<p:outputPanel style="display" styleClass="right">
+									<p:commandButton value="Asociar activos" icon="ui-icon-suitcase" resetValues="true"/>									
+							</p:outputPanel>
+							</f:facet>
+							<p:outputPanel styleClass="tableClass">
+							<p:dataTable style="width:100%" paginatorPosition="top" selectionMode="single" scrollable="true" scrollHeight="410" 
+							var="oEmpleado" id="listEmpleado"  sortBy="#{oEmpleado.primerNombre}"
+							rowKey="#{oEmpleado.id}" value="#{registroActivosBackBean.listaEmpleados}"
+							paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="12" pageLinks="3" 
+							paginatorTemplate="#{configApplicationBean.paginatorTemplate}" currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
+								<p:column headerText="Nombre" >
+									<h:outputText value="#{oEmpleado.primerNombre} #{oEmpleado.segundoNombre}" />
+								</p:column>
+								<p:column headerText="Apellido">
+									<h:outputText value="#{oEmpleado.primerApellido} #{oEmpleado.segundoApellido}"/>
+								</p:column>
+								<p:column headerText="Pasivo" style="text-align:center;" width="10%">
+									<p:selectBooleanCheckbox value="#{oEmpleado.pasivo}" disabled="true" styleClass="ui-linus-enabled"/>
+								</p:column>
+							</p:dataTable>
+						</p:outputPanel>
+						</p:panel>
+					</h:form>
+				</div>
+				<!-- FORMULARIO PARA LOS DATOS Y ASOCIACION DE ACTIVOS -->
+				<div class="Container50 Responsive">
+					<h:form id="formDatosRegistro" style="width:99%">
+						
+					</h:form>
+				</div>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

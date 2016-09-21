@@ -43,25 +43,36 @@ public class EmpleadoServiceImpl implements EmpleadoService{
 		oEmpleadoDAO.updateUpper(oEmpleado);		
 	}
 
-	@SuppressWarnings("unchecked")
 	@Transactional
 	@Override
 	public List<Empleado> buscar(String criterioBusqueda, Integer delegacionId) throws EntityNotFoundException {
+		return this.buscar(criterioBusqueda, delegacionId, null);
+	}
+	
+	@Transactional
+	@Override
+	public List<Empleado> buscar(String criterioBusqueda, Integer delegacionId, Boolean pasivo)	throws EntityNotFoundException {
 		String txtBusqueda = StringUtils.isEmpty(criterioBusqueda) ? "" : criterioBusqueda;
 		Search oSearch = new Search();
 		
 		if(delegacionId != null){
 			oSearch.addFilter(Filter.equal("delegacionId", delegacionId));
 		}
+	
+		if(pasivo != null){
+			oSearch.addFilter(Filter.equal("pasivo", pasivo));
+		}
+		
 		oSearch.addFilterOr(Filter.ilike("primerNombre", "%"+txtBusqueda+"%"),
 								Filter.ilike("segundoNombre", "%"+txtBusqueda+"%"),
 								Filter.ilike("primerApellido", "%"+txtBusqueda+"%"),
 								Filter.ilike("segundoApellido", "%"+txtBusqueda+"%"));
-		
-		
-		return oEmpleadoDAO.search(oSearch);			
+					
+		return oEmpleadoDAO.search(oSearch);
 		
 	}
+	
+	
 	
 	public void validaEmpleado(Empleado oEmpleado) throws BusinessException{
 		if(this.obtieneEmpleadoPorNumeroEmpleado(oEmpleado.getNumeroEmpleado())!=null){
@@ -84,5 +95,7 @@ public class EmpleadoServiceImpl implements EmpleadoService{
 		oSearch.addFilter(Filter.equal("nroIdentificacion", numeroCedula));
 		return (Empleado) oEmpleadoDAO.searchUnique(oSearch);	
 	}
+
+
 
 }

@@ -51,6 +51,7 @@ public class Activos extends EntityBase implements java.io.Serializable {
 	private Empleado empleado;
 	private Delegacion ubicacion;
 	private Secaf secaf;
+	private String color;
 
 	@Id
 	@Column(name = "id", unique = true, nullable = false)
@@ -238,8 +239,15 @@ public class Activos extends EntityBase implements java.io.Serializable {
 	public void setSecaf(Secaf secaf) {
 		this.secaf = secaf;
 	}
-	
-	
 
+	@Column(name="color", length=50, nullable=false)
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
 	
+		
 }

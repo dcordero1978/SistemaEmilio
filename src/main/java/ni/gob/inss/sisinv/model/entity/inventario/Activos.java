@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -20,6 +21,7 @@ import javax.persistence.UniqueConstraint;
 import ni.gob.inss.barista.model.entity.EntityBase;
 import ni.gob.inss.sisinv.model.entity.catalogo.Delegacion;
 import ni.gob.inss.sisinv.model.entity.catalogo.Empleado;
+import ni.gob.inss.sisinv.model.entity.catalogo.MarcasModelos;
 import ni.gob.inss.sisinv.model.entity.catalogo.Secaf;
 
 /**
@@ -52,6 +54,8 @@ public class Activos extends EntityBase implements java.io.Serializable {
 	private Delegacion ubicacion;
 	private Secaf secaf;
 	private String color;
+	private MarcasModelos marca;
+	private MarcasModelos modelo;
 
 	@Id
 	@Column(name = "id", unique = true, nullable = false)
@@ -248,6 +252,25 @@ public class Activos extends EntityBase implements java.io.Serializable {
 	public void setColor(String color) {
 		this.color = color;
 	}
+
+	@OneToOne(mappedBy="marcaActivo", cascade=CascadeType.ALL)
+	public MarcasModelos getMarca() {
+		return marca;
+	}
+
+	public void setMarca(MarcasModelos marca) {
+		this.marca = marca;
+	}
+
+	@OneToOne(mappedBy="modeloActivo", cascade=CascadeType.ALL)	
+	public MarcasModelos getModelo() {
+		return modelo;
+	}
+
+	public void setModelo(MarcasModelos modelo) {
+		this.modelo = modelo;
+	}
+	
 	
 		
 }

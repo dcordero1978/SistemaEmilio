@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -18,6 +19,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
 import ni.gob.inss.barista.model.entity.EntityBase;
+import ni.gob.inss.sisinv.model.entity.catalogo.Delegacion;
 import ni.gob.inss.sisinv.model.entity.catalogo.Empleado;
 
 /**
@@ -47,7 +49,8 @@ public class Activos extends EntityBase implements java.io.Serializable {
 	private Integer tipoMoneda;
 	private String lote;
 	private Empleado empleado;
-	private Integer ubicacionId;
+	private Delegacion ubicacion;
+	
 
 	@Id
 	@Column(name = "id", unique = true, nullable = false)
@@ -207,7 +210,7 @@ public class Activos extends EntityBase implements java.io.Serializable {
 	}
 
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "empleadoId")
+	@JoinColumn(name = "empleado_id")
 	public Empleado getEmpleado() {
 		return empleado;
 	}
@@ -216,13 +219,15 @@ public class Activos extends EntityBase implements java.io.Serializable {
 		this.empleado = empleado;
 	}
 
-	public Integer getUbicacionId() {
-		return ubicacionId;
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "ubicacion_id")
+	public Delegacion getUbicacion() {
+		return ubicacion;
 	}
 
-	public void setUbicacionId(Integer ubicacionId) {
-		this.ubicacionId = ubicacionId;
+	public void setUbicacion(Delegacion ubicacion) {
+		this.ubicacion = ubicacion;
 	}
-	
+
 	
 }

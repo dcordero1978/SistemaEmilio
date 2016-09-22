@@ -26,6 +26,7 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 	private String busquedaEmpleado;
 	private Empleado empleadoSeleccionado;
 	private Integer hfId;
+	private Boolean modoEdicion;
 	
 	private String nombreCompleto;
 	private String numeroEmpleado;
@@ -118,4 +119,9 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 		this.numeroEmpleado = numeroEmpleado;
 	}
 
+	public Boolean getModoEdicion() {
+		return this.getHfId()!=null;
+	}
+
+	
 }

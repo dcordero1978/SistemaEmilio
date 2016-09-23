@@ -8,5 +8,5 @@ import ni.gob.inss.sisinv.model.entity.catalogo.MarcasModelos;
 
 public interface CatalogoExtService extends CatalogoService {
 	public List<MarcasModelos> obtenerListaMarcas()throws EntityNotFoundException;
-	public List<MarcasModelos> obtenerListaModelos()throws EntityNotFoundException;
+	public List<MarcasModelos> obtenerListaModelos(Integer marcaId)throws EntityNotFoundException;
 }

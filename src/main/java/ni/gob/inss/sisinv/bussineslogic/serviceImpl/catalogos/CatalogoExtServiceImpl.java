@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.googlecode.genericdao.search.Filter;
@@ -16,6 +17,7 @@ import ni.gob.inss.sisinv.model.dao.catalogos.MarcaModeloDAO;
 import ni.gob.inss.sisinv.model.entity.catalogo.MarcasModelos;
 
 @Primary
+@Service("CatalogoService")
 public class CatalogoExtServiceImpl extends CatalogoServiceImpl implements CatalogoExtService {
 	@Autowired
 	MarcaModeloDAO oMarcaModeloDAO;
@@ -29,9 +31,10 @@ public class CatalogoExtServiceImpl extends CatalogoServiceImpl implements Catal
 	}
 
 	@Override
-	public List<MarcasModelos> obtenerListaModelos() throws EntityNotFoundException {
-		// TODO Auto-generated method stub
-		return null;
+	public List<MarcasModelos> obtenerListaModelos(Integer marcaId) throws EntityNotFoundException {
+		Search oSearch = new Search();
+		oSearch.addFilter(Filter.equal("padreId", marcaId));
+		return oMarcaModeloDAO.search(oSearch);
 	}
 	
 }

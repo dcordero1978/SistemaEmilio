@@ -60,8 +60,7 @@ public class MarcasModelos extends EntityBase implements java.io.Serializable {
 		this.padreId = padreId;
 	}
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="marca_id")
+	@OneToOne(cascade = CascadeType.ALL, mappedBy="marca")
 	public Activos getMarcaActivo() {
 		return marcaActivo;
 	}
@@ -70,13 +69,12 @@ public class MarcasModelos extends EntityBase implements java.io.Serializable {
 		this.marcaActivo = marcaActivo;
 	}
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="modelo_id")
+	
+	@OneToOne( cascade = CascadeType.ALL, mappedBy="modelo")
 	public Activos getModeloActivo() {
 		return modeloActivo;
 	}
-
-	@OneToOne(mappedBy="modelo")	
+		
 	public void setModeloActivo(Activos modeloActivo) {
 		this.modeloActivo = modeloActivo;
 	}

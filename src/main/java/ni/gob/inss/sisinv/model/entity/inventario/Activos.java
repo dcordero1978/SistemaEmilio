@@ -104,7 +104,7 @@ public class Activos extends EntityBase implements java.io.Serializable {
 		this.descripcion = descripcion;
 	}
 
-	@Column(name = "marca_id", nullable = false)
+	@Column(name = "marca_id", nullable = false, insertable=false, updatable=false)
 	public Integer getMarcaId() {
 		return this.marcaId;
 	}
@@ -113,7 +113,7 @@ public class Activos extends EntityBase implements java.io.Serializable {
 		this.marcaId = marcaId;
 	}
 
-	@Column(name = "modelo_id", nullable = false)
+	@Column(name = "modelo_id", nullable = false, insertable=false, updatable=false)
 	public Integer getModeloId() {
 		return this.modeloId;
 	}
@@ -253,7 +253,8 @@ public class Activos extends EntityBase implements java.io.Serializable {
 		this.color = color;
 	}
 
-	@OneToOne(mappedBy="marcaActivo", cascade=CascadeType.ALL)
+	@OneToOne(cascade=CascadeType.ALL)
+	@JoinColumn(name="marca_id")
 	public MarcasModelos getMarca() {
 		return marca;
 	}
@@ -262,7 +263,8 @@ public class Activos extends EntityBase implements java.io.Serializable {
 		this.marca = marca;
 	}
 
-	@OneToOne(mappedBy="modeloActivo", cascade=CascadeType.ALL)	
+	@OneToOne(cascade=CascadeType.ALL)
+	@JoinColumn(name="modelo_id")
 	public MarcasModelos getModelo() {
 		return modelo;
 	}

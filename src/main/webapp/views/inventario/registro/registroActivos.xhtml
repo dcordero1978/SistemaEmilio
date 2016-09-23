@@ -102,22 +102,25 @@
 							<f:selectItems var="oUbicacion" value="#{registroActivosBackBean.listaUbicaciones}" itemLabel="#{oUbicacion.descripcion}" itemValue="#{oUbicacion.id}"/>									
 						</p:selectOneMenu>
 						<p:outputLabel for="Secaf" value="Bien" />								
-						<p:selectOneMenu required="true" id="Secaf" label="Bien:" style="width:85%">
+						<p:selectOneMenu required="true" id="Secaf" label="Bien:" style="width:85%" value="#{registroActivosBackBean.catalogoSecafId}">
 							<f:selectItem itemValue="#{null}" itemLabel="Por favor seleccione"/>
+							<f:selectItems var="oSecaf" value="#{registroActivosBackBean.listaCatalogoSecaf}" itemLabel="#{oSecaf.descripcionCbs}" itemValue="#{oSecaf.id}" />
 						</p:selectOneMenu>
 						<p:outputLabel for="Descripcion" value="Descripción Activo" />
 						<p:inputText id="Descripcion" required="true" maxlength="100" autocomplete="off" style="width:90%"/>
 						<p:outputLabel for="marca" value="Marca"/>
-						<p:selectOneMenu required="true" id="marca" label="Marca:" style="width:85%">
+						<p:selectOneMenu required="true" id="marca" label="Marca:" style="width:85%" value="#{registroActivosBackBean.marcaId}">
 							<f:selectItem itemValue="#{null}" itemLabel="Seleccione Marca"/>
+							<f:selectItems var="oMarca" value="#{registroActivosBackBean.listaMarcas}" itemLabel="#{oMarca.descripcion}" itemValue="#{oMarca.id}"/>
 						</p:selectOneMenu>
 						<p:outputLabel for="modelo" value="Modelo"/>
 						<p:selectOneMenu required="true" id="modelo" label="Modelo:" style="width:85%">
 							<f:selectItem itemValue="#{null}" itemLabel="Seleccione Modelo"/>
 						</p:selectOneMenu>
 						<p:outputLabel for="color" value="Color"/>
-						<p:selectOneMenu required="true" id="color" label="Color:" style="width:85%">
+						<p:selectOneMenu required="true" id="color" value="#{registroActivosBackBean.codigoColor}" label="Color:" style="width:85%">
 							<f:selectItem itemValue="#{null}" itemLabel="Seleccione Color"/>
+							<f:selectItems var="oColor" itemLabel="#{oColor.descripcion}" itemValue="#{oColor.codigo}" />
 						</p:selectOneMenu>
 						<p:outputLabel for="noLote" value="Lote" />
 						<p:inputText id="noLote" maxlength="20" autocomplete="off" required="true" style="width:90%"/>
@@ -125,20 +128,23 @@
 						<p:inputText id="noSerie" maxlength="20" autocomplete="off" required="true" style="width:90%"/>
 						
 						<p:outputLabel for="estadoFisico" value="Estado Fisico"/>
-						<p:selectOneMenu required="true" id="estadoFisico" label="Estado Fisico:" style="width:85%">
+						<p:selectOneMenu required="true" id="estadoFisico" value="#{registroActivosBackBean.estadoFisicoId}" label="Estado Fisico:" style="width:85%">
 							<f:selectItem itemValue="#{null}" itemLabel="Seleccione Estado Fisico"/>
+							<f:selectItems var="oEstadoFisico" value="#{registroActivosBackBean.listaEstadoFisico}" itemLabel="#{oEstadoFisico.descripcion}" itemValue="#{oEstadoFisico.id}" />I
 						</p:selectOneMenu>
 						<p:outputLabel for="tipoResguardo" value="Resguardo"/>
-						<p:selectOneMenu required="true" id="tipoResguardo" label="Resguardo:" style="width:85%">
+						<p:selectOneMenu required="true" id="tipoResguardo" label="Resguardo:" style="width:85%" value="#{registroActivosBackBean.tipoResguardoId}">
 							<f:selectItem itemValue="#{null}" itemLabel="Seleccione Resguardo"/>
+							<f:selectItems var="oTipoResguardo" value="#{registroActivosBackBean.listaTipoResguardo}" itemLabel="#{oTipoResguardo.descripcion}" itemValue="#{oTipoResguardo.id}" />
 						</p:selectOneMenu>
 						<p:outputLabel for="noProyecto" value="Número Proyecto" />
 						<p:inputText id="noProyecto" maxlength="20" autocomplete="off" style="width:90%"/>
 						<p:outputLabel for="noBodega" value="Número Bodega" />
 						<p:inputText id="noBodega" maxlength="20" autocomplete="off" style="width:90%"/>
 						<p:outputLabel for="tipoMoneda" value="Tipo Moneda:"/>
-						<p:selectOneMenu id="tipoMoneda" label="Tipo Moneda:" style="width:85%">
+						<p:selectOneMenu id="tipoMoneda" label="Tipo Moneda:" style="width:85%" value="#{registroActivosBackBean.tipoMonedaId}">
 							<f:selectItem itemValue="#{null}" itemLabel="Seleccione Tipo Moneda"/>
+							<f:selectItems var="oTipoMoneda" value="#{registroActivosBackBean.listaTipoMoneda}" itemLabel="#{oTipoMoneda.descripcion}" itemValue="#{oTipoMoneda.id}"/>
 						</p:selectOneMenu>
 						<p:outputLabel for="valor" value="Valor" />
 						<p:inputText id="valor" maxlength="10" autocomplete="off" style="width:90%"/>

@@ -13,9 +13,9 @@ import org.springframework.context.annotation.Scope;
 import ni.gob.inss.barista.businesslogic.service.BusinessException;
 import ni.gob.inss.barista.model.dao.EntityNotFoundException;
 import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
-import ni.gob.inss.barista.model.entity.catalogo.TiposCatalogo;
 import ni.gob.inss.barista.view.bean.backbean.BaseBackBean;
 import ni.gob.inss.barista.view.utils.web.MessagesResults;
+import ni.gob.inss.sisinv.bussineslogic.service.catalogos.CatalogoExtService;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.DelegacionService;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.EmpleadoService;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.SecafService;
@@ -54,6 +54,8 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 	private List<Catalogo> listaTipoResguardo;
 	private Integer tipoMonedaId;
 	private List<Catalogo> listaTipoMoneda;
+	private Integer modeloId;
+	private List<MarcasModelos> listaModelos;
 	
 	
 	@Autowired
@@ -67,11 +69,14 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 	
 	@Autowired
 	TipoCatalogoExtService oTipoCatalogoService;
+
+	@Autowired
+	CatalogoExtService oCatalogoService;
 	
 	@PostConstruct
 	public void init(){
 		this.limpiar();
-		this.cargarListaEmpleados();
+		this.cargarListas();
 	}
 	
 	public void limpiar(){
@@ -84,28 +89,32 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 	
 	public void limpiarFormularioRegistro(){
 		this.setUbicacionId(null);
-		this.setListaUbicaciones(null);
-		this.setListaCatalogoSecaf(null);
 		this.setCatalogoSecafId(null);
 		this.setMarcaId(null);
-		this.setListaMarcas(null);
 		this.setCodigoColor(StringUtils.EMPTY);
-		this.setListaColores(null);
 		this.setEstadoFisicoId(null);
-		this.setListaEstadoFisico(null);
 		this.setTipoResguardoId(null);
-		this.setListaTipoResguardo(null);
 		this.setTipoMonedaId(null);
-		this.setListaTipoMoneda(null);
+		this.setModeloId(null);
+		
 	}
 	
 	public void iniciarFormularioRegistro(){
 		this.cargarListasFormularioRegistro();
 	}
-	public void cargarListaEmpleados(){
+	public void cargarListas(){
 		try {
+						
 			this.setListaEmpleados(oEmpleadoService.buscar(this.getBusquedaEmpleado(), null));
-		} catch (EntityNotFoundException e) {
+			
+			this.listaCatalogoSecaf = oSecafService.buscar("");
+			this.listaColores = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.COLORES.getCodigoCatalogo());
+			this.listaEstadoFisico = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.ESTADO_FISICO.getCodigoCatalogo());
+			this.listaTipoResguardo = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.TIPO_RESGUARDO.getCodigoCatalogo());
+			this.listaTipoMoneda = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.MONEDA.getCodigoCatalogo());
+			this.listaMarcas = oCatalogoService.obtenerListaMarcas();
+			
+		} catch (EntityNotFoundException  e) {
 			mostrarMensajeError(this.getClass().getSimpleName(), "cargarListaEmpleados", MessagesResults.ERROR_OBTENER_LISTA, e);
 		}
 	}
@@ -113,24 +122,20 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 	public void cargarListasFormularioRegistro(){
 		try {
 			Empleado oEmpleado = oEmpleadoService.obtener(this.getHfId());		
-			TiposCatalogo catalogoColor = null;
-			TiposCatalogo catalogoEstadoFisico = null;
-			TiposCatalogo catalogoTipoResguardo = null;
-			TiposCatalogo catalogoTipoMoneda = null;
-			
 			this.listaUbicaciones =oDelegacionService.listaUbicacionesPorDepartamento(oEmpleado.getDelegacion().getDepartamentoId());
-			this.listaCatalogoSecaf = oSecafService.buscar("");
-			catalogoColor = oTipoCatalogoService.obtenerTipoCatalogoPorCodigo(CatalogoGeneral.COLORES.getCodigoCatalogo());
-			this.listaColores = oTipoCatalogoService.obtenerCatalogos(catalogoColor);
-			catalogoEstadoFisico  = oTipoCatalogoService.obtenerTipoCatalogoPorCodigo(CatalogoGeneral.ESTADO_FISICO.getCodigoCatalogo());
-			this.listaEstadoFisico = oTipoCatalogoService.obtenerCatalogos(catalogoEstadoFisico);
-			catalogoTipoResguardo = oTipoCatalogoService.obtenerTipoCatalogoPorCodigo(CatalogoGeneral.TIPO_RESGUARDO.getCodigoCatalogo());
-			this.listaTipoResguardo = oTipoCatalogoService.obtenerCatalogos(catalogoTipoResguardo);
-			catalogoTipoMoneda = oTipoCatalogoService.obtenerTipoCatalogoPorCodigo(CatalogoGeneral.MONEDA.getCodigoCatalogo());
-			this.listaTipoMoneda = oTipoCatalogoService.obtenerCatalogos(catalogoTipoMoneda);
-		} catch (EntityNotFoundException | BusinessException e) {
+			
+		} catch (EntityNotFoundException e) {
 			mostrarMensajeError(MessagesResults.ERROR_OBTENER_LISTA);
 		}		
+	}
+	
+	public void cargarListaModelos(){
+		try{
+			this.listaModelos = oCatalogoService.obtenerListaModelos(this.getMarcaId());
+		}catch (EntityNotFoundException e) {
+			mostrarMensajeError(MessagesResults.ERROR_OBTENER_LISTA);
+		}
+		
 	}
 	
 	
@@ -313,7 +318,22 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 
 	public void setListaTipoMoneda(List<Catalogo> listaTipoMoneda) {
 		this.listaTipoMoneda = listaTipoMoneda;
-	}		
-	
+	}
+
+	public Integer getModeloId() {
+		return modeloId;
+	}
+
+	public void setModeloId(Integer modeloId) {
+		this.modeloId = modeloId;
+	}
+
+	public List<MarcasModelos> getListaModelos() {
+		return listaModelos;
+	}
+
+	public void setListaModelos(List<MarcasModelos> listaModelos) {
+		this.listaModelos = listaModelos;
+	}			
 	
 }

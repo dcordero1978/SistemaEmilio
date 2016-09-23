@@ -110,17 +110,19 @@
 						<p:inputText id="Descripcion" required="true" maxlength="100" autocomplete="off" style="width:90%"/>
 						<p:outputLabel for="marca" value="Marca"/>
 						<p:selectOneMenu required="true" id="marca" label="Marca:" style="width:85%" value="#{registroActivosBackBean.marcaId}">
+							<p:ajax listener="#{registroActivosBackBean.cargarListaModelos}" update="modelo"/>
 							<f:selectItem itemValue="#{null}" itemLabel="Seleccione Marca"/>
 							<f:selectItems var="oMarca" value="#{registroActivosBackBean.listaMarcas}" itemLabel="#{oMarca.descripcion}" itemValue="#{oMarca.id}"/>
 						</p:selectOneMenu>
 						<p:outputLabel for="modelo" value="Modelo"/>
-						<p:selectOneMenu required="true" id="modelo" label="Modelo:" style="width:85%">
+						<p:selectOneMenu required="true" id="modelo" label="Modelo:" value="#{registroActivosBackBean.modeloId}" style="width:85%">
 							<f:selectItem itemValue="#{null}" itemLabel="Seleccione Modelo"/>
+							<f:selectItems var="oModelo" value="#{registroActivosBackBean.listaModelos}" itemLabel="#{oModelo.descripcion}" itemValue="#{oModelo.id}"/>
 						</p:selectOneMenu>
 						<p:outputLabel for="color" value="Color"/>
 						<p:selectOneMenu required="true" id="color" value="#{registroActivosBackBean.codigoColor}" label="Color:" style="width:85%">
 							<f:selectItem itemValue="#{null}" itemLabel="Seleccione Color"/>
-							<f:selectItems var="oColor" itemLabel="#{oColor.descripcion}" itemValue="#{oColor.codigo}" />
+							<f:selectItems var="oColor" itemLabel="#{oColor.descripcion}" itemValue="#{oColor.codigo}" value="#{registroActivosBackBean.listaColores}"/>
 						</p:selectOneMenu>
 						<p:outputLabel for="noLote" value="Lote" />
 						<p:inputText id="noLote" maxlength="20" autocomplete="off" required="true" style="width:90%"/>

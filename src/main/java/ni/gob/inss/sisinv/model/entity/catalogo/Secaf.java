@@ -136,7 +136,6 @@ public class Secaf extends EntityBase implements java.io.Serializable {
 	}
 
 	@OneToMany(mappedBy = "secaf")
-	@JoinColumn(name="secaf_id")
 	public List<Activos> getListaActivos() {
 		return listaActivos;
 	}

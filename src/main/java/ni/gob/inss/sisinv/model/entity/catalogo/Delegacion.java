@@ -29,6 +29,7 @@ public class Delegacion extends EntityBase{
 	private String descripcion;
 	private Integer departamentoId;
 	private Boolean pasivo;
+	private Boolean esUbicacion;
 	private List<Empleado> empleados = new ArrayList<Empleado>();
 	private List<Activos> listaActivos = new ArrayList<Activos>();
 
@@ -79,14 +80,22 @@ public class Delegacion extends EntityBase{
 		this.empleados = empleados;
 	}
 
-	@OneToMany(mappedBy = "ubicacion")
-	@JoinColumn(name="ubicacion_id")
+	@OneToMany(mappedBy = "ubicacion")	
 	public List<Activos> getListaActivos() {
 		return listaActivos;
 	}
 
 	public void setListaActivos(List<Activos> listaActivos) {
 		this.listaActivos = listaActivos;
+	}
+
+	@Column(name="ubicacion")
+	public Boolean getEsUbicacion() {
+		return esUbicacion;
+	}
+
+	public void setEsUbicacion(Boolean esUbicacion) {
+		this.esUbicacion = esUbicacion;
 	}
 	
 	

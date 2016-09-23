@@ -68,7 +68,7 @@ public class Activos extends EntityBase implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@Column(name = "secaf_id", nullable = false)
+	@Column(name = "secaf_id", nullable = false, insertable=false,updatable=false)
 	public Integer getSecafId() {
 		return this.secafId;
 	}

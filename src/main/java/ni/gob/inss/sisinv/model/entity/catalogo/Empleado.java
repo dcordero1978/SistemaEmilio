@@ -134,7 +134,6 @@ public class Empleado extends EntityBase{
 	}
 
 	@OneToMany(mappedBy = "empleado")
-	@JoinColumn(name = "empleado_id")
 	public List<Activos> getListaActivos() {
 		return listaActivos;
 	}

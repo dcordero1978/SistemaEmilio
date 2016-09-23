@@ -16,5 +16,8 @@ public interface DelegacionService {
 	public List<Delegacion> buscar(String txtCriterio);
 	
 	public Delegacion obtener(int id) throws EntityNotFoundException;
+
+	public List<Delegacion> listaDelegacionesPorDepartamento(Integer departamentoId);
 	
+	public List<Delegacion> listaUbicacionesPorDepartamento(Integer departamentoId);
 }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.googlecode.genericdao.search.Filter;
 import com.googlecode.genericdao.search.Search;
 
 import ni.gob.inss.barista.businesslogic.service.BusinessException;
@@ -57,7 +58,20 @@ public class DelegacionServiceImpl implements DelegacionService{
 	public Delegacion obtener(int id) throws EntityNotFoundException {
 		return oDelegacionDAO.find(id);		
 	}
-	
+
+	@Override
+	public List<Delegacion> listaDelegacionesPorDepartamento(Integer departamentoId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Transactional
+	@Override
+	public List<Delegacion> listaUbicacionesPorDepartamento(Integer departamentoId) {
+		Search oSearch = new Search();
+		oSearch.addFilterAnd(Filter.equal("departamentoId", departamentoId),Filter.equal("esUbicacion", true));
+		return oDelegacionDAO.search(oSearch);		
+	}
 	
 	
 

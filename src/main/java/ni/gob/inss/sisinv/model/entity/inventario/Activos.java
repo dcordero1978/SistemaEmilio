@@ -3,15 +3,14 @@ package ni.gob.inss.sisinv.model.entity.inventario;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -21,7 +20,6 @@ import javax.persistence.UniqueConstraint;
 import ni.gob.inss.barista.model.entity.EntityBase;
 import ni.gob.inss.sisinv.model.entity.catalogo.Delegacion;
 import ni.gob.inss.sisinv.model.entity.catalogo.Empleado;
-import ni.gob.inss.sisinv.model.entity.catalogo.MarcasModelos;
 import ni.gob.inss.sisinv.model.entity.catalogo.Secaf;
 
 /**
@@ -54,9 +52,7 @@ public class Activos extends EntityBase implements java.io.Serializable {
 	private Delegacion ubicacion;
 	private Secaf secaf;
 	private String color;
-	private MarcasModelos marca;
-	private MarcasModelos modelo;
-
+	
 	@Id
 	@Column(name = "id", unique = true, nullable = false)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="Activos_SEQ")
@@ -104,7 +100,7 @@ public class Activos extends EntityBase implements java.io.Serializable {
 		this.descripcion = descripcion;
 	}
 
-	@Column(name = "marca_id", nullable = false, insertable=false, updatable=false)
+	@Column(name = "marca_id", nullable = false)
 	public Integer getMarcaId() {
 		return this.marcaId;
 	}
@@ -113,7 +109,7 @@ public class Activos extends EntityBase implements java.io.Serializable {
 		this.marcaId = marcaId;
 	}
 
-	@Column(name = "modelo_id", nullable = false, insertable=false, updatable=false)
+	@Column(name = "modelo_id", nullable = false)
 	public Integer getModeloId() {
 		return this.modeloId;
 	}
@@ -214,7 +210,7 @@ public class Activos extends EntityBase implements java.io.Serializable {
 		this.lote = lote;
 	}
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "empleado_id")
 	public Empleado getEmpleado() {
 		return empleado;
@@ -224,7 +220,7 @@ public class Activos extends EntityBase implements java.io.Serializable {
 		this.empleado = empleado;
 	}
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "ubicacion_id")
 	public Delegacion getUbicacion() {
 		return ubicacion;
@@ -234,7 +230,7 @@ public class Activos extends EntityBase implements java.io.Serializable {
 		this.ubicacion = ubicacion;
 	}
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="secaf_id")
 	public Secaf getSecaf() {
 		return secaf;
@@ -253,26 +249,4 @@ public class Activos extends EntityBase implements java.io.Serializable {
 		this.color = color;
 	}
 
-	@OneToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name="marca_id")
-	public MarcasModelos getMarca() {
-		return marca;
-	}
-
-	public void setMarca(MarcasModelos marca) {
-		this.marca = marca;
-	}
-
-	@OneToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name="modelo_id")
-	public MarcasModelos getModelo() {
-		return modelo;
-	}
-
-	public void setModelo(MarcasModelos modelo) {
-		this.modelo = modelo;
-	}
-	
-	
-		
 }

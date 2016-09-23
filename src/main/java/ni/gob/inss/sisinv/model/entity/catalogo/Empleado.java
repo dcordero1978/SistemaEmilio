@@ -2,10 +2,13 @@ package ni.gob.inss.sisinv.model.entity.catalogo;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
+
 // Generated 07-12-2016 04:38:35 PM by Hibernate Tools 4.3.4.Final
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -51,7 +54,7 @@ public class Empleado extends EntityBase{
 		this.id = id;
 	}
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "delegacion_id")
 	public Delegacion getDelegacion() {
 		return this.delegacion;
@@ -133,7 +136,7 @@ public class Empleado extends EntityBase{
 		this.numeroEmpleado = numeroEmpleado;
 	}
 
-	@OneToMany(mappedBy = "empleado")
+	@OneToMany(mappedBy = "empleado", fetch = FetchType.LAZY)
 	public List<Activos> getListaActivos() {
 		return listaActivos;
 	}

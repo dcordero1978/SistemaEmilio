@@ -5,10 +5,10 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -71,7 +71,7 @@ public class Delegacion extends EntityBase{
 		this.pasivo = pasivo;
 	}
 
-	@OneToMany(mappedBy = "delegacion")
+	@OneToMany(mappedBy = "delegacion", fetch=FetchType.LAZY)
 	public List<Empleado> getEmpleados() {
 		return this.empleados;
 	}
@@ -80,7 +80,7 @@ public class Delegacion extends EntityBase{
 		this.empleados = empleados;
 	}
 
-	@OneToMany(mappedBy = "ubicacion")	
+	@OneToMany(mappedBy = "ubicacion", fetch = FetchType.LAZY)	
 	public List<Activos> getListaActivos() {
 		return listaActivos;
 	}

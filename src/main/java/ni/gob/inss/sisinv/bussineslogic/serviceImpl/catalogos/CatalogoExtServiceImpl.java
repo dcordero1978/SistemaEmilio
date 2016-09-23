@@ -12,6 +12,8 @@ import com.googlecode.genericdao.search.Search;
 
 import ni.gob.inss.barista.businesslogic.serviceImpl.catalogos.CatalogoServiceImpl;
 import ni.gob.inss.barista.model.dao.EntityNotFoundException;
+import ni.gob.inss.barista.model.dao.catalogos.CatalogoDAO;
+import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.CatalogoExtService;
 import ni.gob.inss.sisinv.model.dao.catalogos.MarcaModeloDAO;
 import ni.gob.inss.sisinv.model.entity.catalogo.MarcasModelos;
@@ -22,6 +24,8 @@ public class CatalogoExtServiceImpl extends CatalogoServiceImpl implements Catal
 	@Autowired
 	MarcaModeloDAO oMarcaModeloDAO;
 	
+	@Autowired
+	CatalogoDAO oCatalogoDAO;	
 	@Transactional
 	@Override
 	public List<MarcasModelos> obtenerListaMarcas() throws EntityNotFoundException {
@@ -30,11 +34,20 @@ public class CatalogoExtServiceImpl extends CatalogoServiceImpl implements Catal
 		return oMarcaModeloDAO.search(oSearch);		
 	}
 
+	@Transactional
 	@Override
 	public List<MarcasModelos> obtenerListaModelos(Integer marcaId) throws EntityNotFoundException {
 		Search oSearch = new Search();
 		oSearch.addFilter(Filter.equal("padreId", marcaId));
 		return oMarcaModeloDAO.search(oSearch);
+	}
+
+	@Transactional
+	@Override
+	public List<Catalogo> obtieneListaCatalogosPorRefTipoCatalogo(String refTipoCatalogo) throws EntityNotFoundException {
+		Search oSearch = new Search();
+		oSearch.addFilter(Filter.equal("refTipoCatalogo", refTipoCatalogo));
+		return oCatalogoDAO.search(oSearch);
 	}
 	
 }

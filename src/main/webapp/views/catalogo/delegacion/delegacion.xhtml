@@ -69,6 +69,9 @@
 									<f:selectItems value="#{delegacionBackBean.listaDepartamentos}" var="dpto" itemLabel="#{dpto.nombre}" itemValue="#{dpto.id}"/>
 								</p:selectOneMenu>		
 								
+								<p:outputLabel for="esUbicacion" value="Es Ubicación:" />
+                            	<p:selectBooleanButton onLabel="Si" offLabel="No" id="esUbicacion" value="#{delegacionBackBean.ubicacion}" />
+                                                   
 								<p:outputLabel for="pasivo" value="Pasivo:" rendered="#{!delegacionBackBean.nuevoRegistro}"/>
                             	<p:selectBooleanButton onLabel="Si" offLabel="No" id="pasivo"
                                                    value="#{delegacionBackBean.pasivo }"

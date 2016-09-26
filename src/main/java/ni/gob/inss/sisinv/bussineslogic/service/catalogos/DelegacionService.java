@@ -6,6 +6,7 @@ import ni.gob.inss.barista.businesslogic.service.BusinessException;
 import ni.gob.inss.barista.model.dao.DAOException;
 import ni.gob.inss.barista.model.dao.EntityNotFoundException;
 import ni.gob.inss.sisinv.model.entity.catalogo.Delegacion;
+import ni.gob.inss.sisinv.model.entity.catalogo.Empleado;
 
 public interface DelegacionService {
 	
@@ -17,7 +18,7 @@ public interface DelegacionService {
 	
 	public Delegacion obtener(int id) throws EntityNotFoundException;
 
-	public List<Delegacion> listaDelegacionesPorDepartamento(Integer departamentoId);
-	
 	public List<Delegacion> listaUbicacionesPorDepartamento(Integer departamentoId);
+	
+	public List<Delegacion> listaUbicacionesEmpleado(Empleado oEmpleado);
 }

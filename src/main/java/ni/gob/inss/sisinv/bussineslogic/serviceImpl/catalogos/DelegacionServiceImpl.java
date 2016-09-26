@@ -1,5 +1,6 @@
 package ni.gob.inss.sisinv.bussineslogic.serviceImpl.catalogos;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import ni.gob.inss.barista.model.dao.EntityNotFoundException;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.DelegacionService;
 import ni.gob.inss.sisinv.model.dao.catalogos.DelegacionDAO;
 import ni.gob.inss.sisinv.model.entity.catalogo.Delegacion;
+import ni.gob.inss.sisinv.model.entity.catalogo.Empleado;
 
 @Service
 public class DelegacionServiceImpl implements DelegacionService{
@@ -59,20 +61,26 @@ public class DelegacionServiceImpl implements DelegacionService{
 		return oDelegacionDAO.find(id);		
 	}
 
-	@Override
-	public List<Delegacion> listaDelegacionesPorDepartamento(Integer departamentoId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	@Transactional
 	@Override
 	public List<Delegacion> listaUbicacionesPorDepartamento(Integer departamentoId) {
 		Search oSearch = new Search();
-		oSearch.addFilterAnd(Filter.equal("departamentoId", departamentoId),Filter.equal("esUbicacion", true));
+		oSearch.addFilter(Filter.equal("esUbicacion", true));
+		oSearch.addFilter(Filter.equal("departamentoId", departamentoId));
 		return oDelegacionDAO.search(oSearch);		
 	}
 	
-	
+	@Transactional
+	@Override
+	public List<Delegacion> listaUbicacionesEmpleado(Empleado oEmpleado){
+		List<Delegacion> listaUbicaciones = new ArrayList<Delegacion>();
+		if(this.listaUbicacionesPorDepartamento(oEmpleado.getDelegacion().getDepartamentoId()).isEmpty()){
+			listaUbicaciones.add(oEmpleado.getDelegacion());
+			return listaUbicaciones;
+		}else{
+			return this.listaUbicacionesPorDepartamento(oEmpleado.getDelegacion().getDepartamentoId()); 
+		}		
+	}
+
 
 }

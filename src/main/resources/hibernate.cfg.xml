@@ -5,8 +5,11 @@
  <session-factory name="SessionFactorySinv">
   <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
   <property name="hibernate.connection.password">123qwesad</property>
-  <property name="hibernate.connection.url">jdbc:postgresql://192.168.1.38:5432/SINV</property>
+  <property name="hibernate.connection.url">jdbc:postgresql://192.168.1.38:5432/SISINV</property>
   <property name="hibernate.connection.username">developer</property>
   <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+  <mapping class="Empleado" package="ni.gob.inss.sisinv.model.entity.catalogo"/>
+  <mapping class="Delegacion" package="ni.gob.inss.sisinv.model.entity.catalogo"/>
+  <mapping class="Secaf" package="ni.gob.inss.sisinv.model.entity.catalogo"/>
  </session-factory>
 </hibernate-configuration>

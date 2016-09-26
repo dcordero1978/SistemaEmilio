@@ -1,18 +1,23 @@
 package ni.gob.inss.sisinv.model.entity.catalogo;
 
+import java.util.List;
+
 // Generated 07-12-2016 04:38:35 PM by Hibernate Tools 4.3.4.Final
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import ni.gob.inss.barista.model.entity.EntityBase;
+import ni.gob.inss.sisinv.model.entity.inventario.Activos;
 
 @Entity
 @Table(name = "empleado", schema = "catalogo")
@@ -32,6 +37,8 @@ public class Empleado extends EntityBase{
 	private String numeroEmpleado;	
 	private String nroIdentificacion;
 	private Boolean pasivo;
+	
+	private List<Activos> listaActivos;
 
 
 	@Id
@@ -45,7 +52,7 @@ public class Empleado extends EntityBase{
 		this.id = id;
 	}
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "delegacion_id")
 	public Delegacion getDelegacion() {
 		return this.delegacion;
@@ -125,6 +132,15 @@ public class Empleado extends EntityBase{
 
 	public void setNumeroEmpleado(String numeroEmpleado) {
 		this.numeroEmpleado = numeroEmpleado;
+	}
+
+	@OneToMany(mappedBy = "empleado", fetch = FetchType.LAZY)
+	public List<Activos> getListaActivos() {
+		return listaActivos;
+	}
+
+	public void setListaActivos(List<Activos> listaActivos) {
+		this.listaActivos = listaActivos;
 	}
 	
 	

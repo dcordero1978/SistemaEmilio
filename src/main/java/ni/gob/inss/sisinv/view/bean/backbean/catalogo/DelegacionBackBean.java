@@ -37,6 +37,7 @@ public class DelegacionBackBean extends BaseBackBean implements Serializable  {
 	private Integer hfId;
 	private boolean pasivo;
 	private Integer departamentoId;
+	private boolean ubicacion;
 	
 	@Autowired
 	TipoCatalogoExtService oTipoCatalogoExtService;
@@ -94,7 +95,7 @@ public class DelegacionBackBean extends BaseBackBean implements Serializable  {
 			oDelegacion.setModificadoEl(this.getTimeNow());
 			oDelegacion.setModificadoPor(this.getUsuarioActual().getId());
 			oDelegacion.setModificadoEnIp(this.getRemoteIp());
-			
+			oDelegacion.setEsUbicacion(this.isUbicacion());
 			oDelegacionService.actualizar(oDelegacion);
 			mostrarMensajeInfo(MessagesResults.EXITO_MODIFICAR);
 			
@@ -121,7 +122,8 @@ public class DelegacionBackBean extends BaseBackBean implements Serializable  {
 		this.setDescripcionDelegacion("");
 		this.setDepartamentoId(null);
 		this.setPasivo(false);
-		this.setDelegacionSeleccionada(null);		
+		this.setDelegacionSeleccionada(null);
+		this.setUbicacion(false);
 	}
 	
 	public void guardar(){
@@ -134,6 +136,7 @@ public class DelegacionBackBean extends BaseBackBean implements Serializable  {
 			oDelegacion.setCreadoEl(this.getTimeNow());
 			oDelegacion.setCreadoEnIp(this.getRemoteIp());
 			oDelegacion.setPasivo(false);
+			oDelegacion.setEsUbicacion(this.isUbicacion());
 			oDelegacionService.agregar(oDelegacion);
 			mostrarMensajeInfo(MessagesResults.EXITO_GUARDAR);	
 		
@@ -153,6 +156,7 @@ public class DelegacionBackBean extends BaseBackBean implements Serializable  {
 			this.setHfId(oDelegacion.getId());
 			this.setPasivo(oDelegacion.getPasivo());
 			this.setNuevoRegistro(false);
+			this.setUbicacion(oDelegacion.getEsUbicacion());
 			
 		} catch (Exception e) {
 			mostrarMensajeError(this.getClass().getSimpleName(), "obtenerDelegacion", MessagesResults.ERROR_OBTENER, e);
@@ -228,7 +232,14 @@ public class DelegacionBackBean extends BaseBackBean implements Serializable  {
 
 	public void setDepartamentoId(Integer departamentoId) {
 		this.departamentoId = departamentoId;
-	}				
-	
+	}
+
+	public boolean isUbicacion() {
+		return ubicacion;
+	}
+
+	public void setUbicacion(boolean ubicacion) {
+		this.ubicacion = ubicacion;
+	}
 	
 }

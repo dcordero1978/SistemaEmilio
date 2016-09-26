@@ -31,6 +31,7 @@ import ni.gob.inss.sisinv.model.entity.catalogo.MarcasModelos;
 import ni.gob.inss.sisinv.model.entity.catalogo.Secaf;
 import ni.gob.inss.sisinv.model.entity.inventario.Activos;
 import ni.gob.inss.sisinv.util.CatalogoGeneral;
+import ni.gob.inss.sisinv.util.RegExpresionExtends;
 
 @Named
 @Scope("view")
@@ -72,6 +73,11 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 	private String descripcionActivo;
 	private String codigoSecundario;
 	
+	private String regExpSoloLetras;
+	private String regExpSoloNumeros;
+	private String regExpDecimales;
+	private String regExpDescripcion;
+	
 	@Autowired
 	EmpleadoService oEmpleadoService;
 	
@@ -94,6 +100,10 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 	public void init(){
 		this.limpiar();
 		this.cargarListas();
+		this.regExpSoloLetras = RegExpresionExtends.regExpSoloLetrasConEspacio;
+		this.regExpSoloNumeros = RegExpresionExtends.regExpSoloNumeros;
+		this.regExpDecimales = RegExpresionExtends.regExpDecimales;
+		this.regExpDescripcion = RegExpresionExtends.regExpDescripcion;
 	}
 	
 	public void limpiar(){
@@ -476,5 +486,22 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 	public void setCodigoSecundario(String codigoSecundario) {
 		this.codigoSecundario = codigoSecundario;
 	}
+
+	public String getRegExpSoloLetras() {
+		return regExpSoloLetras;
+	}
+
+	public String getRegExpSoloNumeros() {
+		return regExpSoloNumeros;
+	}
+
+	public String getRegExpDecimales() {
+		return regExpDecimales;
+	}
+
+	public String getRegExpDescripcion() {
+		return regExpDescripcion;
+	}
+	
 	
 }

@@ -120,7 +120,9 @@
 							<f:selectItems var="oSecaf" value="#{registroActivosBackBean.listaCatalogoSecaf}" itemLabel="#{oSecaf.descripcionCbs}" itemValue="#{oSecaf.id}" />
 						</p:selectOneMenu>
 						<p:outputLabel for="Descripcion" value="Descripción Activo" />
-						<p:inputText id="Descripcion" required="true" maxlength="100" autocomplete="off" style="width:90%" value="#{registroActivosBackBean.descripcionActivo}"/>
+						<p:inputText id="Descripcion" required="true" maxlength="100" autocomplete="off" style="width:90%" value="#{registroActivosBackBean.descripcionActivo}">
+							<pe:keyFilter regEx="/#{registroActivosBackBean.regExpDescripcion}/"/>
+						</p:inputText>
 						<p:outputLabel for="codigoSecundario" value="Código Secundario" />
 						<p:inputText id="codigoSecundario" required="false" maxlength="100" autocomplete="off" style="width:90%" value="#{registroActivosBackBean.codigoSecundario}"/>
 					</h:panelGrid>
@@ -151,9 +153,13 @@
 								<f:selectItems var="oEstadoFisico" value="#{registroActivosBackBean.listaEstadoFisico}" itemLabel="#{oEstadoFisico.descripcion}" itemValue="#{oEstadoFisico.id}" />I
 							</p:selectOneMenu>
 							<p:outputLabel for="noProyecto" value="Número Proyecto" />
-							<p:inputText id="noProyecto" maxlength="20" value="#{registroActivosBackBean.numeroProyecto}" autocomplete="off" style="width:90%"/>
+							<p:inputText id="noProyecto" maxlength="10" value="#{registroActivosBackBean.numeroProyecto}" autocomplete="off" style="width:90%">
+								<pe:keyFilter regEx="/#{registroActivosBackBean.regExpSoloNumeros}/"/>
+							</p:inputText>
 							<p:outputLabel for="noBodega" value="Número Bodega" />
-							<p:inputText id="noBodega" maxlength="20" autocomplete="off" style="width:90%" value="#{registroActivosBackBean.numeroBodega}"/>
+							<p:inputText id="noBodega" maxlength="10" autocomplete="off" style="width:90%" value="#{registroActivosBackBean.numeroBodega}">
+								<pe:keyFilter regEx="/#{registroActivosBackBean.regExpSoloNumeros}/"/>
+							</p:inputText>
 							
 							<p:outputLabel for="tipoResguardo" value="Resguardo"/>
 							<p:selectOneMenu required="true" id="tipoResguardo" label="Resguardo:" style="width:85%" value="#{registroActivosBackBean.tipoResguardoId}">
@@ -163,7 +169,9 @@
 						<p:outputLabel for="fechaAdquisicion" value="Fecha Adquisición:" />
  		       			<p:calendar id="fechaAdquisicion"  pattern="dd/MM/yyyy" mask="true"  style="width:90%"/>
  		       			<p:outputLabel for="valor" value="Valor" />
-						<p:inputText id="valor" maxlength="10" autocomplete="off" style="width:90%" value="#{registroActivosBackBean.valor}"/>
+						<p:inputText id="valor" maxlength="10" autocomplete="off" style="width:90%" value="#{registroActivosBackBean.valor}">
+							<pe:keyFilter regEx="/#{registroActivosBackBean.regExpDecimales}/"/>
+						</p:inputText>
 						<p:outputLabel for="tipoMoneda" value="Tipo Moneda:"/>
 						<p:selectOneMenu id="tipoMoneda" label="Tipo Moneda:" style="width:85%" value="#{registroActivosBackBean.tipoMonedaId}">
 							<f:selectItem itemValue="#{null}" itemLabel="Seleccione Tipo Moneda"/>

@@ -2,8 +2,6 @@ package ni.gob.inss.sisinv.model.entity.catalogo;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
-
 // Generated 07-12-2016 04:38:35 PM by Hibernate Tools 4.3.4.Final
 
 import javax.persistence.Column;

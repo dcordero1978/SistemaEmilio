@@ -48,6 +48,7 @@ public class Activos extends EntityBase implements java.io.Serializable {
 	private BigDecimal valor;
 	private Integer tipoMoneda;
 	private String lote;
+	private Integer empleadoId;
 	private Empleado empleado;
 	private Delegacion ubicacion;
 	private Secaf secaf;
@@ -249,4 +250,13 @@ public class Activos extends EntityBase implements java.io.Serializable {
 		this.color = color;
 	}
 
+	@Column(name="empleado_id", insertable = false, updatable = false)
+	public Integer getEmpleadoId() {
+		return empleadoId;
+	}
+
+	public void setEmpleadoId(Integer empleadoId) {
+		this.empleadoId = empleadoId;
+	}
+	
 }

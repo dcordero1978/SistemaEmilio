@@ -6,7 +6,11 @@
                 xmlns:pe="http://primefaces.org/ui/extensions"
                 template="/web/template/innerLayout.xhtml"
                 xmlns:mc="http://java.sun.com/jsf/composite/comps">
-
+<style type="text/css">
+	ui-icon ui-icon-search{
+		top: 3px !important;
+	}
+</style>
 	<ui:param name="paramBackBean" value="#{registroActivosBackBean}"/>
 	<ui:define name="headerContent">
 		Registro de Activos
@@ -100,18 +104,18 @@
 					<f:facet name="header">
 						Registrar Activo.
 						<p:outputPanel style="display:block" styleClass="right">
-							<p:commandButton ajax="true" update=":formDatosGenerales:listaActivos :datosActivo" value="#{labelName.btnGuardar}" resetValues="true"  icon="ui-icon-circle-plus" action="#{registroActivosBackBean.guardar}"/>
+							<p:commandButton ajax="true" update=":formDatosGenerales:listaActivos :datosActivo" value="#{labelName.btnGuardar}" resetValues="true"  icon="ui-icon-disk" action="#{registroActivosBackBean.guardar}"/>
 						 	<p:commandButton oncomplete="PF('modalRegistroActivo').hide()"  immediate="true" value="#{labelName.btnCancelar}" ajax="true" action="#{registroActivosBackBean.limpiarFormularioRegistro}" icon="ui-icon-cancel" />
 						</p:outputPanel>						
 					</f:facet>
-					<h:panelGrid style="width:100%" columns="2" columnClasses="Wid30, Wid70" >
+					<h:panelGrid style="width:100%" columns="2" columnClasses="Wid20, Wid80" >
 						<p:outputLabel for="ubicacion" value="Ubicación"/>
-						<p:selectOneMenu id="ubicacion" label="Ubicación" required="true" value="#{registroActivosBackBean.ubicacionId}" style="width:85%" >
+						<p:selectOneMenu id="ubicacion" label="Ubicación" required="true" value="#{registroActivosBackBean.ubicacionId}" style="width:88%" >
 							<f:selectItem itemValue="#{null}" itemLabel="Seleccione la Ubicación"/>
 							<f:selectItems  var="oUbicacion" value="#{registroActivosBackBean.listaUbicaciones}" itemLabel="#{oUbicacion.descripcion}" itemValue="#{oUbicacion.id}"/>									
 						</p:selectOneMenu>
 						<p:outputLabel for="Secaf" value="Bien" />								
-						<p:selectOneMenu filter="true" filterMatchMode="contains"  required="true" id="Secaf" label="Bien:" style="width:85%" value="#{registroActivosBackBean.catalogoSecafId}">
+						<p:selectOneMenu filter="true" filterMatchMode="contains"  required="true" id="Secaf" label="Bien:" style="width:88%" value="#{registroActivosBackBean.catalogoSecafId}">
 							<f:selectItem itemValue="#{null}" itemLabel="Por favor seleccione"/>
 							<f:selectItems var="oSecaf" value="#{registroActivosBackBean.listaCatalogoSecaf}" itemLabel="#{oSecaf.descripcionCbs}" itemValue="#{oSecaf.id}" />
 						</p:selectOneMenu>
@@ -119,55 +123,58 @@
 						<p:inputText id="Descripcion" required="true" maxlength="100" autocomplete="off" style="width:90%" value="#{registroActivosBackBean.descripcionActivo}"/>
 						<p:outputLabel for="codigoSecundario" value="Código Secundario" />
 						<p:inputText id="codigoSecundario" required="false" maxlength="100" autocomplete="off" style="width:90%" value="#{registroActivosBackBean.codigoSecundario}"/>
-						
+					</h:panelGrid>
+					<h:panelGrid style="width:95%" columns="4" columnClasses="Wid25,Wid25,Wid25,Wid25">
 						<p:outputLabel for="marca" value="Marca"/>
-						<p:selectOneMenu filter="true" filterMatchMode="contains" required="true" id="marca" label="Marca:" style="width:85%" value="#{registroActivosBackBean.marcaId}">
-							<p:ajax listener="#{registroActivosBackBean.cargarListaModelos}" update="modelo"/>
-							<f:selectItem itemValue="#{null}" itemLabel="Seleccione Marca"/>
-							<f:selectItems var="oMarca" value="#{registroActivosBackBean.listaMarcas}" itemLabel="#{oMarca.descripcion}" itemValue="#{oMarca.id}"/>
+							<p:selectOneMenu filter="true" filterMatchMode="contains" required="true" id="marca" label="Marca:" style="width:85%" value="#{registroActivosBackBean.marcaId}">
+								<p:ajax listener="#{registroActivosBackBean.cargarListaModelos}" update="modelo"/>
+								<f:selectItem itemValue="#{null}" itemLabel="Seleccione Marca"/>
+								<f:selectItems var="oMarca" value="#{registroActivosBackBean.listaMarcas}" itemLabel="#{oMarca.descripcion}" itemValue="#{oMarca.id}"/>
+							</p:selectOneMenu>
+							<p:outputLabel for="modelo" value="Modelo"/>
+							<p:selectOneMenu filter="true" filterMatchMode="contains" required="true" id="modelo" label="Modelo:" value="#{registroActivosBackBean.modeloId}" style="width:85%">
+								<f:selectItem itemValue="#{null}" itemLabel="Seleccione Modelo"/>
+								<f:selectItems var="oModelo" value="#{registroActivosBackBean.listaModelos}" itemLabel="#{oModelo.descripcion}" itemValue="#{oModelo.id}"/>
+							</p:selectOneMenu>
+							<p:outputLabel for="noLote" value="Lote" />
+							<p:inputText id="noLote" maxlength="20" autocomplete="off"  value="#{registroActivosBackBean.noLote}" required="true" style="width:90%"/>
+							<p:outputLabel for="noSerie" value="Serie" />
+							<p:inputText id="noSerie" maxlength="20" value="#{registroActivosBackBean.noSerie}" autocomplete="off" required="true" style="width:90%"/>
+							<p:outputLabel for="color" value="Color"/>
+							<p:selectOneMenu required="true" id="color" filter="true" filterMatchMode="contains" value="#{registroActivosBackBean.codigoColor}" label="Color:" style="width:85%">
+								<f:selectItem itemValue="#{null}" itemLabel="Seleccione Color"/>
+								<f:selectItems var="oColor" itemLabel="#{oColor.descripcion}" itemValue="#{oColor.codigo}" value="#{registroActivosBackBean.listaColores}"/>
+							</p:selectOneMenu>
+							<p:outputLabel for="estadoFisico" value="Estado Fisico"/>
+							<p:selectOneMenu required="true" id="estadoFisico" value="#{registroActivosBackBean.estadoFisicoId}" label="Estado Fisico:" style="width:85%">
+								<f:selectItem itemValue="#{null}" itemLabel="Seleccione Estado Fisico"/>
+								<f:selectItems var="oEstadoFisico" value="#{registroActivosBackBean.listaEstadoFisico}" itemLabel="#{oEstadoFisico.descripcion}" itemValue="#{oEstadoFisico.id}" />I
+							</p:selectOneMenu>
+							<p:outputLabel for="noProyecto" value="Número Proyecto" />
+							<p:inputText id="noProyecto" maxlength="20" value="#{registroActivosBackBean.numeroProyecto}" autocomplete="off" style="width:90%"/>
+							<p:outputLabel for="noBodega" value="Número Bodega" />
+							<p:inputText id="noBodega" maxlength="20" autocomplete="off" style="width:90%" value="#{registroActivosBackBean.numeroBodega}"/>
+							
+							<p:outputLabel for="tipoResguardo" value="Resguardo"/>
+							<p:selectOneMenu required="true" id="tipoResguardo" label="Resguardo:" style="width:85%" value="#{registroActivosBackBean.tipoResguardoId}">
+								<f:selectItem itemValue="#{null}" itemLabel="Seleccione Resguardo"/>
+								<f:selectItems var="oTipoResguardo" value="#{registroActivosBackBean.listaTipoResguardo}" itemLabel="#{oTipoResguardo.descripcion}" itemValue="#{oTipoResguardo.id}" />
 						</p:selectOneMenu>
-						<p:outputLabel for="modelo" value="Modelo"/>
-						<p:selectOneMenu filter="true" filterMatchMode="contains" required="true" id="modelo" label="Modelo:" value="#{registroActivosBackBean.modeloId}" style="width:85%">
-							<f:selectItem itemValue="#{null}" itemLabel="Seleccione Modelo"/>
-							<f:selectItems var="oModelo" value="#{registroActivosBackBean.listaModelos}" itemLabel="#{oModelo.descripcion}" itemValue="#{oModelo.id}"/>
-						</p:selectOneMenu>
-						<p:outputLabel for="color" value="Color"/>
-						<p:selectOneMenu required="true" id="color" filter="true" filterMatchMode="contains" value="#{registroActivosBackBean.codigoColor}" label="Color:" style="width:85%">
-							<f:selectItem itemValue="#{null}" itemLabel="Seleccione Color"/>
-							<f:selectItems var="oColor" itemLabel="#{oColor.descripcion}" itemValue="#{oColor.codigo}" value="#{registroActivosBackBean.listaColores}"/>
-						</p:selectOneMenu>
-						<p:outputLabel for="noLote" value="Lote" />
-						<p:inputText id="noLote" maxlength="20" autocomplete="off"  value="#{registroActivosBackBean.noLote}" required="true" style="width:90%"/>
-						<p:outputLabel for="noSerie" value="Serie" />
-						<p:inputText id="noSerie" maxlength="20" value="#{registroActivosBackBean.noSerie}" autocomplete="off" required="true" style="width:90%"/>
-						
-						<p:outputLabel for="estadoFisico" value="Estado Fisico"/>
-						<p:selectOneMenu required="true" id="estadoFisico" value="#{registroActivosBackBean.estadoFisicoId}" label="Estado Fisico:" style="width:85%">
-							<f:selectItem itemValue="#{null}" itemLabel="Seleccione Estado Fisico"/>
-							<f:selectItems var="oEstadoFisico" value="#{registroActivosBackBean.listaEstadoFisico}" itemLabel="#{oEstadoFisico.descripcion}" itemValue="#{oEstadoFisico.id}" />I
-						</p:selectOneMenu>
-						<p:outputLabel for="tipoResguardo" value="Resguardo"/>
-						<p:selectOneMenu required="true" id="tipoResguardo" label="Resguardo:" style="width:85%" value="#{registroActivosBackBean.tipoResguardoId}">
-							<f:selectItem itemValue="#{null}" itemLabel="Seleccione Resguardo"/>
-							<f:selectItems var="oTipoResguardo" value="#{registroActivosBackBean.listaTipoResguardo}" itemLabel="#{oTipoResguardo.descripcion}" itemValue="#{oTipoResguardo.id}" />
-						</p:selectOneMenu>
-						<p:outputLabel for="noProyecto" value="Número Proyecto" />
-						<p:inputText id="noProyecto" maxlength="20" value="#{registroActivosBackBean.numeroProyecto}" autocomplete="off" style="width:90%"/>
-						<p:outputLabel for="noBodega" value="Número Bodega" />
-						<p:inputText id="noBodega" maxlength="20" autocomplete="off" style="width:90%" value="#{registroActivosBackBean.numeroBodega}"/>
-						<p:outputLabel for="valor" value="Valor" />
+						<p:outputLabel for="fechaAdquisicion" value="Fecha Adquisición:" />
+ 		       			<p:calendar id="fechaAdquisicion"  pattern="dd/MM/yyyy" mask="true"  style="width:90%"/>
+ 		       			<p:outputLabel for="valor" value="Valor" />
 						<p:inputText id="valor" maxlength="10" autocomplete="off" style="width:90%" value="#{registroActivosBackBean.valor}"/>
 						<p:outputLabel for="tipoMoneda" value="Tipo Moneda:"/>
 						<p:selectOneMenu id="tipoMoneda" label="Tipo Moneda:" style="width:85%" value="#{registroActivosBackBean.tipoMonedaId}">
 							<f:selectItem itemValue="#{null}" itemLabel="Seleccione Tipo Moneda"/>
 							<f:selectItems var="oTipoMoneda" value="#{registroActivosBackBean.listaTipoMoneda}" itemLabel="#{oTipoMoneda.descripcion}" itemValue="#{oTipoMoneda.id}"/>
 						</p:selectOneMenu>
-						<p:outputLabel for="fechaAdquisicion" value="Fecha Adquisición:" />
- 		       			<p:calendar id="fechaAdquisicion"  pattern="dd/MM/yyyy" mask="true" />
-					</h:panelGrid>					
+					</h:panelGrid>	
+										
 				</p:panel>
 			</h:form>
 			</div>
 		</p:dialog>
 	</ui:define>
 </ui:composition>
+

@@ -35,7 +35,7 @@
 							paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="12" pageLinks="3"  paginatorTemplate="#{configApplicationBean.paginatorTemplate}"
 							currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
 								<p:ajax event="rowSelect" listener="#{delegacionBackBean.editar}" update=":formDatosDelegacion" resetValues="true" />
-								<p:column headerText="Delegación" sortBy="#{oDelegacion.descripcionDelegacion}">
+								<p:column headerText="Delegación" sortBy="#{oDelegacion.descripcion}">
 									<h:outputText value="#{oDelegacion.descripcion}" />
 								</p:column>
 								<p:column headerText="Pasivo" style="text-align:center; width:10%" priority="2" sortBy="#{oDelegacion.pasivo}">

@@ -16,6 +16,7 @@ import ni.gob.inss.barista.view.bean.backbean.BaseBackBean;
 import ni.gob.inss.barista.view.utils.web.MessagesResults;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.DelegacionService;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.TipoCatalogoExtService;
+import ni.gob.inss.sisinv.bussineslogic.service.seguridad.UsuarioExtService;
 import ni.gob.inss.sisinv.model.entity.catalogo.Delegacion;
 import ni.gob.inss.sisinv.util.CatalogoGeneral;
 
@@ -39,6 +40,8 @@ public class DelegacionBackBean extends BaseBackBean implements Serializable  {
 	private Integer departamentoId;
 	private boolean ubicacion;
 	
+	private boolean autorizadoParaEditar;
+	
 	@Autowired
 	TipoCatalogoExtService oTipoCatalogoExtService;
 		
@@ -49,11 +52,15 @@ public class DelegacionBackBean extends BaseBackBean implements Serializable  {
 	DelegacionService oDelegacionService;
 	
 	
+	@Autowired
+	UsuarioExtService oUsuarioService;
+	
 	@PostConstruct
 	public void init(){
 		this.limpiar();
 		this.cargarListaDepartamentos();
 		this.buscarDelegacionByName();
+		this.autorizadoParaEditar = oUsuarioService.usuarioTieneAutorizacion(this.getUsuarioActual(), this.getEntidadActual(), "EDEL");
 	}
 	
 	public void cargarListaDepartamentos(){
@@ -241,5 +248,9 @@ public class DelegacionBackBean extends BaseBackBean implements Serializable  {
 	public void setUbicacion(boolean ubicacion) {
 		this.ubicacion = ubicacion;
 	}
+
+	public boolean isAutorizadoParaEditar() {
+		return autorizadoParaEditar;
+	}	
 	
 }

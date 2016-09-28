@@ -24,8 +24,8 @@
 									</p:outputPanel>
 									<p:outputPanel style="display: block;" styleClass="right">
 										<p:commandButton icon="ui-icon-circle-plus" action="#{delegacionBackBean.limpiar}" value="#{labelName.btnAgregar}"
-										resetValues="true" ajax="true" update=":formDatosDelegacion"/>
-										<p:commandButton icon="ui-icon-pencil" action="#{delegacionBackBean.editar}" value="#{labelName.btnEditar}" resetValues="true" update=":formDatosDelegacion"/>
+										resetValues="true" ajax="true" update=":formDatosDelegacion" rendered="#{delegacionBackBean.autorizadoParaEditar}" />
+										<p:commandButton icon="ui-icon-pencil" action="#{delegacionBackBean.editar}" value="#{labelName.btnEditar}" resetValues="true" update=":formDatosDelegacion" rendered="#{delegacionBackBean.autorizadoParaEditar}"/>
 									</p:outputPanel>
 							</f:facet>
 							<p:outputPanel styleClass="tableClass">
@@ -53,7 +53,7 @@
 							<f:facet name="header">
 								<h:outputText value="ID: #{delegacionBackBean.hfId}" rendered="#{!delegacionBackBean.nuevoRegistro}"/>
 								<p:outputPanel style="display:block" styleClass="right">
-									<p:commandButton widgetVar="btnGuardar" actionListener="#{delegacionBackBean.guardarOrActualizar}" icon="ui-icon-disk" 
+									<p:commandButton widgetVar="btnGuardar" actionListener="#{delegacionBackBean.guardarOrActualizar}" icon="ui-icon-disk" rendered="#{delegacionBackBean.autorizadoParaEditar}"
 										update="formDatosDelegacion :formListaDelegaciones" value="#{labelName.btnGuardar}" onstart="PF('btnGuardar').disable();" oncomplete="PF('btnGuardar').enable();"/>
 									<p:commandButton resetValues="true" ajax="true" update=":formDatosDelegacion" action="#{delegacionBackBean.limpiar}" value="#{labelName.btnCancelar}" icon="ui-icon-cancel" process="@this"/>	
 								</p:outputPanel>
@@ -62,20 +62,20 @@
 							<h:panelGrid columns="2" style="width:100" columnClasses="Wid20, Wid80">
 								<p:outputLabel for="nombreDelegacion" value="Nombre"/>
 								<p:inputText value="#{delegacionBackBean.descripcionDelegacion}" label="Nombre" maxlength="25" 
-											 id="nombreDelegacion" required="true" styleClass="Wid80" autocomplete="off"/>
+											 id="nombreDelegacion" required="true" styleClass="Wid80" autocomplete="off" disabled="#{!delegacionBackBean.autorizadoParaEditar}"/>
 								<p:outputLabel for="departamentoPertenece" value="Departamento"/>
-								<p:selectOneMenu id="departamentoPertenece" label="Departamento" value="#{delegacionBackBean.departamentoId}" required="true" >
+								<p:selectOneMenu id="departamentoPertenece" label="Departamento" value="#{delegacionBackBean.departamentoId}" required="true" disabled="#{!delegacionBackBean.autorizadoParaEditar}">
 									<f:selectItem itemLabel="Seleccione" itemValue="#{null}"/>
 									<f:selectItems value="#{delegacionBackBean.listaDepartamentos}" var="dpto" itemLabel="#{dpto.nombre}" itemValue="#{dpto.id}"/>
 								</p:selectOneMenu>		
 								
 								<p:outputLabel for="esUbicacion" value="Es Ubicación:" />
-                            	<p:selectBooleanButton onLabel="Si" offLabel="No" id="esUbicacion" value="#{delegacionBackBean.ubicacion}" />
+                            	<p:selectBooleanButton onLabel="Si" offLabel="No" id="esUbicacion" value="#{delegacionBackBean.ubicacion}" disabled="#{!delegacionBackBean.autorizadoParaEditar}"/>
                                                    
 								<p:outputLabel for="pasivo" value="Pasivo:" rendered="#{!delegacionBackBean.nuevoRegistro}"/>
                             	<p:selectBooleanButton onLabel="Si" offLabel="No" id="pasivo"
                                                    value="#{delegacionBackBean.pasivo }"
-                                                   rendered="#{!delegacionBackBean.nuevoRegistro}"/>		
+                                                   rendered="#{!delegacionBackBean.nuevoRegistro}" disabled="#{!delegacionBackBean.autorizadoParaEditar}"/>		
 							</h:panelGrid>						
 						</p:panel>
 					

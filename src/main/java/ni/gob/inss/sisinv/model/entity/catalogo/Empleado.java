@@ -28,16 +28,16 @@ public class Empleado extends EntityBase{
 	private Integer id;
 	private Delegacion delegacion;
 	private Integer delegacionId;
-	
 	private String primerNombre;
 	private String segundoNombre;
 	private String primerApellido;
 	private String segundoApellido;
-	
 	private String numeroEmpleado;	
 	private String nroIdentificacion;
 	private Boolean pasivo;
-	
+	private String area;
+	private String cargo;
+	private Boolean ingresadoManual;
 	private List<Activos> listaActivos;
 
 
@@ -141,6 +141,33 @@ public class Empleado extends EntityBase{
 
 	public void setListaActivos(List<Activos> listaActivos) {
 		this.listaActivos = listaActivos;
+	}
+
+	@Column(name="area", insertable=false, updatable=false)
+	public String getArea() {
+		return area;
+	}
+
+	public void setArea(String area) {
+		this.area = area;
+	}
+
+	@Column(name="cargo", insertable=false, updatable=false)
+	public String getCargo() {
+		return cargo;
+	}
+
+	public void setCargo(String cargo) {
+		this.cargo = cargo;
+	}
+
+	@Column(name="ingresado_manual")
+	public Boolean getIngresadoManual() {
+		return ingresadoManual;
+	}
+
+	public void setIngresadoManual(Boolean ingresadoManual) {
+		this.ingresadoManual = ingresadoManual;
 	}
 	
 	

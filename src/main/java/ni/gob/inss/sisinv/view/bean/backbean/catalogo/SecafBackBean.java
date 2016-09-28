@@ -18,6 +18,7 @@ import ni.gob.inss.barista.view.bean.backbean.BaseBackBean;
 import ni.gob.inss.barista.view.utils.web.MessagesResults;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.SecafService;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.TipoCatalogoExtService;
+import ni.gob.inss.sisinv.bussineslogic.service.seguridad.UsuarioExtService;
 import ni.gob.inss.sisinv.model.entity.catalogo.Secaf;
 import ni.gob.inss.sisinv.util.CatalogoGeneral;
 import ni.gob.inss.sisinv.util.RegExpresionExtends;
@@ -55,18 +56,23 @@ public class SecafBackBean extends BaseBackBean implements Serializable{
 	private List<Secaf> listaCatalogoSecaf;
 	private List<Catalogo> listaTipoBienes;
 	
+	private boolean autorizadoParaEditar;
+	
 	@Autowired
 	private SecafService oSecafService;
 	
 	@Autowired
 	private TipoCatalogoExtService oTipoCatalogoService;
 	
+	@Autowired
+	private UsuarioExtService oUsuarioService;
 	@PostConstruct
 	public void init(){
 		limpiar();
 		this.cargarExpresionesRegulares();
 		this.cargarListaCatalogo();
 		this.buscar();
+		autorizadoParaEditar =  oUsuarioService.usuarioTieneAutorizacion(this.getUsuarioActual(), this.getEntidadActual(), "ESEC");
 	}
 	
 	public void limpiar(){
@@ -331,6 +337,10 @@ public class SecafBackBean extends BaseBackBean implements Serializable{
 
 	public void setGasto(Integer gasto) {
 		this.gasto = gasto;
-	}	
+	}
+
+	public boolean isAutorizadoParaEditar() {
+		return autorizadoParaEditar;
+	}
 	
 }

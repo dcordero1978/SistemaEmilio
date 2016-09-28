@@ -22,8 +22,8 @@
 						<p:commandButton icon="ui-icon-search" action="#{secafBackBean.buscar}" ajax="true" update="listaCatalogoSecaf"/>
 					</p:outputPanel>
 					<p:outputPanel style="display" styleClass="right">
-						<p:commandButton icon="ui-icon-circle-plus" value="#{labelName.btnAgregar}" ajax="true" action="#{secafBackBean.limpiar}" update=":formDatosSecaf"/>
-						<p:commandButton icon="ui-icon-pencil" value="#{labelName.btnEditar}" action="#{secafBackBean.editar}" resetValues="true" update=":formDatosSecaf"/>
+						<p:commandButton icon="ui-icon-circle-plus" value="#{labelName.btnAgregar}" ajax="true" action="#{secafBackBean.limpiar}" update=":formDatosSecaf" rendered="#{secafBackBean.autorizadoParaEditar}"/>
+						<p:commandButton icon="ui-icon-pencil" value="#{labelName.btnEditar}" action="#{secafBackBean.editar}" resetValues="true" update=":formDatosSecaf" rendered="#{secafBackBean.autorizadoParaEditar}"/>
 					</p:outputPanel>
 					</f:facet>
 					<p:outputPanel styleClass="tableClass">
@@ -76,43 +76,43 @@
 						<f:facet name="header">
 							<h:outputText value="ID: #{secafBackBean.hfId}" rendered="#{!secafBackBean.nuevoRegistro}"/>
 							<p:outputPanel style="display:block" styleClass="right">
-								<p:commandButton widgetVar="btnGuardar" icon="ui-icon-disk" value="#{labelName.btnGuardar}" action="#{secafBackBean.guardarOactualizar}" ajax="true" update=":formLista formDatosSecaf"/>
+								<p:commandButton widgetVar="btnGuardar" icon="ui-icon-disk" value="#{labelName.btnGuardar}" action="#{secafBackBean.guardarOactualizar}" ajax="true" update=":formLista formDatosSecaf" rendered="#{secafBackBean.autorizadoParaEditar}"/>
 								<p:commandButton widgetVar="btnCancelar" icon="ui-icon-cancel" value="#{labelName.btnCancelar}" action="#{secafBackBean.limpiar}" update="formDatosSecaf"/>
 							</p:outputPanel>
 						</f:facet>						
 						<h:panelGrid columns="2" style="width:100%" columnClasses="Wid20, Wid80">
 							<h:outputLabel for="noCuenta" value="Cuenta No:" />
-							<p:inputText id="noCuenta" required="true" label="Cuenta No:" maxlength="10" styleClass="Wid20" value="#{secafBackBean.noCuenta}">
+							<p:inputText id="noCuenta" required="true" label="Cuenta No:" maxlength="10" styleClass="Wid20" value="#{secafBackBean.noCuenta}" disabled="#{!secafBackBean.autorizadoParaEditar}">
 								<pe:keyFilter regEx="/#{secafBackBean.regExpNumeros}/"/>
 							</p:inputText>
 							<h:outputLabel for="noSubcuenta" value="Subcuenta No:" />
-							<p:inputText id="noSubcuenta" required="true" maxlength="10" styleClass="Wid20" label="Subcuenta No:" value="#{secafBackBean.noSubcuenta}" >
+							<p:inputText id="noSubcuenta" required="true" maxlength="10" styleClass="Wid20" label="Subcuenta No:" value="#{secafBackBean.noSubcuenta}" disabled="#{!secafBackBean.autorizadoParaEditar}">
 								<pe:keyFilter regEx="/#{secafBackBean.regExpNumeros}/"/>
 							</p:inputText>			
 							<h:outputLabel for="digitoAuxiliar"  value="Digito Auxiliar:"/>
-							<p:inputText id="digitoAuxiliar" label="Digito Auxiliar:" maxlength="1"  styleClass="Wid20" value="#{secafBackBean.digitoAuxiliar}">
+							<p:inputText id="digitoAuxiliar" label="Digito Auxiliar:" maxlength="1"  styleClass="Wid20" value="#{secafBackBean.digitoAuxiliar}" disabled="#{!secafBackBean.autorizadoParaEditar}">
 								<pe:keyFilter regEx="/#{secafBackBean.regExpLetras}/"/>
 							</p:inputText>
 							<h:outputLabel for="codigoObjeto" value="Código Objeto:" />
-							<p:inputText id="codigoObjeto" label="Codigo Objeto" styleClass="Wid20" maxlength="10" value="#{secafBackBean.codigoObjeto}" >
+							<p:inputText id="codigoObjeto" label="Codigo Objeto" styleClass="Wid20" maxlength="10" value="#{secafBackBean.codigoObjeto}" disabled="#{!secafBackBean.autorizadoParaEditar}">
 								<pe:keyFilter regEx="/#{secafBackBean.regExpNumeros}/"/>
 							</p:inputText>
 							<h:outputLabel for="gasto" value="Gasto"/>
-							<p:inputText id="gasto" label="Gasto" styleClass="Wid20" value="#{secafBackBean.gasto}">
+							<p:inputText id="gasto" label="Gasto" styleClass="Wid20" value="#{secafBackBean.gasto}" disabled="#{!secafBackBean.autorizadoParaEditar}">
 								<pe:keyFilter regEx="/#{secafBackBean.regExpNumeros}/"/>
 							</p:inputText>
 							<h:outputLabel for="tipoBien" value="Tipo de Bien"/>
-							<p:selectOneMenu id="tipoBien" label="Descripción Bien" value="#{secafBackBean.tipoBien}" required="true" style="width:90%" filter="true" filterMatchMode="contains">
+							<p:selectOneMenu id="tipoBien" label="Descripción Bien" value="#{secafBackBean.tipoBien}" required="true" style="width:90%" filter="true" filterMatchMode="contains" disabled="#{!secafBackBean.autorizadoParaEditar}">
 								<f:selectItem itemLabel="Seleccione Tipo Bien" itemValue="#{null}" />
 								<f:selectItems var="oTipoBien" value="#{secafBackBean.listaTipoBienes}" itemLabel="#{oTipoBien.nombre}" itemValue="#{oTipoBien.id}" />
 							</p:selectOneMenu>
 							<!--   <p:inputText id="descripcion" label="Decripción" styleClass="Wid90" maxlength="250" required="true" value="#{secafBackBean.descripcionBien}" />-->
 							<h:outputLabel for="cbs" value="Codigo CBS" />
-							<p:inputText id="cbs" label="CBS" maxlength="20" required="true" value="#{secafBackBean.codigoCbs}"/>
+							<p:inputText id="cbs" label="CBS" maxlength="20" required="true" value="#{secafBackBean.codigoCbs}" disabled="#{!secafBackBean.autorizadoParaEditar}"/>
 							<h:outputLabel for="descripcionCbs" value="Descripción CBS"/>
-							<p:inputText  id="descripcionCbs" maxlength="250" required="true" label="Descripción CBS" styleClass="Wid90" value="#{secafBackBean.descripcionCbs}"/>
+							<p:inputText  id="descripcionCbs" maxlength="250" required="true" label="Descripción CBS" styleClass="Wid90" value="#{secafBackBean.descripcionCbs}" disabled="#{!secafBackBean.autorizadoParaEditar}"/>
 							<h:outputLabel for="pasivo" value="Pasivo"  rendered="#{!secafBackBean.nuevoRegistro}"/>
-							<p:selectBooleanButton offLabel="No" onLabel="Si" id="pasivo" value="#{secafBackBean.pasivo}" rendered="#{!secafBackBean.nuevoRegistro}"/>
+							<p:selectBooleanButton offLabel="No" onLabel="Si" id="pasivo" value="#{secafBackBean.pasivo}" rendered="#{!secafBackBean.nuevoRegistro}" disabled="#{!secafBackBean.autorizadoParaEditar}"/>
 						</h:panelGrid>
 					</p:panel>
 				</h:form>			

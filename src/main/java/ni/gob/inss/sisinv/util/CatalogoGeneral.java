@@ -10,7 +10,8 @@ public enum CatalogoGeneral {
 	CARACTERISTICA_ARMA_FUEGO("CAF"),
 	CARACTERISTICA_OBRA_ARTE("COA"),
 	TIPO_COMBUSTIBLE("TCB"),
-	COLORES("COL");
+	COLORES("COL"),
+	PROYECTOS("PRY");
 	
 	private final String catalogo ;
 	

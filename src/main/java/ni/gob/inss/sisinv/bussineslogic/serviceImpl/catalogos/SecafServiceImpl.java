@@ -29,8 +29,9 @@ public class SecafServiceImpl implements SecafService {
 		String txtBusqueda = StringUtils.isEmpty(txtCriterio) ? "" : txtCriterio;
 		
 		Search oSearch = new Search();		
-		oSearch.addFilterOr(Filter.ilike("descripcionCbs", "%"+txtBusqueda+"%"));		
-		oSearch.addSortDesc("descripcionCbs");
+		oSearch.addFilterOr(Filter.ilike("descripcionCbs", "%"+txtBusqueda+"%"));
+		oSearch.addFilter(Filter.notEqual("descripcionCbs", StringUtils.EMPTY));
+		oSearch.addSortAsc("descripcionCbs");
 		
 		return oSecafDAO.search(oSearch);
 	}

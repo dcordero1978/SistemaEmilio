@@ -44,8 +44,8 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 	private Integer hfId;
 	private Boolean modoEdicion;
 	
-	private String nombreCompleto;
-	private String numeroEmpleado;
+	
+	
 	
 	private Integer ubicacionId;
 	private List<Delegacion> listaUbicaciones;
@@ -64,6 +64,8 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 	private Integer modeloId;
 	private List<MarcasModelos> listaModelos;
 	private List<Activos> listaActivosAsociados;
+	private List<Catalogo> listaProyectos;
+	
 	private String noSerie;
 	private String noLote;
 	private String numeroProyecto;
@@ -72,6 +74,7 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 	private Date fechaAdquisicion;
 	private String descripcionActivo;
 	private String codigoSecundario;
+	private Integer proyectoId;
 	
 	private String regExpSoloLetras;
 	private String regExpSoloNumeros;
@@ -109,8 +112,6 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 	public void limpiar(){
 		this.setEmpleadoSeleccionado(null);
 		this.setBusquedaEmpleado(StringUtils.EMPTY);
-		this.setNombreCompleto(StringUtils.EMPTY);
-		this.setNumeroEmpleado(StringUtils.EMPTY);
 		this.setHfId(null);
 	}
 	
@@ -131,6 +132,7 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 		this.setFechaAdquisicion(null);
 		this.setDescripcionActivo(StringUtils.EMPTY);
 		this.setCodigoSecundario(StringUtils.EMPTY);
+		this.setProyectoId(null);
 	}
 	
 	public void iniciarFormularioRegistro(){
@@ -155,6 +157,7 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 			this.listaEstadoFisico = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.ESTADO_FISICO.getCodigoCatalogo());
 			this.listaTipoResguardo = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.TIPO_RESGUARDO.getCodigoCatalogo());
 			this.listaTipoMoneda = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.MONEDA.getCodigoCatalogo());
+			this.listaProyectos = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.PROYECTOS.getCodigoCatalogo());
 			this.listaMarcas = oCatalogoService.obtenerListaMarcas();
 			
 		} catch (EntityNotFoundException  e) {
@@ -183,8 +186,6 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 		try {
 			if(empleadoSeleccionado==null) throw new BusinessException(MessagesResults.SELECCIONE_UN_REGISTRO);
 			Empleado oEmpleado = oEmpleadoService.obtener(empleadoSeleccionado.getId());
-			this.setNombreCompleto(oEmpleado.getPrimerNombre() + " "+ oEmpleado.getSegundoNombre() + " " +oEmpleado.getPrimerApellido()+" "+oEmpleado.getSegundoApellido());
-			this.setNumeroEmpleado(oEmpleado.getNumeroEmpleado());
 			this.setHfId(oEmpleado.getId());
 			cargarListaActivos();
 		} catch (EntityNotFoundException e) {
@@ -215,6 +216,7 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 			oActivo.setUbicacion(oDelegacionService.obtener(this.getUbicacionId()));
 			oActivo.setColor(this.getCodigoColor());
 			oActivo.setCodigoSecundario(this.getCodigoSecundario());
+			oActivo.setProyectoId(this.getProyectoId());
 			
 			oActivo.setCreadoEl(this.getTimeNow());
 			oActivo.setCreadoEnIp(this.getRemoteIp());
@@ -265,22 +267,6 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 		this.hfId = hfId;
 	}
 
-
-	public String getNombreCompleto() {
-		return nombreCompleto;
-	}
-
-	public void setNombreCompleto(String nombreCompleto) {
-		this.nombreCompleto = nombreCompleto;
-	}
-
-	public String getNumeroEmpleado() {
-		return numeroEmpleado;
-	}
-
-	public void setNumeroEmpleado(String numeroEmpleado) {
-		this.numeroEmpleado = numeroEmpleado;
-	}
 
 	public Boolean getModoEdicion() {
 		return this.getHfId()!=null;
@@ -502,6 +488,21 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 	public String getRegExpDescripcion() {
 		return regExpDescripcion;
 	}
-	
+
+	public List<Catalogo> getListaProyectos() {
+		return listaProyectos;
+	}
+
+	public void setListaProyectos(List<Catalogo> listaProyectos) {
+		this.listaProyectos = listaProyectos;
+	}
+
+	public Integer getProyectoId() {
+		return proyectoId;
+	}
+
+	public void setProyectoId(Integer proyectoId) {
+		this.proyectoId = proyectoId;
+	}	
 	
 }

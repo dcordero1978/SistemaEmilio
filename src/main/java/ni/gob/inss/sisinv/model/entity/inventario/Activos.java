@@ -53,6 +53,7 @@ public class Activos extends EntityBase implements java.io.Serializable {
 	private Delegacion ubicacion;
 	private Secaf secaf;
 	private String color;
+	private Integer proyectoId;
 	
 	@Id
 	@Column(name = "id", unique = true, nullable = false)
@@ -257,6 +258,15 @@ public class Activos extends EntityBase implements java.io.Serializable {
 
 	public void setEmpleadoId(Integer empleadoId) {
 		this.empleadoId = empleadoId;
+	}
+
+	@Column(name="proyecto_id")
+	public Integer getProyectoId() {
+		return proyectoId;
+	}
+
+	public void setProyectoId(Integer proyectoId) {
+		this.proyectoId = proyectoId;
 	}
 	
 }

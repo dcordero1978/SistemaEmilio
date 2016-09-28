@@ -65,9 +65,15 @@
 							</f:facet>
 							<h:panelGrid columns="2" style="width:100%" columnClasses="Wid30, Wid70">
 								<h:outputLabel for="nombreCompleto" value="Nombre completo:"/>
-								<p:inputText id="nombreCompleto" disabled="true" value="#{registroActivosBackBean.nombreCompleto}" label="Nombre"  styleClass="Wid90"/>
+								<p:inputText id="nombreCompleto" readonly="true" 
+									value="#{registroActivosBackBean.empleadoSeleccionado.primerNombre} #{registroActivosBackBean.empleadoSeleccionado.segundoNombre} #{registroActivosBackBean.empleadoSeleccionado.primerApellido} #{registroActivosBackBean.empleadoSeleccionado.segundoApellido}" 
+									label="Nombre"  styleClass="Wid90"/>
 								<h:outputLabel for="numeroEmpleado" value="No. Empleado:"/>
-								<p:inputText id="numeroEmpleado" disabled="true" value="#{registroActivosBackBean.numeroEmpleado}" styleClass="Wid90"/>
+								<p:inputText id="numeroEmpleado" readonly="true" value="#{registroActivosBackBean.empleadoSeleccionado.numeroEmpleado}" styleClass="Wid90"/>
+								<h:outputLabel for="cedula" value="Cedula:"/>
+								<p:inputText id="cedula" readonly="true" value="#{registroActivosBackBean.empleadoSeleccionado.nroIdentificacion}" styleClass="Wid90"/>
+								<h:outputLabel for="cargo" value="Cargo:"/>
+								<p:inputText id="cargo" readonly="true" value="#{registroActivosBackBean.empleadoSeleccionado.cargo}" styleClass="Wid90"/>
 							</h:panelGrid>
 							<p:outputPanel styleClass="tableClass">
 								<p:dataTable style="width:100%" paginatorPosition="top" selectionMode="single" scrollable="true" scrollHeight="310"
@@ -139,7 +145,7 @@
 								<f:selectItems var="oModelo" value="#{registroActivosBackBean.listaModelos}" itemLabel="#{oModelo.descripcion}" itemValue="#{oModelo.id}"/>
 							</p:selectOneMenu>
 							<p:outputLabel for="noLote" value="Lote" />
-							<p:inputText id="noLote" maxlength="20" autocomplete="off"  value="#{registroActivosBackBean.noLote}" required="true" style="width:90%"/>
+							<p:inputText id="noLote" maxlength="20" autocomplete="off"  value="#{registroActivosBackBean.noLote}" style="width:90%"/>
 							<p:outputLabel for="noSerie" value="Serie" />
 							<p:inputText id="noSerie" maxlength="20" value="#{registroActivosBackBean.noSerie}" autocomplete="off" required="true" style="width:90%"/>
 							<p:outputLabel for="color" value="Color"/>
@@ -176,6 +182,11 @@
 						<p:selectOneMenu id="tipoMoneda" label="Tipo Moneda:" style="width:85%" value="#{registroActivosBackBean.tipoMonedaId}">
 							<f:selectItem itemValue="#{null}" itemLabel="Seleccione Tipo Moneda"/>
 							<f:selectItems var="oTipoMoneda" value="#{registroActivosBackBean.listaTipoMoneda}" itemLabel="#{oTipoMoneda.descripcion}" itemValue="#{oTipoMoneda.id}"/>
+						</p:selectOneMenu>
+						<p:outputLabel for="proyecto" value="Proyecto"/>
+						<p:selectOneMenu id="proyecto" label="Proyecto:" style="width:85%" value="#{registroActivosBackBean.proyectoId}">
+							<f:selectItem itemValue="#{null}" itemLabel="Seleccione proyecto"/>
+							<f:selectItems var="oProyecto" value="#{registroActivosBackBean.listaProyectos}" itemLabel="#{oProyecto.descripcion}" itemValue="#{oProyecto.id}"/>
 						</p:selectOneMenu>
 					</h:panelGrid>	
 										

@@ -186,6 +186,7 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 			oEmpleado.setSegundoApellido(this.getSegundoApellido());
 			oEmpleado.setNroIdentificacion(this.getNroIdentificacion());
 			oEmpleado.setNumeroEmpleado(this.getNumeroEmpleado());
+			oEmpleado.setIngresadoManual(true);
 			oEmpleado.setDelegacion(oDelegacion);
 			oEmpleado.setCreadoPor(this.getUsuarioActual().getId());
 			oEmpleado.setCreadoEl(this.getTimeNow());			

@@ -96,6 +96,11 @@
 							</p:selectOneMenu>
 							<p:outputLabel for="pasivo" value="Pasivo" rendered="#{!empleadoBackBean.nuevoRegistro}"/>
 							<p:selectBooleanButton offLabel="No" onLabel="Si" id="pasivo"  value="#{empleadoBackBean.pasivo}" rendered="#{!empleadoBackBean.nuevoRegistro}" disabled="#{!empleadoBackBean.autorizadoParaEditar}"/>
+							<p:outputLabel for="area" value="Area:"/>
+							<p:inputText id="area" readonly="true" value="#{empleadoBackBean.empleadoSeleccionado.area}" styleClass="Wid90"/>
+							<p:outputLabel for="cargo" value="Cargo:"/>
+							<p:inputText id="cargo" readonly="true" value="#{empleadoBackBean.empleadoSeleccionado.cargo}" styleClass="Wid90"/>
+							
 						</h:panelGrid>
 						
 						

@@ -27,8 +27,8 @@
 								<p:commandButton  icon="ui-icon-search" action="#{empleadoBackBean.buscar}" ajax="true" update="listEmpleado" style="margin-left:5px;"/>								
 							</p:outputPanel>						
 							<p:outputPanel style="display" styleClass="right">
-								<p:commandButton value="#{labelName.btnAgregar}" icon="ui-icon-circle-plus" action="#{empleadoBackBean.limpiar}" resetValues="true" update=":formDatosEmpleado"/>
-								<p:commandButton value="#{labelName.btnEditar}" icon="ui-icon-pencil" action="#{empleadoBackBean.editar}" resetValues="true" update=":formDatosEmpleado"/>
+								<p:commandButton value="#{labelName.btnAgregar}" icon="ui-icon-circle-plus" action="#{empleadoBackBean.limpiar}" resetValues="true" update=":formDatosEmpleado" rendered="#{empleadoBackBean.autorizadoParaEditar}"/>
+								<p:commandButton value="#{labelName.btnEditar}" icon="ui-icon-pencil" action="#{empleadoBackBean.editar}" resetValues="true" update=":formDatosEmpleado" rendered="#{empleadoBackBean.autorizadoParaEditar}"/>
 							</p:outputPanel>
 						</f:facet>
 						<p:outputPanel styleClass="tableClass">
@@ -60,42 +60,42 @@
 						<f:facet name="header">
 							<h:outputText value="ID: #{empleadoBackBean.hfId}" rendered="#{!empleadoBackBean.nuevoRegistro}"/>
 							<p:outputPanel style="display:block" styleClass="right">
-								<p:commandButton widgetVar="btnGuardar" actionListener="#{empleadoBackBean.guardarOrActualizar}" icon="ui-icon-disk" 
+								<p:commandButton widgetVar="btnGuardar" actionListener="#{empleadoBackBean.guardarOrActualizar}" icon="ui-icon-disk"  rendered="#{empleadoBackBean.autorizadoParaEditar}"
 								update="formDatosEmpleado :formLista" value="#{labelName.btnGuardar}" onstart="PF('btnGuardar').disable();" oncomplete="PF('btnGuardar').enable();"/>
 								<p:commandButton resetValues="true" ajax="true" update="formDatosEmpleado" action="#{empleadoBackBean.limpiar}" value="#{labelName.btnCancelar}" icon="ui-icon-cancel" process="@this"/>
 							</p:outputPanel>
 						</f:facet>
 						<h:panelGrid columns="2" style="width:100%" columnClasses="Wid30, Wid70">
 							<p:outputLabel for="primerNombre" value="Primer Nombre" />
-							<p:inputText value="#{empleadoBackBean.primerNombre}" label="Nombres" maxlength="25" required="true" autocomplete="off" id="primerNombre" styleClass="Wid80">
+							<p:inputText value="#{empleadoBackBean.primerNombre}" label="Nombres" maxlength="25" required="true" autocomplete="off" id="primerNombre" styleClass="Wid80" disabled="#{!empleadoBackBean.autorizadoParaEditar}">
 								<pe:keyFilter regEx="/#{empleadoBackBean.regExpLetras}/" />
 							</p:inputText>
 							<p:outputLabel for="segundoNombre" value="Segundo Nombre" />
-							<p:inputText value="#{empleadoBackBean.segundoNombre}" label="SegundoNombre" maxlength="25" autocomplete="off" id="segundoNombre" styleClass="Wid80">
+							<p:inputText value="#{empleadoBackBean.segundoNombre}" label="SegundoNombre" maxlength="25" autocomplete="off" id="segundoNombre" styleClass="Wid80" disabled="#{!empleadoBackBean.autorizadoParaEditar}">
 								<pe:keyFilter regEx="/#{empleadoBackBean.regExpLetras}/" />
 							</p:inputText>
 													
 							<p:outputLabel for="primerApellido" value="Primer Apellido"/>
-							<p:inputText value="#{empleadoBackBean.primerApellido}" label="Apellidos" maxlength="25" required="true" autocomplete="off" id="primerApellido"  styleClass="Wid80">
+							<p:inputText value="#{empleadoBackBean.primerApellido}" label="Apellidos" maxlength="25" required="true" autocomplete="off" id="primerApellido"  styleClass="Wid80" disabled="#{!empleadoBackBean.autorizadoParaEditar}">
 								<pe:keyFilter regEx="/#{empleadoBackBean.regExpLetras}/" />
 							</p:inputText>
 							<p:outputLabel for="segundoApellido" value="Segundo Apellido"/>
-							<p:inputText value="#{empleadoBackBean.segundoApellido}" label="Apellidos" maxlength="25" autocomplete="off" id="segundoApellido"  styleClass="Wid80">
+							<p:inputText value="#{empleadoBackBean.segundoApellido}" label="Apellidos" maxlength="25" autocomplete="off" id="segundoApellido"  styleClass="Wid80" disabled="#{!empleadoBackBean.autorizadoParaEditar}">
 								<pe:keyFilter regEx="/#{empleadoBackBean.regExpLetras}/" />
 							</p:inputText>
 							<p:outputLabel for="numeroEmpleado" value="No. Empleado" />
-							<p:inputText value="#{empleadoBackBean.numeroEmpleado}" label="No. Empleado" required="true" autocomplete="false" id="numeroEmpleado" styleClass="Wid80" maxlength="8">
+							<p:inputText value="#{empleadoBackBean.numeroEmpleado}" label="No. Empleado" required="true" autocomplete="false" id="numeroEmpleado" styleClass="Wid80" maxlength="8" disabled="#{!empleadoBackBean.autorizadoParaEditar}">
 								<pe:keyFilter regEx="/#{empleadoBackBean.regExpSoloNumeros}/"/>
 							</p:inputText>							     
 							<p:outputLabel for="numeroCedula" value="No. Cédula" />
-							<p:inputMask value="#{empleadoBackBean.nroIdentificacion}" label="No. Identificación" id="numeroCedula" styleClass="Wid80" required="true" maxlength="14" mask="9999999999999a" />
+							<p:inputMask value="#{empleadoBackBean.nroIdentificacion}" label="No. Identificación" id="numeroCedula" styleClass="Wid80" required="true" maxlength="14" mask="9999999999999a" disabled="#{!empleadoBackBean.autorizadoParaEditar}"/>
 							<p:outputLabel for="delegacion" value="Delegación"/>
-							<p:selectOneMenu id="delegacion" label="Delegación" value="#{empleadoBackBean.delegacionId}" required="true" style="width:80%">
+							<p:selectOneMenu id="delegacion" label="Delegación" value="#{empleadoBackBean.delegacionId}" required="true" style="width:80%" disabled="#{!empleadoBackBean.autorizadoParaEditar}">
 								<f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
 								<f:selectItems var="oDelegacion" value="#{empleadoBackBean.listaDelegaciones}" itemLabel="#{oDelegacion.descripcion}" itemValue="#{oDelegacion.id}"/>
 							</p:selectOneMenu>
 							<p:outputLabel for="pasivo" value="Pasivo" rendered="#{!empleadoBackBean.nuevoRegistro}"/>
-							<p:selectBooleanButton offLabel="No" onLabel="Si" id="pasivo"  value="#{empleadoBackBean.pasivo}" rendered="#{!empleadoBackBean.nuevoRegistro}"/>
+							<p:selectBooleanButton offLabel="No" onLabel="Si" id="pasivo"  value="#{empleadoBackBean.pasivo}" rendered="#{!empleadoBackBean.nuevoRegistro}" disabled="#{!empleadoBackBean.autorizadoParaEditar}"/>
 						</h:panelGrid>
 						
 						

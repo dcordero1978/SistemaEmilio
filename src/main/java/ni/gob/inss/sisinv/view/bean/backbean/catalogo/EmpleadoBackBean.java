@@ -18,6 +18,7 @@ import ni.gob.inss.barista.view.utils.web.MessagesResults;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.DelegacionService;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.EmpleadoService;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.TipoCatalogoExtService;
+import ni.gob.inss.sisinv.bussineslogic.service.seguridad.UsuarioExtService;
 import ni.gob.inss.sisinv.model.entity.catalogo.Delegacion;
 import ni.gob.inss.sisinv.model.entity.catalogo.Empleado;
 import ni.gob.inss.sisinv.util.RegExpresionExtends;
@@ -52,6 +53,8 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	private String regExpCedula;
 	private String regExpSoloNumeros;
 	
+	private boolean autorizadoParaEditar;
+	
 	@Autowired
 	private EmpleadoService oEmpleadoService;
 	
@@ -64,12 +67,16 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	@Autowired
 	CatalogoService oCatalogoService;
 	
+	@Autowired
+	UsuarioExtService oUsuarioService;
 	@PostConstruct
 	public void init(){
 		this.limpiar();
 		this.cargarListaDelegaciones();
 		this.cargaValidaciones();
-		this.buscar();		
+		this.buscar();
+		autorizadoParaEditar =  oUsuarioService.usuarioTieneAutorizacion(this.getUsuarioActual(), this.getEntidadActual(), "EEMP");
+		
 	}
 	
 	public void cargaValidaciones(){
@@ -342,8 +349,10 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	public void setSegundoApellido(String segundoApellido) {
 		this.segundoApellido = segundoApellido;
 	}
-	
 
-	
-	
+	public boolean isAutorizadoParaEditar() {
+		return autorizadoParaEditar;
+	}
+
+
 }

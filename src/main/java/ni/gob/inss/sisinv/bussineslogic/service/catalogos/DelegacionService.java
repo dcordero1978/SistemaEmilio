@@ -21,4 +21,7 @@ public interface DelegacionService {
 	public List<Delegacion> listaUbicacionesPorDepartamento(Integer departamentoId);
 	
 	public List<Delegacion> listaUbicacionesEmpleado(Empleado oEmpleado);
+	
+	public List<Delegacion> buscarPorEstado(String txtCriterio, Boolean estado);
+	
 }

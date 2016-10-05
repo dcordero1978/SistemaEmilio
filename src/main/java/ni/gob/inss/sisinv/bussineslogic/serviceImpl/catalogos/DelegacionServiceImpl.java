@@ -37,22 +37,12 @@ public class DelegacionServiceImpl implements DelegacionService{
 		
 	}
 	
-	@SuppressWarnings("unchecked")
+
 	@Transactional
 	@Override
 	public List<Delegacion> buscar(String txtCriterio) {
-		List<Delegacion> listaDelegaciones = null;
 		
-		Search oSearch = new Search();
-		oSearch.addFilterILike("descripcion", "%"+txtCriterio+"%");
-		oSearch.addSortDesc("descripcion");
-		if(txtCriterio==null || "".equalsIgnoreCase(txtCriterio)){
-			listaDelegaciones = oDelegacionDAO.findAll();
-		}else{
-			listaDelegaciones = oDelegacionDAO.search(oSearch);
-		}
-		
-		return listaDelegaciones;		
+		return this.buscarPorEstado(txtCriterio,  (Boolean) null);
 	}
 
 	@Transactional
@@ -81,6 +71,36 @@ public class DelegacionServiceImpl implements DelegacionService{
 			return this.listaUbicacionesPorDepartamento(oEmpleado.getDelegacion().getDepartamentoId()); 
 		}		
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Transactional
+	@Override
+	public List<Delegacion> buscarPorEstado(String txtCriterio, Boolean estado) {
+		List<Delegacion> listaDelegaciones = null;
+		
+		Search oSearch = new Search();
+		oSearch.addFilterILike("descripcion", "%"+txtCriterio+"%");
+		
+		if(estado != null)
+		{		
+			oSearch.addFilter(Filter.equal("pasivo",estado));
+		}
+		
+		oSearch.addSortAsc("descripcion");
+		
+		listaDelegaciones = oDelegacionDAO.search(oSearch);
+		
+		
+		if((txtCriterio==null || "".equalsIgnoreCase(txtCriterio)) && estado ==null ){
+			listaDelegaciones = oDelegacionDAO.findAll();
+		}else {
+			listaDelegaciones = oDelegacionDAO.search(oSearch);
+		}
+		
+		return listaDelegaciones;
+				
+	}
+
 
 
 }

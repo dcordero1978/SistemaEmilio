@@ -1,10 +1,12 @@
 package ni.gob.inss.sisinv.model.entity.inventario;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import ni.gob.inss.barista.model.entity.EntityBase;
@@ -14,28 +16,47 @@ import ni.gob.inss.barista.model.entity.EntityBase;
  */
 @Entity
 @Table(name="activos_caracteristicas" ,schema="inventario")
+@IdClass(ActivosCaracteristicasId.class)
 public class ActivosCaracteristicas extends EntityBase  implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private ActivosCaracteristicasId id;
-    private String valor;
+	private String valor;
     private boolean esCatalogo;
+    private Integer activoId;
+    private String caracteristicaCodigo;
+    private Activos activo;
      
-       
-     @EmbeddedId
-     @AttributeOverrides( {
-        @AttributeOverride(name="activoId", column=@Column(name="activo_id", nullable=false) ), 
-        @AttributeOverride(name="caracteristicaId", column=@Column(name="caracteristca_id", nullable=false) ) } )
-    public ActivosCaracteristicasId getId() {
-        return this.id;
-    }
     
-    public void setId(ActivosCaracteristicasId id) {
-        this.id = id;
-    }
+    @Id
+    @Column(name="activo_id")
+    public Integer getActivoId() {
+		return activoId;
+	}
 
-    
-    @Column(name="valor", nullable=false, length=50)
+	public void setActivoId(Integer activoId) {
+		this.activoId = activoId;
+	}
+	@Id
+	@Column(name="caracteristica_cod")
+	public String getCaracteristicaCodigo() {
+		return caracteristicaCodigo;
+	}
+
+	public void setCaracteristicaCodigo(String caracteristicaCodigo) {
+		this.caracteristicaCodigo = caracteristicaCodigo;
+	}
+
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="activo_id")
+	public Activos getActivo() {
+		return activo;
+	}
+
+	public void setActivo(Activos activo) {
+		this.activo = activo;
+	}
+
+	@Column(name="valor", nullable=false, length=50)
     public String getValor() {
         return this.valor;
     }

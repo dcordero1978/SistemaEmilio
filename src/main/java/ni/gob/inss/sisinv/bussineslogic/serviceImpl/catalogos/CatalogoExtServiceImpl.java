@@ -1,5 +1,6 @@
 package ni.gob.inss.sisinv.bussineslogic.serviceImpl.catalogos;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,17 @@ public class CatalogoExtServiceImpl extends CatalogoServiceImpl implements Catal
 	public List<Catalogo> obtieneListaCatalogosPorRefTipoCatalogo(String refTipoCatalogo) throws EntityNotFoundException {
 		Search oSearch = new Search();
 		oSearch.addFilter(Filter.equal("refTipoCatalogo", refTipoCatalogo));
+		return oCatalogoDAO.search(oSearch);
+	}
+
+	@Transactional
+	@Override
+	public List<Catalogo> obtieneListaCatalogosPorRefTipoCatalogo(String... refTipoCatalogo)throws EntityNotFoundException {
+		Search oSearch = new Search();
+		Arrays.stream(refTipoCatalogo).forEach(tipoCatalogo -> {
+			oSearch.addFilter(Filter.equal("refTipoCatalogo", tipoCatalogo));
+		});
+		
 		return oCatalogoDAO.search(oSearch);
 	}
 	

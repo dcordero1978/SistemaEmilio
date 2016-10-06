@@ -102,11 +102,11 @@
 				</div>
 		</div>
 		
-		<p:dialog widgetVar="modalRegistroActivo" hideEffect="blind" showEffect="blind"  dynamic="true" modal="true" resizable="false" height="550px" width="650px" showHeader="false" >
+		<p:dialog widgetVar="modalRegistroActivo" hideEffect="blind" showEffect="blind" draggable="true"  dynamic="true" modal="true" resizable="false" height="580px" width="650px" showHeader="false" >
 			
 			<div class="Container100 Responsive">
 			<h:form id="datosActivo" >
-				<p:panel styleClass="fondoPaneles" style="height:530px;" >
+				<p:panel styleClass="fondoPaneles" style="height:560px;" >
 					<f:facet name="header">
 						Registrar Activo.
 						<p:outputPanel style="display:block" styleClass="right">
@@ -171,25 +171,65 @@
 							<p:selectOneMenu required="true" id="tipoResguardo" label="Resguardo:" style="width:85%" value="#{registroActivosBackBean.tipoResguardoId}">
 								<f:selectItem itemValue="#{null}" itemLabel="Seleccione Resguardo"/>
 								<f:selectItems var="oTipoResguardo" value="#{registroActivosBackBean.listaTipoResguardo}" itemLabel="#{oTipoResguardo.descripcion}" itemValue="#{oTipoResguardo.id}" />
-						</p:selectOneMenu>
-						<p:outputLabel for="fechaAdquisicion" value="Fecha Adquisición:" />
- 		       			<p:calendar id="fechaAdquisicion"  pattern="dd/MM/yyyy" mask="true"  style="width:90%"/>
- 		       			<p:outputLabel for="valor" value="Valor" />
-						<p:inputText id="valor" maxlength="10" autocomplete="off" style="width:90%" value="#{registroActivosBackBean.valor}">
-							<pe:keyFilter regEx="/#{registroActivosBackBean.regExpDecimales}/"/>
-						</p:inputText>
-						<p:outputLabel for="tipoMoneda" value="Tipo Moneda:"/>
-						<p:selectOneMenu id="tipoMoneda" label="Tipo Moneda:" style="width:85%" value="#{registroActivosBackBean.tipoMonedaId}">
-							<f:selectItem itemValue="#{null}" itemLabel="Seleccione Tipo Moneda"/>
-							<f:selectItems var="oTipoMoneda" value="#{registroActivosBackBean.listaTipoMoneda}" itemLabel="#{oTipoMoneda.descripcion}" itemValue="#{oTipoMoneda.id}"/>
-						</p:selectOneMenu>
-						<p:outputLabel for="proyecto" value="Proyecto"/>
-						<p:selectOneMenu id="proyecto" label="Proyecto:" style="width:85%" value="#{registroActivosBackBean.proyectoId}">
-							<f:selectItem itemValue="#{null}" itemLabel="Seleccione proyecto"/>
-							<f:selectItems var="oProyecto" value="#{registroActivosBackBean.listaProyectos}" itemLabel="#{oProyecto.descripcion}" itemValue="#{oProyecto.id}"/>
-						</p:selectOneMenu>
-					</h:panelGrid>	
-										
+							</p:selectOneMenu>
+							<p:outputLabel for="fechaAdquisicion" value="Fecha Adquisición:" />
+	 		       			<p:calendar id="fechaAdquisicion"  pattern="dd/MM/yyyy" mask="true"  style="width:90%"/>
+	 		       			<p:outputLabel for="valor" value="Valor" />
+							<p:inputText id="valor" maxlength="10" autocomplete="off" style="width:90%" value="#{registroActivosBackBean.valor}">
+								<pe:keyFilter regEx="/#{registroActivosBackBean.regExpDecimales}/"/>
+							</p:inputText>
+							<p:outputLabel for="tipoMoneda" value="Tipo Moneda:"/>
+							<p:selectOneMenu id="tipoMoneda" label="Tipo Moneda:" style="width:85%" value="#{registroActivosBackBean.tipoMonedaId}">
+								<f:selectItem itemValue="#{null}" itemLabel="Seleccione Tipo Moneda"/>
+								<f:selectItems var="oTipoMoneda" value="#{registroActivosBackBean.listaTipoMoneda}" itemLabel="#{oTipoMoneda.descripcion}" itemValue="#{oTipoMoneda.id}"/>
+							</p:selectOneMenu>
+							<p:outputLabel for="proyecto" value="Proyecto"/>
+							<p:selectOneMenu id="proyecto" label="Proyecto:" style="width:85%" value="#{registroActivosBackBean.proyectoId}">
+								<f:selectItem itemValue="#{null}" itemLabel="Seleccione proyecto"/>
+								<f:selectItems var="oProyecto" value="#{registroActivosBackBean.listaProyectos}" itemLabel="#{oProyecto.descripcion}" itemValue="#{oProyecto.id}"/>
+							</p:selectOneMenu>
+							<p:outputLabel for="esActivoEspecial" value="Agregar caracteristicas"/>
+							<p:selectBooleanButton id="esActivoEspecial" offLabel="No" onLabel="Si" value="#{registroActivosBackBean.activoEspecial}" >
+								<p:ajax update="caracteristicasEspeciales"  resetValues="false"/>
+							</p:selectBooleanButton>
+					</h:panelGrid>
+					<p:outputPanel id="caracteristicasEspeciales">
+						<p:tabView style="width:100%; height: 150px;" rendered="#{registroActivosBackBean.activoEspecial}">
+							<p:tab title="Armas de fuego" >
+								<h:panelGrid columns="2">
+									<p:outputLabel for="calibre" value="Calibre"/>
+									<p:inputText id="calibre" value="#{registroActivosBackBean.calibre}"/>
+								</h:panelGrid>							
+							</p:tab>
+							<p:tab title="Obras de arte">
+								<h:panelGrid columns="2" columnClasses="Wid25, Wid75"> 
+									<p:outputLabel for="nombre" value="Nombre"/>
+									<p:inputText id="nombre" value="#{registroActivosBackBean.nombreObreArte}"/>
+								</h:panelGrid>							
+							</p:tab>
+							<p:tab title="Vehiculo">
+								<h:panelGrid columns="4" columnClasses="Wid25,Wid25,Wid25,Wid25">
+									<p:outputLabel for="numeroMotor" value="Número motor"/>
+									<p:inputText id="numeroMotor" value="#{registroActivosBackBean.numeroMotor}" />
+									<p:outputLabel for="numeroChasis" value="Número Chasis"/>
+									<p:inputText id="numeroChasis" value="#{registroActivosBackBean.numeroChasis}" />
+									<p:outputLabel for="numeroCilindros" value="Número de cilindros"/>
+									<p:inputText id="numeroCilindros" value="#{registroActivosBackBean.numeroCilindros}" />
+									<p:outputLabel for="anio" value="Año"/>
+									<p:inputText id="anio" value="#{registroActivosBackBean.anio}" />
+									<p:outputLabel for="placa" value="Placa"/>
+									<p:inputText id="placa" value="#{registroActivosBackBean.placa}" />
+									<p:outputLabel for="numeroPasajeros" value="Número de pasajeros"/>
+									<p:inputText id="numeroPasajeros" value="#{registroActivosBackBean.numeroPasajeros}" />
+									<p:outputLabel for="capacidadCarga" value="Capacidad de carga"/>
+									<p:inputText id="capacidadCarga" value="#{registroActivosBackBean.capacidadCarga}" />
+									<p:outputLabel for="combustible" value="Tipo de Combustible"/>
+									<p:inputText id="combustible" value="#{registroActivosBackBean.combustible}" />
+								</h:panelGrid>
+							</p:tab>
+							
+						</p:tabView>
+					</p:outputPanel>
 				</p:panel>
 			</h:form>
 			</div>

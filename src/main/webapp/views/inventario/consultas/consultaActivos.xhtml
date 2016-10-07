@@ -1,0 +1,115 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                template="/web/template/innerLayout.xhtml"
+                xmlns:mc="http://java.sun.com/jsf/composite/comps">
+
+	<ui:param name="paramBackBean" value="#{consultaActivosBackBean}"/>
+	<ui:define name="headerContent">
+		Consulta General de Activos
+	</ui:define>
+	<ui:define name="content">
+		<div id="ContainerIndent">
+			<div class="Container100 Responsive">
+				<h:form id="formConsultaActivos" style="width: 100%;">
+					<p:panel styleClass="fondoPaneles">
+					<f:facet name="header">
+						<p:outputPanel style="display:block;" styleClass="left">
+							<h:panelGrid columns="3" cellpadding="5">
+								<p:selectOneMenu id="delegacion" label="Delegación"  value="#{consultaActivosBackBean.delegacionId}" effect="fold" style="width:250px" >
+									<f:selectItem itemValue="#{null}" itemLabel="Seleccione una Delegación"/>
+									<f:selectItems  var="oDelegacion" value="#{consultaActivosBackBean.listaDelegaciones}" itemLabel="#{oDelegacion.descripcion}" itemValue="#{oDelegacion.id}"/>									
+								</p:selectOneMenu>
+								<p:inputText value="#{consultaActivosBackBean.txtBusquedaActivoByCodigo}" maxlength="50" action="#{consultaActivosBackBean.buscarActivo}" placeholder="Buscar por Código" style="width:200px"/>
+								<p:inputText value="#{consultaActivosBackBean.txtBusquedaActivoByDescripcion}" maxlength="50" action="#{consultaActivosBackBean.buscarActivo}" placeholder="Buscar por Descripción" style="width:200px"/>
+							</h:panelGrid>
+							</p:outputPanel>
+						
+							<p:outputPanel style="display:block;" styleClass="right">
+							<h:panelGrid columns="2" cellpadding="5">
+								<p:commandButton value="Buscar" id="btsearch" action="#{consultaActivosBackBean.buscarActivo}" ajax="true" update="tablaActivo" icon="ui-icon-disk" />
+								<p:commandButton value="Cancelar" id="btclean" action="#{consultaActivosBackBean.limpiar}" ajax="true" update="formConsultaActivos"  resetValues="true" icon="ui-icon-cancel" />
+							</h:panelGrid>
+							</p:outputPanel>
+						</f:facet>
+						<p:outputPanel styleClass="tableClass">
+							<p:dataTable id="tablaActivo" style="width:100%" paginatorPosition="top" selectionMode="single"  scrollable="true" scrollHeight="410" 
+							var="oActivo" value="#{consultaActivosBackBean.listaActivos}" rowKey="#{oActivo.id}"
+							paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="12" pageLinks="3"  paginatorTemplate="#{configApplicationBean.paginatorTemplate}"
+							currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
+							<f:facet name="header">
+        						Listado de Bienes
+    						</f:facet>
+    						
+    							<p:column style="width:16px">
+            						<p:rowToggler />
+        						</p:column>
+ 
+							    <p:column headerText="Código Inventario">
+							        <h:outputText value="#{oActivo.codigoInventario}" />
+							    </p:column>
+							 
+							    <p:column headerText="Código Secundario">
+							        <h:outputText value="#{oActivo.codigoSecundario}" />
+							    </p:column>
+							 
+							    <p:column headerText="Descripción del Bien">
+							        <h:outputText value="#{oActivo.descripcion}"/>
+							    </p:column>
+							 
+							    <p:column headerText="Marca">
+							        <h:outputText value="#{oActivo.marca.descripcion}" />
+							    </p:column>
+							    
+							    <p:column headerText="Modelo">
+							        <h:outputText value="#{oActivo.modelo.descripcion}" />
+							    </p:column>
+							    
+							    <p:column headerText="Color">
+							        <h:outputText value="#{oActivo.colorCatalogo.descripcion}" />
+							    </p:column>
+							    
+							    <p:column headerText="Serie">
+							        <h:outputText value="#{oActivo.serie}" />
+							    </p:column>
+							    
+							    <p:column headerText="Estado Físico">
+							        <h:outputText value="#{oActivo.estadoFisico.descripcion}" />
+							    </p:column>
+							    
+							    <p:column headerText="Ubicación">
+							        <h:outputText value="#{oActivo.ubicacion.descripcion}" />
+							    </p:column>
+							    
+							     <p:rowExpansion>
+							     		 <p:panelGrid  columns="2" columnClasses="label,value" style="width:500px">
+							     		 <f:facet name="header">
+							     		 	 <p:graphicImage library="default" name="img/icons/comunes/user.png" width="100px"/>
+							     		 </f:facet>
+							     		 	<h:outputText value="Num Empleado:"/>
+                							<h:outputText value="#{oActivo.empleado.numeroEmpleado}" />
+                							
+                							<h:outputText value="Empleado:"/>
+                							<h:outputText value="#{oActivo.empleado.primerNombre} #{oActivo.empleado.segundoNombre} #{oActivo.empleado.primerApellido} #{oActivo.empleado.segundoApellido}" />
+                							
+                							<h:outputText value="Cargo:"/>
+                							<h:outputText value="#{oActivo.empleado.cargo}" />
+ 
+ 											<h:outputText value="Área:"/>
+                							<h:outputText value="#{oActivo.empleado.area}" />
+                							
+							     		 </p:panelGrid>
+							     </p:rowExpansion>
+							    
+							</p:dataTable>
+						</p:outputPanel>
+						
+					</p:panel>
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

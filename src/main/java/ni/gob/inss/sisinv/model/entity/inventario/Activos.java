@@ -3,6 +3,7 @@ package ni.gob.inss.sisinv.model.entity.inventario;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,15 +12,22 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import ni.gob.inss.barista.model.entity.EntityBase;
+import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
 import ni.gob.inss.sisinv.model.entity.catalogo.Delegacion;
 import ni.gob.inss.sisinv.model.entity.catalogo.Empleado;
+import ni.gob.inss.sisinv.model.entity.catalogo.MarcasModelos;
 import ni.gob.inss.sisinv.model.entity.catalogo.Secaf;
 
 /**
@@ -54,6 +62,12 @@ public class Activos extends EntityBase implements java.io.Serializable {
 	private Secaf secaf;
 	private String color;
 	private Integer proyectoId;
+	private MarcasModelos marca; 
+	private MarcasModelos modelo;
+	private Catalogo estadoFisico;
+	private Integer ubicacionId;
+	private Catalogo colorCatalogo;
+	
 	
 	@Id
 	@Column(name = "id", unique = true, nullable = false)
@@ -268,5 +282,55 @@ public class Activos extends EntityBase implements java.io.Serializable {
 	public void setProyectoId(Integer proyectoId) {
 		this.proyectoId = proyectoId;
 	}
+
+	@Column(name="ubicacion_id", insertable = false, updatable = false)
+	public Integer getUbicacionId() {
+		return ubicacionId;
+	}
+
+	public void setUbicacionId(Integer ubicacionId) {
+		this.ubicacionId = ubicacionId;
+	}
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name="marca_id", insertable=false, updatable=false)
+	public MarcasModelos getMarca() {
+		return marca;
+	}
+
+	public void setMarca(MarcasModelos marca) {
+		this.marca = marca;
+	}
 	
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name="modelo_id", insertable=false, updatable=false)
+	public MarcasModelos getModelo() {
+		return modelo;
+	}
+
+	public void setModelo(MarcasModelos modelo) {
+		this.modelo = modelo;
+	}
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name="estado_fisico_id", insertable=false, updatable=false)
+	public Catalogo getEstadoFisico() {
+		return estadoFisico;
+	}
+
+	public void setEstadoFisico(Catalogo estadoFisico) {
+		this.estadoFisico = estadoFisico;
+	}
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name="color", referencedColumnName="codigo", insertable=false, updatable=false)
+	public Catalogo getColorCatalogo() {
+		return colorCatalogo;
+	}
+
+	public void setColorCatalogo(Catalogo colorCatalogo) {
+		this.colorCatalogo = colorCatalogo;
+	}
+	
+
 }

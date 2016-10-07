@@ -2,6 +2,7 @@ package ni.gob.inss.sisinv.bussineslogic.serviceImpl.catalogos;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,7 @@ import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
 import ni.gob.inss.barista.model.entity.seguridad.Parametro;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.ActivoService;
 import ni.gob.inss.sisinv.model.dao.catalogos.ActivoDAO;
+import ni.gob.inss.sisinv.model.entity.catalogo.Delegacion;
 import ni.gob.inss.sisinv.model.entity.inventario.Activos;
 
 @Service
@@ -63,5 +65,36 @@ public class ActivoServiceImpl implements ActivoService {
 		return codigoInventario;
 	}
 	
+	//PARA REALIZAR LAS DIFERENTES BUSQUEDAS DE CONSULTA GENERAL
+	@SuppressWarnings("unchecked")
+	@Transactional
+	@Override
+	public List<Activos> buscar(Integer delegacionId, String codActivo, String descripcion) {
+		List<Activos> listaActivos = null;
+		
+		Search oSearch = new Search();
+		
+		if(!StringUtils.isEmpty(descripcion)){
+			oSearch.addFilterILike("descripcion", "%"+descripcion+"%");
+		}
+		
+		if(!StringUtils.isEmpty(codActivo)){
+			oSearch.addFilterILike("codigoInventario","%"+codActivo+"%");
+		}
+		
+		if(delegacionId!=null ){
+			oSearch.addFilter(Filter.equal("ubicacionId", delegacionId));
+		}
 	
+		oSearch.addSortAsc("descripcion");
+		
+	
+		if(!StringUtils.isEmpty(descripcion) && (delegacionId == null) && !StringUtils.isEmpty(codActivo)){
+			listaActivos = oActivoDAO.findAll();
+		}else{
+			listaActivos = oActivoDAO.search(oSearch);
+		}
+		
+		return listaActivos;		
+	}
 }

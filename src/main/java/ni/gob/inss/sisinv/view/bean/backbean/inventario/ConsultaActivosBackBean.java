@@ -6,16 +6,21 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
+import ni.gob.inss.barista.businesslogic.service.catalogos.CatalogoService;
+import ni.gob.inss.barista.model.dao.EntityNotFoundException;
+import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
 import ni.gob.inss.barista.view.bean.backbean.BaseBackBean;
 import ni.gob.inss.barista.view.utils.web.MessagesResults;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.ActivoService;
+import ni.gob.inss.sisinv.bussineslogic.service.catalogos.CatalogoExtService;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.DelegacionService;
 import ni.gob.inss.sisinv.model.entity.catalogo.Delegacion;
 import ni.gob.inss.sisinv.model.entity.inventario.Activos;
-import ni.gob.inss.sisinv.util.RegExpresionExtends;
+import ni.gob.inss.sisinv.util.CatalogoGeneral;
 
 @Named
 @Scope("view")
@@ -24,11 +29,12 @@ public class ConsultaActivosBackBean extends BaseBackBean implements Serializabl
 	
 	private static final long serialVersionUID = 1L;
 	private List<Delegacion> listaDelegaciones;
+	private List<Catalogo> listaEstadoFisico;
 	private Integer delegacionId;
+	private Integer estadoFisicoId;
 	private String txtBusquedaActivoByCodigo;
 	private String txtBusquedaActivoByDescripcion;
 	private List<Activos> listaActivos;
-	private String regExpSoloNumeros;
 
 	@Autowired
 	DelegacionService oDelegacionService;
@@ -36,27 +42,36 @@ public class ConsultaActivosBackBean extends BaseBackBean implements Serializabl
 	@Autowired
 	ActivoService oActivoService;
 	
-	
+	@Autowired
+	CatalogoExtService oCatalogoService;
 	
 	@PostConstruct
 	public void init(){
 		this.limpiar();
 		this.cargarListaDelegaciones();
 		this.buscarActivo();
-		this.setRegExpSoloNumeros(RegExpresionExtends.regExpSoloNumeros);
+		this.cargarListas();
 	} 
 	
+
+	public void cargarListas(){
+		try {
+			this.listaEstadoFisico = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.ESTADO_FISICO.getCodigoCatalogo());	
+		} catch (EntityNotFoundException  e) {
+			mostrarMensajeError(this.getClass().getSimpleName(), "cargarListas", MessagesResults.ERROR_OBTENER_LISTA, e);
+		}
+	}
+
 	public void limpiar(){
 		this.setTxtBusquedaActivoByCodigo(null);
 		this.setTxtBusquedaActivoByDescripcion(null);
 		this.setDelegacionId(null);
-		
+		this.setEstadoFisicoId(null);
+		this.buscarActivo();
 	}
 	
 	public void cargarListaDelegaciones(){
 		try {
-							
-			
 				this.listaDelegaciones=oDelegacionService.buscarPorEstado("",false);								
 			} catch (Exception e) {
             	mostrarMensajeError(this.getClass().getSimpleName(),"cargarListaDelegaciones()",MessagesResults.ERROR_OBTENER_LISTA, e);
@@ -65,7 +80,7 @@ public class ConsultaActivosBackBean extends BaseBackBean implements Serializabl
 	
 	public void buscarActivo(){
 		try{
-			this.listaActivos = oActivoService.buscar( this.getDelegacionId(), this.txtBusquedaActivoByCodigo, this.txtBusquedaActivoByDescripcion);
+			this.listaActivos = oActivoService.buscar( this.getDelegacionId(), this.txtBusquedaActivoByCodigo, this.txtBusquedaActivoByDescripcion,this.estadoFisicoId);
 			if(this.listaActivos.isEmpty()){
 				mostrarMensajeInfo("No se han encontrado resultados con el criterio de Búsqueda ingresada.");
 			}
@@ -115,13 +130,20 @@ public class ConsultaActivosBackBean extends BaseBackBean implements Serializabl
 		this.listaActivos = listaActivos;
 	}
 
-	public String getRegExpSoloNumeros() {
-		return regExpSoloNumeros;
+	public Integer getEstadoFisicoId() {
+		return estadoFisicoId;
 	}
 
-	public void setRegExpSoloNumeros(String regExpSoloNumeros) {
-		this.regExpSoloNumeros = regExpSoloNumeros;
+	public void setEstadoFisicoId(Integer estadoFisicoId) {
+		this.estadoFisicoId = estadoFisicoId;
 	}
-	
+
+	public List<Catalogo> getListaEstadoFisico() {
+		return listaEstadoFisico;
+	}
+
+	public void setListaEstadoFisico(List<Catalogo> listaEstadoFisico) {
+		this.listaEstadoFisico = listaEstadoFisico;
+	}
 
 }

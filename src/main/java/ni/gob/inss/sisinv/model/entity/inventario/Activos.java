@@ -69,6 +69,7 @@ public class Activos extends EntityBase implements java.io.Serializable {
 	private Catalogo colorCatalogo;
 	
 	
+	
 	@Id
 	@Column(name = "id", unique = true, nullable = false)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="Activos_SEQ")

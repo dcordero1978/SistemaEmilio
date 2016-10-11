@@ -10,5 +10,5 @@ import ni.gob.inss.sisinv.model.entity.inventario.Activos;
 public interface ActivoService {
 	public void guardar(Activos oActivo) throws BusinessException, EntityNotFoundException, DAOException;
 	public List<Activos> obtenerListaActivosPorEmpleado(Integer EmpleadoId) throws EntityNotFoundException;
-	public List<Activos> buscar(Integer DelegacionId, String CodActivo, String Descripcion) throws EntityNotFoundException; 
+	public List<Activos> buscar(Integer delegacionId, String codActivo, String descripcion, Integer estadoFisicoI);
 }

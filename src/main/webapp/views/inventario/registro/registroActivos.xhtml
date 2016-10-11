@@ -198,31 +198,47 @@
 							<p:tab title="Armas de fuego" >
 								<h:panelGrid columns="2">
 									<p:outputLabel for="calibre" value="Calibre"/>
-									<p:inputText id="calibre" value="#{registroActivosBackBean.calibre}"/>
+									<p:inputText id="calibre" value="#{registroActivosBackBean.calibre}" maxlength="2">
+										<pe:keyFilter regEx="/#{registroActivosBackBean.regExpSoloNumeros}/"/>
+									</p:inputText>
 								</h:panelGrid>							
 							</p:tab>
 							<p:tab title="Obras de arte">
 								<h:panelGrid columns="2" columnClasses="Wid25, Wid75"> 
 									<p:outputLabel for="nombre" value="Nombre"/>
-									<p:inputText id="nombre" value="#{registroActivosBackBean.nombreObreArte}"/>
+									<p:inputText id="nombre" value="#{registroActivosBackBean.nombreObreArte}" >
+										<pe:keyFilter regEx="/#{registroActivosBackBean.regExpDescripcion}/"/>
+									</p:inputText>
 								</h:panelGrid>							
 							</p:tab>
 							<p:tab title="Vehiculo">
 								<h:panelGrid columns="4" columnClasses="Wid25,Wid25,Wid25,Wid25">
 									<p:outputLabel for="numeroMotor" value="Número motor"/>
-									<p:inputText id="numeroMotor" value="#{registroActivosBackBean.numeroMotor}" />
+									<p:inputText id="numeroMotor" value="#{registroActivosBackBean.numeroMotor}" maxlength="17">
+										<pe:keyFilter regEx="/#{registroActivosBackBean.regExpSoloNumeros}/"/>
+									</p:inputText>
 									<p:outputLabel for="numeroChasis" value="Número Chasis"/>
-									<p:inputText id="numeroChasis" value="#{registroActivosBackBean.numeroChasis}" />
+									<p:inputText id="numeroChasis" value="#{registroActivosBackBean.numeroChasis}" maxlength="17">
+										<pe:keyFilter regEx="/[^IOQÑ]/"/>
+									</p:inputText>
 									<p:outputLabel for="numeroCilindros" value="Número de cilindros"/>
-									<p:inputText id="numeroCilindros" value="#{registroActivosBackBean.numeroCilindros}" />
+									<p:inputText id="numeroCilindros" value="#{registroActivosBackBean.numeroCilindros}" maxlength="2">
+										<pe:keyFilter regEx="/#{registroActivosBackBean.regExpSoloNumeros}/"/>
+									</p:inputText>
 									<p:outputLabel for="anio" value="Año"/>
-									<p:inputText id="anio" value="#{registroActivosBackBean.anio}" />
+									<p:inputMask mask="9999" id="anio" value="#{registroActivosBackBean.anio}" maxlength="4">
+										<pe:keyFilter regEx="/#{registroActivosBackBean.regExpSoloNumeros}/"/>
+									</p:inputMask>
 									<p:outputLabel for="placa" value="Placa"/>
 									<p:inputText id="placa" value="#{registroActivosBackBean.placa}" />
 									<p:outputLabel for="numeroPasajeros" value="Número de pasajeros"/>
-									<p:inputText id="numeroPasajeros" value="#{registroActivosBackBean.numeroPasajeros}" />
+									<p:inputText id="numeroPasajeros" value="#{registroActivosBackBean.numeroPasajeros}" maxlength="3">
+										<pe:keyFilter regEx="/#{registroActivosBackBean.regExpSoloNumeros}/"/>
+									</p:inputText>
 									<p:outputLabel for="capacidadCarga" value="Capacidad de carga"/>
-									<p:inputText id="capacidadCarga" value="#{registroActivosBackBean.capacidadCarga}" />
+									<p:inputText id="capacidadCarga" value="#{registroActivosBackBean.capacidadCarga}" maxlength="4">
+										<pe:keyFilter regEx="/#{registroActivosBackBean.regExpSoloNumeros}/"/>
+									</p:inputText>
 									<p:outputLabel for="combustible" value="Tipo de Combustible"/>
 									<p:inputText id="combustible" value="#{registroActivosBackBean.combustible}" />
 								</h:panelGrid>

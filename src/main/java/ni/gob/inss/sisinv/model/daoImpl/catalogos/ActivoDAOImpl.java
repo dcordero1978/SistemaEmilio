@@ -33,7 +33,7 @@ public class ActivoDAOImpl extends BaseGenericDAOImpl<Activos, Integer> implemen
 	
 	@Override
 	public List<Activos> ListadoActivosFiltro(Integer delegacionId, String codActivo, String descripcion, Integer estadoFisicoId){ 
-		Session session = sessionFactory.openSession();
+		Session session = sessionFactory.getCurrentSession();
 		
 		Criteria criteriaCount = session.createCriteria(Activos.class);
 		criteriaCount.setProjection(Projections.rowCount());

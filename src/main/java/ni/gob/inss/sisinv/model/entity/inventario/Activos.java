@@ -1,9 +1,11 @@
 package ni.gob.inss.sisinv.model.entity.inventario;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -56,7 +58,7 @@ public class Activos extends EntityBase implements java.io.Serializable {
 	private Secaf secaf;
 	private String color;
 	private Integer proyectoId;
-	private List<ActivosCaracteristicas> listaCaracteristicas;
+	private List<ActivosCaracteristicas> listaCaracteristicas = new ArrayList<ActivosCaracteristicas>();
 	
 	@Id
 	@Column(name = "id", unique = true, nullable = false)
@@ -272,7 +274,7 @@ public class Activos extends EntityBase implements java.io.Serializable {
 		this.proyectoId = proyectoId;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "activo")
+	@OneToMany(fetch = FetchType.LAZY, cascade= CascadeType.ALL, orphanRemoval=true, mappedBy="primaryKey.activoId")
 	public List<ActivosCaracteristicas> getListaCaracteristicas() {
 		return listaCaracteristicas;
 	}

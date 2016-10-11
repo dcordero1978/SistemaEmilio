@@ -274,7 +274,7 @@ public class Activos extends EntityBase implements java.io.Serializable {
 		this.proyectoId = proyectoId;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, cascade= CascadeType.ALL, orphanRemoval=true, mappedBy="primaryKey.activoId")
+	@OneToMany(fetch = FetchType.LAZY, cascade= CascadeType.ALL, orphanRemoval=true, mappedBy="caracteristica.activoId")
 	public List<ActivosCaracteristicas> getListaCaracteristicas() {
 		return listaCaracteristicas;
 	}

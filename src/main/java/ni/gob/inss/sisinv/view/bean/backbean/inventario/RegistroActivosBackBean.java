@@ -188,7 +188,7 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 				oCaracteristica.setCreadoEl(this.getTimeNow());
 				oCaracteristica.setCreadoEnIp(this.getRemoteIp());
 				oCaracteristica.setCreadoPor(this.getUsuarioActual().getId());
-				oCaracteristica.getPrimaryKey().setCaracteristicaCod(caracteristica.getCodigo());
+				oCaracteristica.getCaracteristica().setCaracteristicaCod(caracteristica.getCodigo());
 				//El Combustible es catalogo para el caso del transporte
 				if(StringUtils.equalsIgnoreCase(caracteristica.getCodigo(), "CMB")){
 					oCaracteristica.setEsCatalogo(true);

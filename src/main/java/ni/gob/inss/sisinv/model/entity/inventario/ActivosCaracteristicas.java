@@ -6,9 +6,13 @@ import javax.persistence.AssociationOverrides;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -19,30 +23,43 @@ import ni.gob.inss.barista.model.entity.EntityBase;
  */
 @Entity
 @Table(name = "activos_caracteristicas", schema = "inventario")
+@SequenceGenerator(name="ACTIVOS_CARACTERISTICAS_SERIAL", sequenceName="inventario.activos_caracteristicas_id_seq", allocationSize=1)
 public class ActivosCaracteristicas extends EntityBase  implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private ActivosCaracteristicasId primaryKey = new ActivosCaracteristicasId();
+	private ActivosCaracteristicasId caracteristica = new ActivosCaracteristicasId();
 	private String valor;
 	private boolean esCatalogo;
+	private Integer id;
 	
-	@EmbeddedId
+	
+	@Id
+	@Column(name="id", nullable=false)
+	@GeneratedValue(generator="ACTIVOS_CARACTERISTICAS_SERIAL", strategy=GenerationType.SEQUENCE)
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	@Embedded
 	@AssociationOverrides({@AssociationOverride(name="activoId",joinColumns= @JoinColumn(name="activo_id"))})
 	@AttributeOverrides({@AttributeOverride(name = "caracteristicaCod", column = @Column(name = "caracteristica_cod", nullable = false, length = 20)) })
-	public ActivosCaracteristicasId getPrimaryKey() {
-		return primaryKey;
+	public ActivosCaracteristicasId getCaracteristica() {
+		return caracteristica;
 	}
 
-	public void setPrimaryKey(ActivosCaracteristicasId primaryKey) {
-		this.primaryKey = primaryKey;
+	public void setCaracteristica(ActivosCaracteristicasId caracteristica) {
+		this.caracteristica = caracteristica;
 	}
-
 	
 	@Column(name = "valor", nullable = false, length = 50)
 	public String getValor() {
 		return this.valor;
 	}
-
+	
 	public void setValor(String valor) {
 		this.valor = valor;
 	}
@@ -56,13 +73,14 @@ public class ActivosCaracteristicas extends EntityBase  implements java.io.Seria
 		this.esCatalogo = esCatalogo;
 	}
 
+
 	@Transient
 	public Activos getActivo() {
-		return primaryKey.getActivoId();
+		return caracteristica.getActivoId();
 	}
 
 	public void setActivo(Activos activo) {
-		primaryKey.setActivoId(activo);
+		caracteristica.setActivoId(activo);
 	}
 	
 }

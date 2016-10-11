@@ -64,6 +64,7 @@ public class ActivoServiceImpl implements ActivoService {
 		return codigoInventario;
 	}
 
+	@Transactional
 	@Override
 	public List<Activos> buscar(Integer delegacionId, String codActivo, String descripcion, Integer estadoFisicoId) {
 		

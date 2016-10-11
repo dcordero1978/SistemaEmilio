@@ -58,6 +58,7 @@ public class Activos extends EntityBase implements java.io.Serializable {
 	private Secaf secaf;
 	private String color;
 	private Integer proyectoId;
+	private Integer entidadId;
 	private List<ActivosCaracteristicas> listaCaracteristicas = new ArrayList<ActivosCaracteristicas>();
 	
 	@Id
@@ -283,6 +284,13 @@ public class Activos extends EntityBase implements java.io.Serializable {
 		this.listaCaracteristicas = listaCaracteristicas;
 	}
 
-	
+	@Column(name="entidad_id", nullable=false)
+	public Integer getEntidadId() {
+		return entidadId;
+	}
+
+	public void setEntidadId(Integer entidadId) {
+		this.entidadId = entidadId;
+	}
 	
 }

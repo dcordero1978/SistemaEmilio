@@ -255,6 +255,7 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 			oActivo.setCreadoEl(this.getTimeNow());
 			oActivo.setCreadoEnIp(this.getRemoteIp());
 			oActivo.setCreadoPor(this.getUsuarioActual().getId());
+			oActivo.setEntidadId(this.getEntidadActual().getId());
 			oActivo.setListaCaracteristicas(this.obtieneListaCaracteristicasActivos(oActivo));
 			
 			oActivoService.guardar(oActivo);

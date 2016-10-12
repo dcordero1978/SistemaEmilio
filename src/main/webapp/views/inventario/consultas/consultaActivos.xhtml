@@ -16,14 +16,14 @@
 			<div class="Container100 Responsive">
 				<h:form id="formConsultaActivos" style="width: 100%;">
 					<p:panel styleClass="fondoPaneles">
-					<f:facet name="header">
+					<f:facet name="header"> 
 						<p:outputPanel style="display:block;" styleClass="left">
 							<h:panelGrid columns="4" cellpadding="5">
 								<p:selectOneMenu id="delegacion" label="Delegación"  value="#{consultaActivosBackBean.delegacionId}" effect="fold" style="width:250px" >
 									<f:selectItem itemValue="#{null}" itemLabel="Seleccione una Delegación"/>
 									<f:selectItems  var="oDelegacion" value="#{consultaActivosBackBean.listaDelegaciones}" itemLabel="#{oDelegacion.descripcion}" itemValue="#{oDelegacion.id}"/>									
 								</p:selectOneMenu>
-								<p:selectOneMenu required="true" id="estadoFisico" value="#{consultaActivosBackBean.estadoFisicoId}" label="Estado Fisico:" style="width:250px">
+								<p:selectOneMenu  id="estadoFisico" value="#{consultaActivosBackBean.estadoFisicoId}" label="Estado Fisico:" style="width:250px">
 								<f:selectItem itemValue="#{null}" itemLabel="Seleccione Estado Fisico"/>
 								<f:selectItems var="oEstadoFisico" value="#{consultaActivosBackBean.listaEstadoFisico}" itemLabel="#{oEstadoFisico.descripcion}" itemValue="#{oEstadoFisico.id}" />I
 							</p:selectOneMenu>
@@ -42,12 +42,12 @@
 						<p:outputPanel styleClass="tableClass">
 							<p:dataTable id="tablaActivo" style="width:100%" paginatorPosition="top" selectionMode="single"  scrollable="true" scrollHeight="410" 
 							var="oActivo" value="#{consultaActivosBackBean.listaActivos}" rowKey="#{oActivo.id}"  loadingmessage="Cargando registros..."
-							paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="10" pageLinks="3" lazy="true" 
+							paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="10" pageLinks="3" lazy="true"  
 							paginatorTemplate="#{configApplicationBean.paginatorTemplate}" currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
 							<f:facet name="header">
         						Listado de Bienes
     						</f:facet>
-    						
+
     							<p:column style="width:16px">
             						<p:rowToggler />
         						</p:column>

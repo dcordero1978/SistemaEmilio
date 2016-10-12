@@ -1,6 +1,7 @@
 package ni.gob.inss.sisinv.bussineslogic.serviceImpl.catalogos;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -25,7 +26,8 @@ public class CatalogoExtServiceImpl extends CatalogoServiceImpl implements Catal
 	MarcaModeloDAO oMarcaModeloDAO;
 	
 	@Autowired
-	CatalogoDAO oCatalogoDAO;	
+	CatalogoDAO oCatalogoDAO;
+
 	@Transactional
 	@Override
 	public List<MarcasModelos> obtenerListaMarcas() throws EntityNotFoundException {
@@ -46,7 +48,23 @@ public class CatalogoExtServiceImpl extends CatalogoServiceImpl implements Catal
 	@Override
 	public List<Catalogo> obtieneListaCatalogosPorRefTipoCatalogo(String refTipoCatalogo) throws EntityNotFoundException {
 		Search oSearch = new Search();
-		oSearch.addFilter(Filter.equal("refTipoCatalogo", refTipoCatalogo));
+		oSearch.addFilterOr(Filter.equal("refTipoCatalogo", refTipoCatalogo));
+		return oCatalogoDAO.search(oSearch);
+	}
+
+	@Transactional
+	@Override
+	public List<Catalogo> obtieneListaCatalogosPorRefTipoCatalogo(String... refTipoCatalogo)throws EntityNotFoundException {
+		Search oSearch = new Search();
+		Filter[] filtros =new Filter[refTipoCatalogo.length];
+		 
+		IntStream.range(0, refTipoCatalogo.length).forEach(iterador -> {
+			filtros[iterador] = new Filter("refTipoCatalogo", refTipoCatalogo[iterador]);
+		});
+		oSearch.addFilterOr(filtros);
+		/*Arrays.stream(refTipoCatalogo).forEach(tipoCatalogo -> {
+		 	oSearch.addFilter(Filter.or(new Filter("refTipoCatalogo",tipoCatalogo)));
+		});*/
 		return oCatalogoDAO.search(oSearch);
 	}
 	

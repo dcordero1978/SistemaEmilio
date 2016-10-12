@@ -1,7 +1,9 @@
 package ni.gob.inss.sisinv.model.entity.inventario;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,15 +15,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
-
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import ni.gob.inss.barista.model.entity.EntityBase;
 import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
@@ -67,8 +65,9 @@ public class Activos extends EntityBase implements java.io.Serializable {
 	private Catalogo estadoFisico;
 	private Integer ubicacionId;
 	private Catalogo colorCatalogo;
-	
-	
+	private Integer entidadId;
+	private List<ActivosCaracteristicas> listaCaracteristicas = new ArrayList<ActivosCaracteristicas>();
+
 	
 	@Id
 	@Column(name = "id", unique = true, nullable = false)
@@ -284,6 +283,7 @@ public class Activos extends EntityBase implements java.io.Serializable {
 		this.proyectoId = proyectoId;
 	}
 
+
 	@Column(name="ubicacion_id", insertable = false, updatable = false)
 	public Integer getUbicacionId() {
 		return ubicacionId;
@@ -332,6 +332,23 @@ public class Activos extends EntityBase implements java.io.Serializable {
 	public void setColorCatalogo(Catalogo colorCatalogo) {
 		this.colorCatalogo = colorCatalogo;
 	}
-	
+
+	@OneToMany(fetch = FetchType.LAZY, cascade= CascadeType.ALL, orphanRemoval=true, mappedBy="caracteristica.activoId")
+	public List<ActivosCaracteristicas> getListaCaracteristicas() {
+		return listaCaracteristicas;
+	}
+
+	public void setListaCaracteristicas(List<ActivosCaracteristicas> listaCaracteristicas) {
+		this.listaCaracteristicas = listaCaracteristicas;
+	}
+
+	@Column(name="entidad_id", nullable=false)
+	public Integer getEntidadId() {
+		return entidadId;
+	}
+
+	public void setEntidadId(Integer entidadId) {
+		this.entidadId = entidadId;
+	}
 
 }

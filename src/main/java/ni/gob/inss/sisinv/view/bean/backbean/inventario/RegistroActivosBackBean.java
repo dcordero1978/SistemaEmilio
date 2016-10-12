@@ -3,7 +3,10 @@ package ni.gob.inss.sisinv.view.bean.backbean.inventario;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
@@ -30,6 +33,7 @@ import ni.gob.inss.sisinv.model.entity.catalogo.Empleado;
 import ni.gob.inss.sisinv.model.entity.catalogo.MarcasModelos;
 import ni.gob.inss.sisinv.model.entity.catalogo.Secaf;
 import ni.gob.inss.sisinv.model.entity.inventario.Activos;
+import ni.gob.inss.sisinv.model.entity.inventario.ActivosCaracteristicas;
 import ni.gob.inss.sisinv.util.CatalogoGeneral;
 import ni.gob.inss.sisinv.util.RegExpresionExtends;
 
@@ -43,9 +47,6 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 	private Empleado empleadoSeleccionado;
 	private Integer hfId;
 	private Boolean modoEdicion;
-	
-	
-	
 	
 	private Integer ubicacionId;
 	private List<Delegacion> listaUbicaciones;
@@ -81,6 +82,22 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 	private String regExpDecimales;
 	private String regExpDescripcion;
 	
+	private Map<String, ActivosCaracteristicas> caracteristicas = new HashMap<>();
+	
+	private boolean activoEspecial;
+	
+	//Variables designadas a los activos especiales
+	private String calibre;
+	private String nombreObreArte;
+	private String numeroMotor;
+	private String numeroChasis;
+	private String numeroCilindros;
+	private String anio;
+	private String placa;
+	private String numeroPasajeros;
+	private String capacidadCarga;
+	private String combustible;
+	
 	@Autowired
 	EmpleadoService oEmpleadoService;
 	
@@ -107,6 +124,7 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 		this.regExpSoloNumeros = RegExpresionExtends.regExpSoloNumeros;
 		this.regExpDecimales = RegExpresionExtends.regExpDecimales;
 		this.regExpDescripcion = RegExpresionExtends.regExpDescripcion;
+		this.setActivoEspecial(false);
 	}
 	
 	public void limpiar(){
@@ -133,6 +151,7 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 		this.setDescripcionActivo(StringUtils.EMPTY);
 		this.setCodigoSecundario(StringUtils.EMPTY);
 		this.setProyectoId(null);
+		this.setActivoEspecial(false);
 	}
 	
 	public void iniciarFormularioRegistro(){
@@ -147,6 +166,7 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 		}
 	}
 	
+	//TODO: SE REQUIERE REFACTORIZAR ESTE METODO 
 	public void cargarListas(){
 		try {
 						
@@ -159,7 +179,22 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 			this.listaTipoMoneda = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.MONEDA.getCodigoCatalogo());
 			this.listaProyectos = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.PROYECTOS.getCodigoCatalogo());
 			this.listaMarcas = oCatalogoService.obtenerListaMarcas();
-			
+
+			List<Catalogo> listaCaracteristicas =  oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.CARACTERISTICA_ARMA_FUEGO.getCodigoCatalogo()
+																	,CatalogoGeneral.CARACTERISTICA_OBRA_ARTE.getCodigoCatalogo(),
+																	CatalogoGeneral.CARACTERISTICA_TRANSPORTE_MAQUINARIA.getCodigoCatalogo());
+			listaCaracteristicas.stream().forEach(caracteristica -> {
+				ActivosCaracteristicas oCaracteristica = new ActivosCaracteristicas();
+				oCaracteristica.setCreadoEl(this.getTimeNow());
+				oCaracteristica.setCreadoEnIp(this.getRemoteIp());
+				oCaracteristica.setCreadoPor(this.getUsuarioActual().getId());
+				oCaracteristica.getCaracteristica().setCaracteristicaCod(caracteristica.getCodigo());
+				//El Combustible es catalogo para el caso del transporte
+				if(StringUtils.equalsIgnoreCase(caracteristica.getCodigo(), "CMB")){
+					oCaracteristica.setEsCatalogo(true);
+				}
+				this.caracteristicas.put(caracteristica.getCodigo(), oCaracteristica);
+			});
 		} catch (EntityNotFoundException  e) {
 			mostrarMensajeError(this.getClass().getSimpleName(), "cargarListas", MessagesResults.ERROR_OBTENER_LISTA, e);
 		}
@@ -217,10 +252,11 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 			oActivo.setColor(this.getCodigoColor());
 			oActivo.setCodigoSecundario(this.getCodigoSecundario());
 			oActivo.setProyectoId(this.getProyectoId());
-			
 			oActivo.setCreadoEl(this.getTimeNow());
 			oActivo.setCreadoEnIp(this.getRemoteIp());
 			oActivo.setCreadoPor(this.getUsuarioActual().getId());
+			oActivo.setEntidadId(this.getEntidadActual().getId());
+			oActivo.setListaCaracteristicas(this.obtieneListaCaracteristicasActivos(oActivo));
 			
 			oActivoService.guardar(oActivo);
 			RequestContext.getCurrentInstance().execute("PF('modalRegistroActivo').hide()");
@@ -228,6 +264,35 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 			this.cargarListaActivos();
 		} catch (BusinessException | DAOException e) {
 			mostrarMensajeError(MessagesResults.ERROR_GUARDAR);
+		}
+	}
+	
+	
+	private List<ActivosCaracteristicas> obtieneListaCaracteristicasActivos(Activos oActivo){
+		aplicaValorActivoCaracteristica(this.getCalibre(), "CLB");
+		aplicaValorActivoCaracteristica(this.getNombreObreArte(), "NOB");
+		aplicaValorActivoCaracteristica(this.getNumeroMotor(), "NM");
+		aplicaValorActivoCaracteristica(this.getNumeroChasis(), "NCH");
+		aplicaValorActivoCaracteristica(this.getNumeroCilindros(), "NC");
+		aplicaValorActivoCaracteristica(this.getAnio(), "ANIO");
+		aplicaValorActivoCaracteristica(this.getPlaca(), "PL");
+		aplicaValorActivoCaracteristica(this.getNumeroPasajeros(), "NP");
+		aplicaValorActivoCaracteristica(this.getCapacidadCarga(), "CC");
+		aplicaValorActivoCaracteristica(this.getCombustible(), "CMB");
+		
+		List<ActivosCaracteristicas> listaPropiedades = new ArrayList<ActivosCaracteristicas>();
+		this.caracteristicas.entrySet().stream()
+			.filter(map -> map.getValue().getValor()!=null).forEach(mapa -> {
+				mapa.getValue().setActivo(oActivo);
+				listaPropiedades.add(mapa.getValue());
+		});
+		
+		return listaPropiedades;
+	}
+	
+	private void aplicaValorActivoCaracteristica(String campo, String codigo){
+		if(StringUtils.isNotEmpty(campo)){
+			this.caracteristicas.get(codigo).setValor(campo);
 		}
 	}
 	
@@ -503,6 +568,95 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 
 	public void setProyectoId(Integer proyectoId) {
 		this.proyectoId = proyectoId;
-	}	
+	}
+
+	public boolean isActivoEspecial() {
+		return activoEspecial;
+	}
+
+	public void setActivoEspecial(boolean activoEspecial) {
+		this.activoEspecial = activoEspecial;
+	}
+
+	public String getCalibre() {
+		return calibre;
+	}
+
+	public void setCalibre(String calibre) {
+		this.calibre = calibre;
+	}
+
+	public String getNombreObreArte() {
+		return nombreObreArte;
+	}
+
+	public void setNombreObreArte(String nombreObreArte) {
+		this.nombreObreArte = nombreObreArte;
+	}
+
+	public String getNumeroMotor() {
+		return numeroMotor;
+	}
+
+	public void setNumeroMotor(String numeroMotor) {
+		this.numeroMotor = numeroMotor;
+	}
+
+	public String getNumeroChasis() {
+		return numeroChasis;
+	}
+
+	public void setNumeroChasis(String numeroChasis) {
+		this.numeroChasis = numeroChasis;
+	}
+
+	public String getNumeroCilindros() {
+		return numeroCilindros;
+	}
+
+	public void setNumeroCilindros(String numeroCilindros) {
+		this.numeroCilindros = numeroCilindros;
+	}
+
+	public String getAnio() {
+		return anio;
+	}
+
+	public void setAnio(String anio) {
+		this.anio = anio;
+	}
+
+	public String getPlaca() {
+		return placa;
+	}
+
+	public void setPlaca(String placa) {
+		this.placa = placa;
+	}
+
+	public String getNumeroPasajeros() {
+		return numeroPasajeros;
+	}
+
+	public void setNumeroPasajeros(String numeroPasajeros) {
+		this.numeroPasajeros = numeroPasajeros;
+	}
+
+	public String getCapacidadCarga() {
+		return capacidadCarga;
+	}
+
+	public void setCapacidadCarga(String capacidadCarga) {
+		this.capacidadCarga = capacidadCarga;
+	}
+
+	public String getCombustible() {
+		return combustible;
+	}
+
+	public void setCombustible(String combustible) {
+		this.combustible = combustible;
+	}
+	
 	
 }

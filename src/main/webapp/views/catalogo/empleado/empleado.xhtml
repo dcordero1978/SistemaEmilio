@@ -67,28 +67,28 @@
 						</f:facet>
 						<h:panelGrid columns="2" style="width:100%" columnClasses="Wid30, Wid70">
 							<p:outputLabel for="primerNombre" value="Primer Nombre" />
-							<p:inputText value="#{empleadoBackBean.primerNombre}" label="Nombres" maxlength="25" required="true" autocomplete="off" id="primerNombre" styleClass="Wid80" disabled="#{!empleadoBackBean.autorizadoParaEditar}">
+							<p:inputText value="#{empleadoBackBean.primerNombre}" label="Nombres" maxlength="25" required="true" autocomplete="off" id="primerNombre" styleClass="Wid80" readonly="#{!empleadoBackBean.autorizadoParaEditar}">
 								<pe:keyFilter regEx="/#{empleadoBackBean.regExpLetras}/" />
 							</p:inputText>
 							<p:outputLabel for="segundoNombre" value="Segundo Nombre" />
-							<p:inputText value="#{empleadoBackBean.segundoNombre}" label="SegundoNombre" maxlength="25" autocomplete="off" id="segundoNombre" styleClass="Wid80" disabled="#{!empleadoBackBean.autorizadoParaEditar}">
+							<p:inputText value="#{empleadoBackBean.segundoNombre}" label="SegundoNombre" maxlength="25" autocomplete="off" id="segundoNombre" styleClass="Wid80" readonly="#{!empleadoBackBean.autorizadoParaEditar}">
 								<pe:keyFilter regEx="/#{empleadoBackBean.regExpLetras}/" />
 							</p:inputText>
 													
 							<p:outputLabel for="primerApellido" value="Primer Apellido"/>
-							<p:inputText value="#{empleadoBackBean.primerApellido}" label="Apellidos" maxlength="25" required="true" autocomplete="off" id="primerApellido"  styleClass="Wid80" disabled="#{!empleadoBackBean.autorizadoParaEditar}">
+							<p:inputText value="#{empleadoBackBean.primerApellido}" label="Apellidos" maxlength="25" required="true" autocomplete="off" id="primerApellido"  styleClass="Wid80" readonly="#{!empleadoBackBean.autorizadoParaEditar}">
 								<pe:keyFilter regEx="/#{empleadoBackBean.regExpLetras}/" />
 							</p:inputText>
 							<p:outputLabel for="segundoApellido" value="Segundo Apellido"/>
-							<p:inputText value="#{empleadoBackBean.segundoApellido}" label="Apellidos" maxlength="25" autocomplete="off" id="segundoApellido"  styleClass="Wid80" disabled="#{!empleadoBackBean.autorizadoParaEditar}">
+							<p:inputText value="#{empleadoBackBean.segundoApellido}" label="Apellidos" maxlength="25" autocomplete="off" id="segundoApellido"  styleClass="Wid80" readonly="#{!empleadoBackBean.autorizadoParaEditar}">
 								<pe:keyFilter regEx="/#{empleadoBackBean.regExpLetras}/" />
 							</p:inputText>
 							<p:outputLabel for="numeroEmpleado" value="No. Empleado" />
-							<p:inputText value="#{empleadoBackBean.numeroEmpleado}" label="No. Empleado" required="true" autocomplete="false" id="numeroEmpleado" styleClass="Wid80" maxlength="8" disabled="#{!empleadoBackBean.autorizadoParaEditar}">
+							<p:inputText value="#{empleadoBackBean.numeroEmpleado}" label="No. Empleado" required="true" autocomplete="false" id="numeroEmpleado" styleClass="Wid80" maxlength="8" readonly="#{!empleadoBackBean.autorizadoParaEditar}">
 								<pe:keyFilter regEx="/#{empleadoBackBean.regExpSoloNumeros}/"/>
 							</p:inputText>							     
 							<p:outputLabel for="numeroCedula" value="No. Cédula" />
-							<p:inputMask value="#{empleadoBackBean.nroIdentificacion}" label="No. Identificación" id="numeroCedula" styleClass="Wid80" required="true" maxlength="14" mask="9999999999999a" disabled="#{!empleadoBackBean.autorizadoParaEditar}"/>
+							<p:inputMask value="#{empleadoBackBean.nroIdentificacion}" label="No. Identificación" id="numeroCedula" styleClass="Wid80" required="true" maxlength="14" mask="9999999999999a" readonly="#{!empleadoBackBean.autorizadoParaEditar}"/>
 							<p:outputLabel for="delegacion" value="Delegación"/>
 							<p:selectOneMenu id="delegacion" label="Delegación" value="#{empleadoBackBean.delegacionId}" required="true" style="width:80%" disabled="#{!empleadoBackBean.autorizadoParaEditar}">
 								<f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>

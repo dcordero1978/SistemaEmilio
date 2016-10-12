@@ -2,7 +2,6 @@ package ni.gob.inss.sisinv.bussineslogic.serviceImpl.catalogos;
 
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,33 +45,14 @@ public class EmpleadoServiceImpl implements EmpleadoService{
 	@Transactional
 	@Override
 	public List<Empleado> buscar(String criterioBusqueda, Integer delegacionId) throws EntityNotFoundException {
-		return this.buscar(criterioBusqueda, delegacionId, null);
+		return oEmpleadoDAO.buscar(criterioBusqueda, delegacionId, null, null, null, null, null);	
 	}
 	
 	@Transactional
 	@Override
 	public List<Empleado> buscar(String criterioBusqueda, Integer delegacionId, Boolean pasivo)	throws EntityNotFoundException {
-		String txtBusqueda = StringUtils.isEmpty(criterioBusqueda) ? "" : criterioBusqueda;
-		Search oSearch = new Search();
-		
-		if(delegacionId != null){
-			oSearch.addFilter(Filter.equal("delegacionId", delegacionId));
-		}
-	
-		if(pasivo != null){
-			oSearch.addFilter(Filter.equal("pasivo", pasivo));
-		}
-		
-		oSearch.addFilterOr(Filter.ilike("primerNombre", "%"+txtBusqueda+"%"),
-								Filter.ilike("segundoNombre", "%"+txtBusqueda+"%"),
-								Filter.ilike("primerApellido", "%"+txtBusqueda+"%"),
-								Filter.ilike("segundoApellido", "%"+txtBusqueda+"%"));
-					
-		return oEmpleadoDAO.search(oSearch);
-		
+		return oEmpleadoDAO.buscar(criterioBusqueda, delegacionId, pasivo, null, null, null, null);			
 	}
-	
-	
 	
 	public void validaEmpleado(Empleado oEmpleado) throws BusinessException{
 		if(this.obtieneEmpleadoPorNumeroEmpleado(oEmpleado.getNumeroEmpleado())!=null){

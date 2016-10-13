@@ -5,7 +5,7 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:pe="http://primefaces.org/ui/extensions"
                 template="/web/template/innerLayout.xhtml"
-                xmlns:mc="http://java.sun.com/jsf/composite/comps">
+                xmlns:mc="http://java.sun.com/jsf/composite/reusables">
                 
 	<ui:param name="paramBackBean" value="#{empleadoBackBean}"/>
 	<ui:define name="headerContent">
@@ -18,13 +18,14 @@
 					<p:panel styleClass="fondoPaneles">
 						<f:facet name="header">
 							<p:outputPanel style="display" styleClass="left">
-								<p:inputText value="#{empleadoBackBean.txtBusquedaEmpleado}" maxlength="150" placeholder="#{labelName.placeholderBuscar}" autocomplete="off"/>
+								<h:panelGrid columns="3" >
+								<p:inputText id="txtBusquedaEmpleado" value="#{empleadoBackBean.txtBusquedaEmpleado}" maxlength="150" placeholder="#{labelName.placeholderBuscar}" autocomplete="off"/>
 								<p:selectOneMenu id="delegacionBusqueda" label="Delegación" value="#{empleadoBackBean.delegacionBusquedaEmpleado}" style="width:200px; left:5px">									
 									<f:selectItem itemValue="#{null}" itemLabel="Seleccione Delegación"/>
 									<f:selectItems var="oDelegacion" value="#{empleadoBackBean.listaDelegaciones}" itemLabel="#{oDelegacion.descripcion}" itemValue="#{oDelegacion.id}"/>									
 								</p:selectOneMenu>
-								
-								<p:commandButton  icon="ui-icon-search" action="#{empleadoBackBean.buscar}" ajax="true" update="listEmpleado" style="margin-left:5px;"/>								
+								<p:commandButton  icon="ui-icon-search" action="#{empleadoBackBean.buscar}" ajax="true" update="listEmpleado" style="margin-left:5px;"/>
+								</h:panelGrid>	
 							</p:outputPanel>						
 							<p:outputPanel style="display" styleClass="right">
 								<p:commandButton value="#{labelName.btnAgregar}" icon="ui-icon-circle-plus" action="#{empleadoBackBean.limpiar}" resetValues="true" update=":formDatosEmpleado" rendered="#{empleadoBackBean.autorizadoParaEditar}"/>
@@ -100,9 +101,7 @@
 							<p:inputText id="area" readonly="true" value="#{empleadoBackBean.empleadoSeleccionado.area}" styleClass="Wid90"/>
 							<p:outputLabel for="cargo" value="Cargo:"/>
 							<p:inputText id="cargo" readonly="true" value="#{empleadoBackBean.empleadoSeleccionado.cargo}" styleClass="Wid90"/>
-							
 						</h:panelGrid>
-						
 						
 					</p:panel>
 				</h:form>

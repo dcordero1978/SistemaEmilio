@@ -1,6 +1,7 @@
 package ni.gob.inss.sisinv.view.bean.backbean.catalogo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -54,6 +55,14 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	private String regExpSoloNumeros;
 	
 	private boolean autorizadoParaEditar;
+	
+	private String filtroNombre;
+	private String filtroCedula;
+	private String filtroNumeroEmpleado;
+	private String filtroCargo;
+	private String filtroArea;
+	private List<Empleado> filtroListaEmpleados = new ArrayList<Empleado>();
+	private Empleado filtroEmpleadoSeleccionado;
 	
 	@Autowired
 	private EmpleadoService oEmpleadoService;
@@ -216,8 +225,18 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 			mostrarMensajeError(this.getClass().getSimpleName(), "cargarDatosEmpleado", MessagesResults.ERROR_OBTENER, e);
 		}
 	}
+	
+	public void busquedaAvanzadaEmpleados(){
+		try {
+			 this.filtroListaEmpleados = oEmpleadoService.buscar(this.getFiltroNombre(), null, false, this.getFiltroCargo(), this.getFiltroArea(), this.getFiltroCedula(), this.getFiltroNumeroEmpleado());
+		} catch (EntityNotFoundException e) {
+			mostrarMensajeError(MessagesResults.ERROR_OBTENER_LISTA);
+		}
+	}
 
-
+	public void cargarDatosFiltro(){
+		this.setTxtBusquedaEmpleado(filtroEmpleadoSeleccionado.getPrimerNombre()+" "+filtroEmpleadoSeleccionado.getSegundoNombre()+" "+filtroEmpleadoSeleccionado.getPrimerApellido()+" "+filtroEmpleadoSeleccionado.getSegundoApellido());
+	}
 	public String getTxtBusquedaEmpleado() {
 		return txtBusquedaEmpleado;
 	}
@@ -355,5 +374,60 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 		return autorizadoParaEditar;
 	}
 
+	public String getFiltroNombre() {
+		return filtroNombre;
+	}
 
+	public void setFiltroNombre(String filtroNombre) {
+		this.filtroNombre = filtroNombre;
+	}
+
+	public String getFiltroCedula() {
+		return filtroCedula;
+	}
+
+	public void setFiltroCedula(String filtroCedula) {
+		this.filtroCedula = filtroCedula;
+	}
+
+	public String getFiltroNumeroEmpleado() {
+		return filtroNumeroEmpleado;
+	}
+
+	public void setFiltroNumeroEmpleado(String filtroNumeroEmpleado) {
+		this.filtroNumeroEmpleado = filtroNumeroEmpleado;
+	}
+
+	public String getFiltroCargo() {
+		return filtroCargo;
+	}
+
+	public void setFiltroCargo(String filtroCargo) {
+		this.filtroCargo = filtroCargo;
+	}
+
+	public String getFiltroArea() {
+		return filtroArea;
+	}
+
+	public void setFiltroArea(String filtroArea) {
+		this.filtroArea = filtroArea;
+	}
+
+	public List<Empleado> getFiltroListaEmpleados() {
+		return filtroListaEmpleados;
+	}
+
+	public void setFiltroListaEmpleados(List<Empleado> filtroListaEmpleados) {
+		this.filtroListaEmpleados = filtroListaEmpleados;
+	}
+
+	public Empleado getFiltroEmpleadoSeleccionado() {
+		return filtroEmpleadoSeleccionado;
+	}
+
+	public void setFiltroEmpleadoSeleccionado(Empleado filtroEmpleadoSeleccionado) {
+		this.filtroEmpleadoSeleccionado = filtroEmpleadoSeleccionado;
+	}
+	
 }

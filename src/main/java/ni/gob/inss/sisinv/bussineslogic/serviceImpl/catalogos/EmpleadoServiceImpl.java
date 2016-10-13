@@ -76,6 +76,11 @@ public class EmpleadoServiceImpl implements EmpleadoService{
 		return (Empleado) oEmpleadoDAO.searchUnique(oSearch);	
 	}
 
-
-
+	@Transactional
+	@Override
+	public List<Empleado> buscar(String criterioNombre, Integer delegacion, Boolean pasivo, String cargo, String area,
+			String numeroIdentificacion, String numeroEmpleado) throws EntityNotFoundException {
+		return oEmpleadoDAO.buscar(criterioNombre, delegacion, pasivo, cargo, area, numeroIdentificacion, numeroEmpleado);
+	}
+	
 }

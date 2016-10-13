@@ -1,0 +1,70 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+      
+	<composite:interface>
+		<composite:attribute name="nombreModal" required="true" shortDescription="Valor de la propiedada Widget desde donde se esta mandando a llamar el Componente"/>
+		<composite:attribute name="componentesActualizar" required="true" shortDescription="El componente a actualizar despues de hacer el llamado al listener"/>
+		<composite:attribute name="backBeanBase" required="true" shortDescription="BackBean donde se encuentra el evento cargarDatosFiltro"/>
+	</composite:interface>
+	<composite:implementation>
+		<h:form id="formBusqueda">
+			<p:dialog id="dialogoBusquedaEmpleado" showEffect="blind" hideEffect="blind" widgetVar="#{cc.attrs.nombreModal}" showHeader="false" width="880" height="500"  modal="true" >
+				<p:panel styleClass="fondoPaneles" style="height:500px;">
+					<f:facet name="header">
+						<p:outputPanel style="display:block;" styleClass="left">
+							Búsqueda de Empleado								
+						</p:outputPanel>
+						<p:outputPanel style="display:block" styleClass="right">
+							<p:commandButton value="#{labelName.btnBuscar}" update="listaEmpleadoFiltro" action="#{empleadoBackBean.busquedaAvanzadaEmpleados}"  icon="ui-icon-search" ajax="true"/>
+							<p:commandButton value="#{labelName.btnCerrarModal}" icon="ui-icon-cancel" ajax="true" immediate="true" onclick="PF('#{cc.attrs.nombreModal}').hide();" resetValues="true" update="listaEmpleadoFiltro" />
+						</p:outputPanel>
+					</f:facet>
+					<h:panelGrid columns="6" columnClasses="Wid15, Wid15, Wid15,Wid15, Wid15, Wid15" style="width:100%">
+								<p:outputLabel for="nombreCompleto" value="Nombre:"/>
+								<p:inputText id="nombreCompleto" placeholder="Nombre" maxlength="50" style="margin-right:5px;" styleClass="Wid90" value="#{empleadoBackBean.filtroNombre}"/>
+								<p:outputLabel for="numeroCedula" value="Cédula:"/>
+								<p:inputText id="numeroCedula" placeholder="Cédula" maxlength="16" style="margin-right:5px;" styleClass="Wid90" value="#{empleadoBackBean.filtroCedula}"/>
+								<p:outputLabel for="numeroEmpleado" value="No. Empleado:"/>
+								<p:inputText id="numeroEmpleado" placeholder="Numero empleado" maxlength="20" style="margin-right:5px;" styleClass="Wid90" value="#{empleadoBackBean.filtroNumeroEmpleado}"/>
+								<p:outputLabel for="cargo" value="Cargo:"/>
+								<p:inputText id="cargo" placeholder="Cargo" maxlength="20" style="margin-right:5px;" styleClass="Wid90" value="#{empleadoBackBean.filtroCargo}"/>
+								<p:outputLabel for="area" value="Area:"/>
+								<p:inputText id="area" placeholder="Area" maxlength="20" style="margin-right:5px;" styleClass="Wid90" value="#{empleadoBackBean.filtroArea}"/>
+					</h:panelGrid>
+					<p:outputPanel styleClass="tableClass" style="width:100%">
+						<p:dataTable id="listaEmpleadoFiltro" value="#{empleadoBackBean.filtroListaEmpleados}" scrollable="true" var="oEmpleado" style="width:100%" paginatorPosition="top" 
+						paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="15" pageLinks="5" scrollHeight="300"
+						paginatorTemplate="#{configApplicationBean.paginatorTemplate}" currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}"
+						selection="#{cc.attrs.backBeanBase.filtroEmpleadoSeleccionado}"  selectionMode="single" rowKey="#{oEmpleado.id}"  > 
+							<p:ajax event="rowDblselect"  listener="#{cc.attrs.backBeanBase.cargarDatosFiltro}" update="#{cc.attrs.componentesActualizar}"  oncomplete="PF('#{cc.attrs.nombreModal}').hide();" />
+							
+							<p:column headerText="Nombre">
+								<h:outputText value="#{oEmpleado.primerNombre} #{oEmpleado.segundoNombre} #{oEmpleado.primerApellido} #{oEmpleado.segundoApellido}" />	
+							</p:column>
+							<p:column headerText="Cédula">
+								<h:outputText value="#{oEmpleado.nroIdentificacion}"/>
+							</p:column>
+							<p:column headerText="No. Empleado">
+								<h:outputText value="#{oEmpleado.numeroEmpleado}"/>
+							</p:column>
+							<p:column headerText="Cargo">
+								<h:outputText value="#{oEmpleado.cargo}"/>
+							</p:column>
+							<p:column headerText="Area">
+								<h:outputText value="#{oEmpleado.area}"/>
+							</p:column>
+							<p:column headerText="Delegación">
+								<h:outputText value="#{oEmpleado.delegacion.descripcion}"/>
+							</p:column>
+						</p:dataTable>
+					</p:outputPanel>
+				</p:panel>	
+			</p:dialog>
+		</h:form>
+	</composite:implementation>
+</html>

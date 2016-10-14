@@ -1,0 +1,31 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:mc="http://java.sun.com/jsf/composite/reusables">
+<composite:interface>
+</composite:interface>
+<composite:implementation>
+	<h:panelGrid id="camposFiltro" columns="6" columnClasses="Wid15, Wid15, Wid15,Wid15, Wid15, Wid15" style="width:100%">
+		<p:outputLabel for="nombreCompleto" value="Nombre:"/>
+		<p:inputText id="nombreCompleto" placeholder="Nombre" maxlength="50" style="margin-right:5px;" styleClass="Wid90" value="#{empleadoBackBean.filtroNombre}"/>
+		<p:outputLabel for="numeroCedula" value="Cédula:"/>
+		<p:inputText id="numeroCedula" placeholder="Cédula" maxlength="16" style="margin-right:5px;" styleClass="Wid90" value="#{empleadoBackBean.filtroCedula}"/>
+		<p:outputLabel for="numeroEmpleado" value="No. Empleado:"/>
+		<p:inputText id="numeroEmpleado" placeholder="Numero empleado" maxlength="20" style="margin-right:5px;" styleClass="Wid90" value="#{empleadoBackBean.filtroNumeroEmpleado}"/>
+		<p:outputLabel for="cargo" value="Cargo:"/>
+		<p:inputText id="cargo" placeholder="Cargo" maxlength="20" style="margin-right:5px;" styleClass="Wid90" value="#{empleadoBackBean.filtroCargo}"/>
+		<p:outputLabel for="area" value="Area:"/>
+		<p:inputText id="area" placeholder="Area" maxlength="20" style="margin-right:5px;" styleClass="Wid90" value="#{empleadoBackBean.filtroArea}"/>
+		<p:outputLabel id="delegacionId" value="Delegación" />
+		<p:selectOneMenu id="delegacionBusqueda" label="Delegación" value="#{empleadoBackBean.delegacionBusquedaEmpleado}" style="width:200px; left:5px">									
+			<f:selectItem itemValue="#{null}" itemLabel="Seleccione Delegación"/>
+			<f:selectItems var="oDelegacion" value="#{empleadoBackBean.listaDelegaciones}" itemLabel="#{oDelegacion.descripcion}" itemValue="#{oDelegacion.id}"/>
+		</p:selectOneMenu>
+	</h:panelGrid>
+</composite:implementation>
+      
+</html>

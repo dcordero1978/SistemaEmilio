@@ -4,7 +4,8 @@
       xmlns:c="http://java.sun.com/jsp/jstl/core"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:mc="http://java.sun.com/jsf/composite/reusables">
       
 	<composite:interface>
 		<composite:attribute name="nombreModal" required="true" shortDescription="Valor de la propiedada Widget desde donde se esta mandando a llamar el Componente"/>
@@ -24,18 +25,7 @@
 							<p:commandButton value="#{labelName.btnCerrarModal}" icon="ui-icon-cancel" ajax="true" immediate="true" onclick="PF('#{cc.attrs.nombreModal}').hide();" resetValues="true" update="listaEmpleadoFiltro" />
 						</p:outputPanel>
 					</f:facet>
-					<h:panelGrid columns="6" columnClasses="Wid15, Wid15, Wid15,Wid15, Wid15, Wid15" style="width:100%">
-								<p:outputLabel for="nombreCompleto" value="Nombre:"/>
-								<p:inputText id="nombreCompleto" placeholder="Nombre" maxlength="50" style="margin-right:5px;" styleClass="Wid90" value="#{empleadoBackBean.filtroNombre}"/>
-								<p:outputLabel for="numeroCedula" value="Cédula:"/>
-								<p:inputText id="numeroCedula" placeholder="Cédula" maxlength="16" style="margin-right:5px;" styleClass="Wid90" value="#{empleadoBackBean.filtroCedula}"/>
-								<p:outputLabel for="numeroEmpleado" value="No. Empleado:"/>
-								<p:inputText id="numeroEmpleado" placeholder="Numero empleado" maxlength="20" style="margin-right:5px;" styleClass="Wid90" value="#{empleadoBackBean.filtroNumeroEmpleado}"/>
-								<p:outputLabel for="cargo" value="Cargo:"/>
-								<p:inputText id="cargo" placeholder="Cargo" maxlength="20" style="margin-right:5px;" styleClass="Wid90" value="#{empleadoBackBean.filtroCargo}"/>
-								<p:outputLabel for="area" value="Area:"/>
-								<p:inputText id="area" placeholder="Area" maxlength="20" style="margin-right:5px;" styleClass="Wid90" value="#{empleadoBackBean.filtroArea}"/>
-					</h:panelGrid>
+					<mc:gridFiltroEmpleado />
 					<p:outputPanel styleClass="tableClass" style="width:100%">
 						<p:dataTable id="listaEmpleadoFiltro" value="#{empleadoBackBean.filtroListaEmpleados}" scrollable="true" var="oEmpleado" style="width:100%" paginatorPosition="top" 
 						paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="15" pageLinks="5" scrollHeight="300"

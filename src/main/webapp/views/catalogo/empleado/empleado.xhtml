@@ -19,12 +19,9 @@
 						<f:facet name="header">
 							<p:outputPanel style="display" styleClass="left">
 								<h:panelGrid columns="3" >
-								<p:inputText id="txtBusquedaEmpleado" value="#{empleadoBackBean.txtBusquedaEmpleado}" maxlength="150" placeholder="#{labelName.placeholderBuscar}" autocomplete="off"/>
-								<p:selectOneMenu id="delegacionBusqueda" label="Delegación" value="#{empleadoBackBean.delegacionBusquedaEmpleado}" style="width:200px; left:5px">									
-									<f:selectItem itemValue="#{null}" itemLabel="Seleccione Delegación"/>
-									<f:selectItems var="oDelegacion" value="#{empleadoBackBean.listaDelegaciones}" itemLabel="#{oDelegacion.descripcion}" itemValue="#{oDelegacion.id}"/>									
-								</p:selectOneMenu>
+								<p:inputText id="txtBusquedaEmpleado" value="#{empleadoBackBean.filtroNombre}" maxlength="150" placeholder="#{labelName.placeholderBuscar}" autocomplete="off"/>
 								<p:commandButton  icon="ui-icon-search" action="#{empleadoBackBean.buscar}" ajax="true" update="listEmpleado" style="margin-left:5px;"/>
+								<p:commandButton id="btnBusquedaAvanzada" value="Búsqueda avanzada"  icon="ui-icon-search" onclick="PF('modalBusquedaAvanzada').show();"  ajax="true" style="margin-left:5px;"/>
 								</h:panelGrid>	
 							</p:outputPanel>						
 							<p:outputPanel style="display" styleClass="right">
@@ -107,5 +104,21 @@
 				</h:form>
 			</div>
 		</div>
+		
+		<p:dialog widgetVar="modalBusquedaAvanzada" hideEffect="blind" showEffect="blind" resizable="false" draggable="tru" dynamic="true" showHeader="false" width="650px">
+			<h:form id="busquedaAvanzadaEmpleado">
+				<p:panel>
+					<f:facet name="header">
+						Búsqueda Avanzada
+						<p:outputPanel style="display:block" styleClass="right">
+							<p:commandButton value="#{labelName.btnBuscar}" icon="ui-icon-search" action="#{empleadoBackBean.buscar}" update=":formLista:listEmpleado" oncomplete="PF('modalBusquedaAvanzada').hide()"/>
+							<p:commandButton oncomplete="PF('modalBusquedaAvanzada').hide()" immediate="true" value="#{labelName.btnCancelar}" ajax="true" icon="ui-icon-cancel"/>
+						</p:outputPanel>
+					</f:facet>
+					<mc:gridFiltroEmpleado />
+				</p:panel>	
+			</h:form>
+		</p:dialog>
+		
 	</ui:define>
 </ui:composition>

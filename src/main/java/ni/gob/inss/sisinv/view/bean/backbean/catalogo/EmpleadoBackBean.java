@@ -121,7 +121,7 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	
 	public void buscar(){
 		try{
-			this.listaEmpleados = oEmpleadoService.buscar(this.getTxtBusquedaEmpleado(), this.getDelegacionBusquedaEmpleado());			
+			this.listaEmpleados = oEmpleadoService.buscar(this.getFiltroNombre(), this.getDelegacionBusquedaEmpleado(), null, this.getFiltroCargo(), this.getFiltroArea(), this.getFiltroCedula() , this.getFiltroNumeroEmpleado());
 			if(this.getListaEmpleados().isEmpty()){
 				mostrarMensajeInfo("No se encontrarón resultados para esta búsqueda");
 			}
@@ -228,7 +228,7 @@ public class EmpleadoBackBean extends BaseBackBean implements Serializable {
 	
 	public void busquedaAvanzadaEmpleados(){
 		try {
-			 this.filtroListaEmpleados = oEmpleadoService.buscar(this.getFiltroNombre(), null, false, this.getFiltroCargo(), this.getFiltroArea(), this.getFiltroCedula(), this.getFiltroNumeroEmpleado());
+			 this.filtroListaEmpleados = oEmpleadoService.buscar(this.getFiltroNombre(), this.getDelegacionBusquedaEmpleado(), false, this.getFiltroCargo(), this.getFiltroArea(), this.getFiltroCedula(), this.getFiltroNumeroEmpleado());
 		} catch (EntityNotFoundException e) {
 			mostrarMensajeError(MessagesResults.ERROR_OBTENER_LISTA);
 		}

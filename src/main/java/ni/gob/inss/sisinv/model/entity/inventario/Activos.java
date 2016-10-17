@@ -39,6 +39,7 @@ public class Activos extends EntityBase implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private Integer secafId;
+	private Secaf catalogoSecaf; 
 	private String codigoInventario;
 	private String codigoSecundario;
 	private String descripcion;
@@ -66,6 +67,7 @@ public class Activos extends EntityBase implements java.io.Serializable {
 	private Integer ubicacionId;
 	private Catalogo colorCatalogo;
 	private Integer entidadId;
+	private Catalogo tipoResguardo;
 	private List<ActivosCaracteristicas> listaCaracteristicas = new ArrayList<ActivosCaracteristicas>();
 
 	
@@ -351,4 +353,26 @@ public class Activos extends EntityBase implements java.io.Serializable {
 		this.entidadId = entidadId;
 	}
 
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="secaf_id", insertable=false, updatable=false)
+	public Secaf getCatalogoSecaf() {
+		return catalogoSecaf;
+	}
+
+	public void setCatalogoSecaf(Secaf catalogoSecaf) {
+		this.catalogoSecaf = catalogoSecaf;
+	}
+
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="tipo_resguardo_id", insertable=false, updatable=false)
+	public Catalogo getTipoResguardo() {
+		return tipoResguardo;
+	}
+
+	public void setTipoResguardo(Catalogo tipoResguardo) {
+		this.tipoResguardo = tipoResguardo;
+	}
+
+	
+	
 }

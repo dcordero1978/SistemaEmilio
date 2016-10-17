@@ -5,7 +5,7 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:pe="http://primefaces.org/ui/extensions"
                 template="/web/template/innerLayout.xhtml"
-                xmlns:mc="http://java.sun.com/jsf/composite/comps">
+                xmlns:mc="http://java.sun.com/jsf/composite/reusables">
 <style type="text/css">
 	ui-icon ui-icon-search{
 		top: 3px !important;
@@ -16,74 +16,44 @@
 		Registro de Activos
 	</ui:define>
 	<ui:define name="content">
+		<div class="Container100 Responsive">
+			<h:form id="empleadoData" style="width:99%">	
+				<p:panel styleClass="fondoPaneles">
+					<f:facet name="header">
+						Datos Generales Empleados.
+					</f:facet>
+					<h:panelGrid columns="10" style="width:100%">
+						<h:outputLabel for="nombreCompleto" value="Nombre completo:"/>
+						<p:inputText id="nombreCompleto" readonly="true" 
+							value="#{registroActivosBackBean.filtroEmpleadoSeleccionado.primerNombre} #{registroActivosBackBean.filtroEmpleadoSeleccionado.segundoNombre} #{registroActivosBackBean.filtroEmpleadoSeleccionado.primerApellido} #{registroActivosBackBean.filtroEmpleadoSeleccionado.segundoApellido}" 
+							label="Nombre"  styleClass="Wid90"/>
+						<h:outputLabel for="numeroEmpleado" value="No. Empleado:"/>
+						<p:inputText id="numeroEmpleado" readonly="true" value="#{registroActivosBackBean.filtroEmpleadoSeleccionado.numeroEmpleado}" styleClass="Wid90"/>
+						<h:outputLabel for="cedula" value="Cedula:"/>
+						<p:inputText id="cedula" readonly="true" value="#{registroActivosBackBean.filtroEmpleadoSeleccionado.nroIdentificacion}" styleClass="Wid90"/>
+						<h:outputLabel for="cargo" value="Cargo:"/>
+						<p:inputText id="cargo" readonly="true" value="#{registroActivosBackBean.filtroEmpleadoSeleccionado.cargo}" styleClass="Wid90"/>
+						<p:commandButton value="#{labelName.btnBuscar}" icon="ui-icon-search" onclick="PF('busquedaAvanzada').show();" />
+						<p:commandButton resetValues="true" ajax="true" update="empleadoData,:formDatosGenerales,:formPropiedadesActivo" action="#{registroActivosBackBean.limpiar}" value="#{labelName.btnCancelar}" icon="ui-icon-cancel" process="@this"/>
+					</h:panelGrid>
+				</p:panel>
+			</h:form>
+		</div>		
 		<div id="ContainerIndent">
-				<div class="Container50 Responsive">
-					<h:form id="formListaEmpleados" style="width:99%">
-						<p:panel styleClass="fondoPaneles">
-							<f:facet name="header">
-								<p:outputPanel style="display" styleClass="left">
-										<p:inputText maxlength="150" placeholder="#{labelName.placeholderBuscar}" value="#{registroActivosBackBean.busquedaEmpleado}" autocomplete="off"/>										
-										<p:commandButton  icon="ui-icon-search" ajax="true" style="margin-left:5px;" resetValues="true" update="formListaEmpleados" actionListener="#{registroActivosBackBean.cargarListaEmpleados}"/>								
-								</p:outputPanel>
-								<p:outputPanel style="display" styleClass="right">
-									<p:commandButton value="Cargar Datos" icon="ui-icon-note" resetValues="true" update=":formDatosGenerales" actionListener="#{registroActivosBackBean.cargarDatos}"/>									
-								</p:outputPanel>
-							</f:facet>
-							<p:outputPanel styleClass="tableClass">
-							<p:dataTable style="width:100%" paginatorPosition="top" selectionMode="single" scrollable="true" scrollHeight="400" 
-							var="oEmpleado" id="listEmpleado"  sortBy="#{oEmpleado.primerNombre}"
-							rowKey="#{oEmpleado.id}" value="#{registroActivosBackBean.listaEmpleados}" selection="#{registroActivosBackBean.empleadoSeleccionado}"
-							paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="12" pageLinks="3" 
-							paginatorTemplate="#{configApplicationBean.paginatorTemplate}" currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
-								<p:ajax event="rowDblselect" listener="#{registroActivosBackBean.cargarDatos}" update=":formDatosGenerales" resetValues="true"/>
-								<p:column headerText="No. Empleado">
-									<h:outputText value="#{oEmpleado.numeroEmpleado}" />
-								</p:column>
-								<p:column headerText="Nombre" >
-									<h:outputText value="#{oEmpleado.primerNombre} #{oEmpleado.segundoNombre}" />
-								</p:column>
-								<p:column headerText="Apellido">
-									<h:outputText value="#{oEmpleado.primerApellido} #{oEmpleado.segundoApellido}"/>
-								</p:column>
-								<p:column headerText="Pasivo" style="text-align:center;" width="10%">
-									<p:selectBooleanCheckbox value="#{oEmpleado.pasivo}" disabled="true" styleClass="ui-linus-enabled"/>
-								</p:column>
-							</p:dataTable>
-						</p:outputPanel>
-						</p:panel>
-					</h:form>
-				</div>
 				<!-- FORMULARIO PARA LOS DATOS Y ASOCIACION DE ACTIVOS -->
-				<div class="Container50 Responsive">
+				<div class="Container50 Responsive"  style="margin-top:5px;">
 					<h:form id="formDatosGenerales" style="width:99%">
-						<p:panel style="height:530px;" styleClass="fondoPaneles">
-							<f:facet name="header">
-								<h:outputText value="ID: #{registroActivosBackBean.hfId}" rendered="#{registroActivosBackBean.modoEdicion}"/>
-								<p:outputPanel style="display:block" styleClass="right">							
-									<p:commandButton resetValues="true" ajax="true" update="formDatosGenerales" action="#{registroActivosBackBean.limpiar}" value="#{labelName.btnCancelar}" icon="ui-icon-cancel" process="@this"/>
-								</p:outputPanel>							
-							</f:facet>
-							<h:panelGrid columns="2" style="width:100%" columnClasses="Wid30, Wid70">
-								<h:outputLabel for="nombreCompleto" value="Nombre completo:"/>
-								<p:inputText id="nombreCompleto" readonly="true" 
-									value="#{registroActivosBackBean.empleadoSeleccionado.primerNombre} #{registroActivosBackBean.empleadoSeleccionado.segundoNombre} #{registroActivosBackBean.empleadoSeleccionado.primerApellido} #{registroActivosBackBean.empleadoSeleccionado.segundoApellido}" 
-									label="Nombre"  styleClass="Wid90"/>
-								<h:outputLabel for="numeroEmpleado" value="No. Empleado:"/>
-								<p:inputText id="numeroEmpleado" readonly="true" value="#{registroActivosBackBean.empleadoSeleccionado.numeroEmpleado}" styleClass="Wid90"/>
-								<h:outputLabel for="cedula" value="Cedula:"/>
-								<p:inputText id="cedula" readonly="true" value="#{registroActivosBackBean.empleadoSeleccionado.nroIdentificacion}" styleClass="Wid90"/>
-								<h:outputLabel for="cargo" value="Cargo:"/>
-								<p:inputText id="cargo" readonly="true" value="#{registroActivosBackBean.empleadoSeleccionado.cargo}" styleClass="Wid90"/>
-							</h:panelGrid>
+						<p:panel style="height:450px;" styleClass="fondoPaneles">
 							<p:outputPanel styleClass="tableClass">
-								<p:dataTable style="width:100%" paginatorPosition="top" selectionMode="single" scrollable="true" scrollHeight="310"
+								<p:dataTable style="width:100%" paginatorPosition="top" selectionMode="single" 
+								scrollable="true" scrollHeight="300"
 								var="oActivo" id="listaActivos" rowKey="#{oActivo.id}"
-								value="#{registroActivosBackBean.listaActivosAsociados}"
+								value="#{registroActivosBackBean.listaActivosAsociados}" selection="#{registroActivosBackBean.activoSeleccionado}"
 								paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="10" pageLinks="3"
 								paginatorTemplate="#{configApplicationBean.paginatorTemplate}" currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
-									
+								<p:ajax event="rowDblselect" update=":formPropiedadesActivo"/>
 									<f:facet name="header">
-										Lista de activos asociados.																	
+										<h:outputText value="ID: #{registroActivosBackBean.hfId}" rendered="#{registroActivosBackBean.modoEdicion}"/> - Lista de activos asociados.																	
 										<p:outputPanel style="display" styleClass="right">
 											<p:commandButton value="Asociar activo" oncomplete="PF('modalRegistroActivo').show();" process="@this" ajax="true" action="#{registroActivosBackBean.iniciarFormularioRegistro}" update=":datosActivo"  icon="ui-icon-document" style="margin-top:-5px;" rendered="#{registroActivosBackBean.modoEdicion}"/>
 										</p:outputPanel> 																	
@@ -97,13 +67,49 @@
 								</p:dataTable>
 							</p:outputPanel>
 						</p:panel>
-						
 					</h:form>
 				</div>
+				<div class="Container50 Responsive" style="margin-top:5px;">
+					<h:form id="formPropiedadesActivo" style="width:99%">
+						<p:panel styleClass="fondoPaneles" style="height:450px">							
+							<f:facet name="header">
+								Propiedades del Activo
+							</f:facet>
+							<h:panelGrid columns="2" style="width:100%" columnClasses="Wid10, Wid90">
+								<h:outputLabel for="descripcion" value="Descripcion activo"/>
+								<p:inputText id="descripcion" readonly="true" value="#{registroActivosBackBean.activoSeleccionado.descripcion}" styleClass="Wid90"/>
+								<h:outputLabel for="descripcionCbs" value="Descripcion CBS" />
+								<p:inputText id="descripcionCbs" readonly="true" value="#{registroActivosBackBean.activoSeleccionado.catalogoSecaf.descripcionCbs}" styleClass="Wid90"/>
+							</h:panelGrid>
+							<h:panelGrid columns="4" style="width:100%"  columnClasses="Wid10, Wid40, Wid10, Wid40">
+								<h:outputLabel for="ubicacion" value="Ubicación" />
+								<p:inputText id="ubicacion" readonly="true" value="#{registroActivosBackBean.activoSeleccionado.ubicacion.descripcion}" styleClass="Wid90"/>
+								<h:outputLabel for="codigoInventario" value="Código"/>
+								<p:inputText id="codigoInventario" readonly="true" value="#{registroActivosBackBean.activoSeleccionado.codigoInventario}"  styleClass="Wid90"/>
+								<h:outputLabel for="serie" value="Serie"/>
+								<p:inputText id="serie" readonly="true" value="#{registroActivosBackBean.activoSeleccionado.serie}" styleClass="Wid90"/>
+								<h:outputLabel for="marca" value="Marca"/>
+								<p:inputText id="marca" readonly="true" value="#{registroActivosBackBean.activoSeleccionado.marca.descripcion}" styleClass="Wid90"/>
+								<h:outputLabel for="modelo" value="Modelo"/>
+								<p:inputText id="modelo" readonly="true" value="#{registroActivosBackBean.activoSeleccionado.modelo.descripcion}" styleClass="Wid90"/>
+								<h:outputLabel for="lote" value="Lote"/>
+								<p:inputText id="lote" readonly="true" value="#{registroActivosBackBean.activoSeleccionado.lote}" styleClass="Wid90"/>
+								<h:outputLabel for="estadoFisico" value="Estado fisico" />
+								<p:inputText id="estadoFisico" readonly="true" value="#{registroActivosBackBean.activoSeleccionado.estadoFisico.descripcion}" styleClass="Wid90"/>
+								<h:outputLabel for="color" value="Color"/>
+								<p:inputText id="color" readonly="true" value="#{registroActivosBackBean.activoSeleccionado.colorCatalogo.descripcion}" styleClass="Wid90"/>
+								<h:outputLabel for="tipoResguardo" value="Tipo de Resguardo" />
+								<p:inputText id="tipoResguardo" readonly="true" value="#{registroActivosBackBean.activoSeleccionado.tipoResguardo.descripcion}" styleClass="Wid90"/>
+								<h:outputLabel for="descripcionSecaf" value="Descripción del Bien"/>
+								<p:inputText id="descripcionSecaf" readonly="true" value="#{registroActivosBackBean.activoSeleccionado.secaf.descripcionCbs}" styleClass="Wid90"/>
+								
+							</h:panelGrid>
+						</p:panel>
+					</h:form>
+				</div>				
 		</div>
 		
 		<p:dialog widgetVar="modalRegistroActivo" hideEffect="blind" showEffect="blind" draggable="true"  dynamic="true" modal="true" resizable="false" height="580px" width="650px" showHeader="false" >
-			
 			<div class="Container100 Responsive">
 			<h:form id="datosActivo" >
 				<p:panel styleClass="fondoPaneles" style="height:560px;" >
@@ -165,8 +171,7 @@
 							<p:outputLabel for="noBodega" value="Número Bodega" />
 							<p:inputText id="noBodega" maxlength="10" autocomplete="off" style="width:90%" value="#{registroActivosBackBean.numeroBodega}">
 								<pe:keyFilter regEx="/#{registroActivosBackBean.regExpSoloNumeros}/"/>
-							</p:inputText>
-							
+							</p:inputText>							
 							<p:outputLabel for="tipoResguardo" value="Resguardo"/>
 							<p:selectOneMenu required="true" id="tipoResguardo" label="Resguardo:" style="width:85%" value="#{registroActivosBackBean.tipoResguardoId}">
 								<f:selectItem itemValue="#{null}" itemLabel="Seleccione Resguardo"/>
@@ -250,6 +255,7 @@
 			</h:form>
 			</div>
 		</p:dialog>
+		
+		<mc:buscaEmpleado nombreModal="busquedaAvanzada" componentesActualizar=":empleadoData, :formDatosGenerales, :formPropiedadesActivo" backBeanBase="#{registroActivosBackBean}" />
 	</ui:define>
 </ui:composition>
-

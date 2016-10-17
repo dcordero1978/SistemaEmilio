@@ -42,9 +42,7 @@ import ni.gob.inss.sisinv.util.RegExpresionExtends;
 public class RegistroActivosBackBean extends BaseBackBean  implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
-	private List<Empleado> listaEmpleados;
-	private String busquedaEmpleado;
-	private Empleado empleadoSeleccionado;
+	private Empleado filtroEmpleadoSeleccionado;
 	private Integer hfId;
 	private Boolean modoEdicion;
 	
@@ -98,6 +96,8 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 	private String capacidadCarga;
 	private String combustible;
 	
+	private Activos activoSeleccionado;
+	
 	@Autowired
 	EmpleadoService oEmpleadoService;
 	
@@ -128,9 +128,10 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 	}
 	
 	public void limpiar(){
-		this.setEmpleadoSeleccionado(null);
-		this.setBusquedaEmpleado(StringUtils.EMPTY);
+		this.setFiltroEmpleadoSeleccionado(null);
 		this.setHfId(null);
+		this.setListaActivosAsociados(null);
+		this.setActivoSeleccionado(null);
 	}
 	
 	public void limpiarFormularioRegistro(){
@@ -158,20 +159,10 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 		this.cargarListasFormularioRegistro();
 	}
 	
-	public void cargarListaEmpleados(){
-		try {
-			this.setListaEmpleados(oEmpleadoService.buscar(this.getBusquedaEmpleado(), null));
-		} catch (EntityNotFoundException e) {
-			mostrarMensajeError(this.getClass().getSimpleName(), "cargarListaEmpleados", MessagesResults.ERROR_OBTENER_LISTA, e);
-		}
-	}
-	
 	//TODO: SE REQUIERE REFACTORIZAR ESTE METODO 
 	public void cargarListas(){
 		try {
 						
-			this.setListaEmpleados(oEmpleadoService.buscar(this.getBusquedaEmpleado(), null));
-			
 			this.listaCatalogoSecaf = oSecafService.buscar("");
 			this.listaColores = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.COLORES.getCodigoCatalogo());
 			this.listaEstadoFisico = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.ESTADO_FISICO.getCodigoCatalogo());
@@ -217,10 +208,10 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 		}
 	}
 
-	public void cargarDatos(){
+	public void cargarDatosFiltro(){
 		try {
-			if(empleadoSeleccionado==null) throw new BusinessException(MessagesResults.SELECCIONE_UN_REGISTRO);
-			Empleado oEmpleado = oEmpleadoService.obtener(empleadoSeleccionado.getId());
+			if(filtroEmpleadoSeleccionado==null) throw new BusinessException(MessagesResults.SELECCIONE_UN_REGISTRO);
+			Empleado oEmpleado = oEmpleadoService.obtener(filtroEmpleadoSeleccionado.getId());
 			this.setHfId(oEmpleado.getId());
 			cargarListaActivos();
 		} catch (EntityNotFoundException e) {
@@ -300,28 +291,12 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 		 this.listaActivosAsociados = oActivoService.obtenerListaActivosPorEmpleado(this.getHfId());
 	}
 	
-	public List<Empleado> getListaEmpleados() {
-		return listaEmpleados;
+	public Empleado getFiltroEmpleadoSeleccionado() {
+		return filtroEmpleadoSeleccionado;
 	}
 
-	public void setListaEmpleados(List<Empleado> listaEmpleados) {
-		this.listaEmpleados = listaEmpleados;
-	}
-
-	public String getBusquedaEmpleado() {
-		return busquedaEmpleado;
-	}
-
-	public void setBusquedaEmpleado(String busquedaEmpleado) {
-		this.busquedaEmpleado = busquedaEmpleado;
-	}
-
-	public Empleado getEmpleadoSeleccionado() {
-		return empleadoSeleccionado;
-	}
-
-	public void setEmpleadoSeleccionado(Empleado empleadoSeleccionado) {
-		this.empleadoSeleccionado = empleadoSeleccionado;
+	public void setFiltroEmpleadoSeleccionado(Empleado filtroEmpleadoSeleccionado) {
+		this.filtroEmpleadoSeleccionado = filtroEmpleadoSeleccionado;
 	}
 
 	public Integer getHfId() {
@@ -657,6 +632,13 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 	public void setCombustible(String combustible) {
 		this.combustible = combustible;
 	}
-	
+
+	public Activos getActivoSeleccionado() {
+		return activoSeleccionado;
+	}
+
+	public void setActivoSeleccionado(Activos activoSeleccionado) {
+		this.activoSeleccionado = activoSeleccionado;
+	}
 	
 }

@@ -1,0 +1,79 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:mc="http://java.sun.com/jsf/composite/reusables">
+      	
+   <composite:interface>
+		<composite:attribute name="nombreModal" required="true" shortDescription="Valor de la propiedada Widget desde donde se esta mandando a llamar el Componente"/>
+		<composite:attribute name="componentesActualizar" required="true" shortDescription="El componente a actualizar despues de hacer el llamado al listener"/>
+		<composite:attribute name="backBeanBase" required="true" shortDescription="BackBean donde se encuentra el evento cargarDatosFiltro"/>
+	</composite:interface>
+	
+	<composite:implementation>
+		<h:form id="formBusqueda">
+		<p:dialog id="dialogoBusquedaActivo" showEffect="blind" hideEffect="blind" widgetVar="#{cc.attrs.nombreModal}" showHeader="false" width="900" height="500"  modal="true" >
+			<p:panel styleClass="fondoPaneles" style="height:500px;">
+				<f:facet name="header">
+					<p:outputPanel style="display:block;" styleClass="left">
+						Búsqueda de Activo								
+					</p:outputPanel>
+					<p:outputPanel style="display:block" styleClass="right">
+						<p:commandButton value="#{labelName.btnBuscar}" update="listaActivoFiltro" action="#{movimientosActivosBackBean.busquedaAvanzadaActivos}"  icon="ui-icon-search" ajax="true"/>
+						<p:commandButton value="#{labelName.btnCerrarModal}" icon="ui-icon-cancel" ajax="true" immediate="true" onclick="PF('#{cc.attrs.nombreModal}').hide();" resetValues="true" update="listaActivoFiltro" action="#{movimientosActivosBackBean.limpiarBusquedaActivo}" />
+					</p:outputPanel>
+				</f:facet>
+				<mc:gridFiltroActivo />
+				<p:outputPanel styleClass="tableClass" style="width:100%">
+					<p:dataTable id="listaActivoFiltro" value="#{movimientosActivosBackBean.filtroListaActivos}" scrollable="true" var="oActivos" style="width:100%" paginatorPosition="top" 
+					paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="5" pageLinks="5" scrollHeight="265"
+					paginatorTemplate="#{configApplicationBean.paginatorTemplate}" currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}"
+					selection="#{cc.attrs.backBeanBase.filtroActivoSeleccionado}"  selectionMode="single" rowKey="#{oActivos.id}"  > 
+						<p:ajax event="rowDblselect"  listener="#{cc.attrs.backBeanBase.cargarDatosFiltroActivo}" update="#{cc.attrs.componentesActualizar}"  oncomplete="PF('#{cc.attrs.nombreModal}').hide();" />	
+							<p:column headerText="Código Inventario">
+							        <h:outputText value="#{oActivos.codigoInventario}" />
+							    </p:column>
+							 
+							    <p:column headerText="Código Secundario">
+							        <h:outputText value="#{oActivos.codigoSecundario}" />
+							    </p:column>
+							 
+							    <p:column headerText="Descripción del Bien">
+							        <h:outputText value="#{oActivos.descripcion}"/>
+							    </p:column>
+							 
+							    <p:column headerText="Marca">
+							        <h:outputText value="#{oActivos.marca.descripcion}" />
+							    </p:column>
+							    
+							    <p:column headerText="Modelo">
+							        <h:outputText value="#{oActivos.modelo.descripcion}" />
+							    </p:column>
+							    
+							    <p:column headerText="Color">
+							        <h:outputText value="#{oActivos.colorCatalogo.descripcion}" />
+							    </p:column>
+							    
+							    <p:column headerText="Serie">
+							        <h:outputText value="#{oActivos.serie}" />
+							    </p:column>
+							    
+							    <p:column headerText="Estado Físico">
+							        <h:outputText value="#{oActivos.estadoFisico.descripcion}" />
+							    </p:column>
+							    
+							    <p:column headerText="Ubicación">
+							        <h:outputText value="#{oActivos.ubicacion.descripcion}" />
+							    </p:column>
+						</p:dataTable>
+					</p:outputPanel>
+			</p:panel>
+		</p:dialog>
+	
+		</h:form>
+	</composite:implementation>
+     
+</html>

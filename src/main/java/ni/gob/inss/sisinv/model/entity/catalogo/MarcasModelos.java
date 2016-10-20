@@ -28,7 +28,7 @@ public class MarcasModelos extends EntityBase implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private Integer id;
-	private String descripcion;
+	public String descripcion;
 	private Integer padreId;
 	private List<Activos> listaMarcaActivo = new ArrayList<Activos>();
 	private List<Activos> listaModeloActivo = new ArrayList<Activos>();

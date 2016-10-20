@@ -1,0 +1,35 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:mc="http://java.sun.com/jsf/composite/reusables">
+<composite:interface>
+</composite:interface>
+<composite:implementation>
+	<h:panelGrid id="camposFiltro" columns="4" columnClasses="Wid10, Wid20, Wid20,Wid20" style="width:100%">
+		<p:outputLabel for="codigoSECAF" value="Cod SECAF:"/>
+		<p:inputText id="codigoSECAF" placeholder="Código SECAF" maxlength="50" style="margin-right:5px;" styleClass="Wid90" value="#{movimientosActivosBackBean.filtroCodSecaf}"/>
+		<p:selectOneMenu id="estadoFisico" label="Estado Fisico" value="#{movimientosActivosBackBean.estadoFisicoId}" style="width:200px; left:5px">									
+			<f:selectItem itemValue="#{null}" itemLabel="Seleccione Estado Físico"/>
+			<f:selectItems var="oEstado" value="#{movimientosActivosBackBean.listaEstadoFisico}" itemLabel="#{oEstado.descripcion}" itemValue="#{oEstado.id}"/>
+		</p:selectOneMenu>
+		<p:selectOneMenu id="tipoResguardo" label="Tipo Resguardo" value="#{movimientosActivosBackBean.tipoResguardoId}" style="width:200px; left:5px">									
+			<f:selectItem itemValue="#{null}" itemLabel="Seleccione Tipo de Resguardo"/>
+			<f:selectItems var="oResguardo" value="#{movimientosActivosBackBean.listaTipoResguardo}" itemLabel="#{oResguardo.descripcion}" itemValue="#{oResguardo.id}"/>
+		</p:selectOneMenu>
+		<p:outputLabel for="codigoSecundario" value="Cod Secundario:"/>
+		<p:inputText id="codigoSecundario" placeholder="Código Secundario" maxlength="16" style="margin-right:5px;" styleClass="Wid90" value="#{movimientosActivosBackBean.filtroCodSecundario}"/>
+		<p:inputText id="Serie" placeholder="Serie" maxlength="50" style="margin-right:5px;" styleClass="Wid80" value="#{movimientosActivosBackBean.filtroSerie}"/>
+		<p:selectOneMenu id="delegacionBusqueda" label="Delegación" value="#{movimientosActivosBackBean.ubicacionId}" style="width:200px; left:5px">									
+			<f:selectItem itemValue="#{null}" itemLabel="Seleccione Delegación"/>
+			<f:selectItems var="oDelegacion" value="#{movimientosActivosBackBean.listaDelegaciones}" itemLabel="#{oDelegacion.descripcion}" itemValue="#{oDelegacion.id}"/>
+		</p:selectOneMenu>
+		<p:outputLabel for="descripcionBien" value="Descripción:"/>
+		<p:inputText id="descripcionBien" placeholder="Descripción Bien" maxlength="20" style="margin-right:5px;" styleClass="Wid90" value="#{movimientosActivosBackBean.filtroDescripcionBien}"/>
+	</h:panelGrid>
+</composite:implementation>
+      
+</html>

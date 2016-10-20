@@ -11,7 +11,8 @@ public enum CatalogoGeneral {
 	CARACTERISTICA_OBRA_ARTE("COA"),
 	TIPO_COMBUSTIBLE("TCB"),
 	COLORES("COL"),
-	PROYECTOS("PRY");
+	PROYECTOS("PRY"),
+	TIPOSMOVIMIENTO("TMB");
 	
 	private final String catalogo ;
 	

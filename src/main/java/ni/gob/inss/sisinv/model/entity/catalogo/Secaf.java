@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -18,6 +19,7 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import ni.gob.inss.barista.model.entity.EntityBase;
+import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
 import ni.gob.inss.sisinv.model.entity.inventario.Activos;
 
 /**
@@ -40,6 +42,7 @@ public class Secaf extends EntityBase implements java.io.Serializable {
 	private String descripcionCbs;	
 	private boolean pasivo;
 	private Integer gasto;
+	private Catalogo tipoBienCatalogo;
 	private List<Activos> listaActivos = new ArrayList<Activos>();
 
 	@Id
@@ -144,7 +147,15 @@ public class Secaf extends EntityBase implements java.io.Serializable {
 	public void setListaActivos(List<Activos> listaActivos) {
 		this.listaActivos = listaActivos;
 	}
-	
-	
+
+	@ManyToOne(fetch= FetchType.EAGER)
+	@JoinColumn(name="tipo_bien", updatable=false, insertable=false)
+	public Catalogo getTipoBienCatalogo() {
+		return tipoBienCatalogo;
+	}
+
+	public void setTipoBienCatalogo(Catalogo tipoBienCatalogo) {
+		this.tipoBienCatalogo = tipoBienCatalogo;
+	}
 
 }

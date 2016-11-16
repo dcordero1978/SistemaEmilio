@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.googlecode.genericdao.search.Filter;
 import com.googlecode.genericdao.search.Search;
+import com.googlecode.genericdao.search.Sort;
 
 import ni.gob.inss.barista.businesslogic.serviceImpl.catalogos.CatalogoServiceImpl;
 import ni.gob.inss.barista.model.dao.EntityNotFoundException;
@@ -32,7 +33,10 @@ public class CatalogoExtServiceImpl extends CatalogoServiceImpl implements Catal
 	@Override
 	public List<MarcasModelos> obtenerListaMarcas() throws EntityNotFoundException {
 		Search oSearch = new Search();
+		//EL NUMERO 0 DENOTA QUE ES PADRE
 		oSearch.addFilter(Filter.equal("padreId", 0));
+		oSearch.addFilter(Filter.equal("pasivo", false));
+		oSearch.addSort(Sort.asc("descripcion"));
 		return oMarcaModeloDAO.search(oSearch);		
 	}
 
@@ -41,6 +45,8 @@ public class CatalogoExtServiceImpl extends CatalogoServiceImpl implements Catal
 	public List<MarcasModelos> obtenerListaModelos(Integer marcaId) throws EntityNotFoundException {
 		Search oSearch = new Search();
 		oSearch.addFilter(Filter.equal("padreId", marcaId));
+		oSearch.addFilter(Filter.equal("pasivo", false));
+		oSearch.addSort(Sort.asc("descripcion"));
 		return oMarcaModeloDAO.search(oSearch);
 	}
 
@@ -49,6 +55,8 @@ public class CatalogoExtServiceImpl extends CatalogoServiceImpl implements Catal
 	public List<Catalogo> obtieneListaCatalogosPorRefTipoCatalogo(String refTipoCatalogo) throws EntityNotFoundException {
 		Search oSearch = new Search();
 		oSearch.addFilterOr(Filter.equal("refTipoCatalogo", refTipoCatalogo));
+		oSearch.addFilter(Filter.equal("pasivo", false));
+		oSearch.addSort(Sort.asc("orden"));
 		return oCatalogoDAO.search(oSearch);
 	}
 

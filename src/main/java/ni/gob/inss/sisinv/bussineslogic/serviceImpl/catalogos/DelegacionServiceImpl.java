@@ -55,7 +55,8 @@ public class DelegacionServiceImpl implements DelegacionService{
 	@Override
 	public List<Delegacion> listaUbicacionesPorDepartamento(Integer departamentoId) {
 		Search oSearch = new Search();
-		oSearch.addFilter(Filter.equal("esUbicacion", true));
+		//Se elimina el filtro debido a que se requiere mostrar tambien La central.
+		//oSearch.addFilter(Filter.equal("esUbicacion", true));
 		oSearch.addFilter(Filter.equal("departamentoId", departamentoId));
 		return oDelegacionDAO.search(oSearch);		
 	}

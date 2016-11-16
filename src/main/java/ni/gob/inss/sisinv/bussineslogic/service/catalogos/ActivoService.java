@@ -11,4 +11,5 @@ public interface ActivoService {
 	public void guardar(Activos oActivo) throws BusinessException, EntityNotFoundException, DAOException;
 	public List<Activos> obtenerListaActivosPorEmpleado(Integer EmpleadoId) throws EntityNotFoundException;
 	public List<Activos> buscar(Integer delegacionId, String codActivo, String descripcion, Integer estadoFisicoI);
+	public void actualizar(Activos oActivo) throws DAOException ;
 }

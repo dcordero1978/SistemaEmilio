@@ -75,6 +75,12 @@ public class ActivoServiceImpl implements ActivoService {
 			return listaActivos;		
 		
 	}
+
+	@Transactional
+	@Override
+	public void actualizar(Activos oActivo) throws DAOException {
+		oActivoDAO.updateUpper(oActivo);
+	}
 	
 	//PARA REALIZAR LAS DIFERENTES BUSQUEDAS DE CONSULTA GENERAL
 

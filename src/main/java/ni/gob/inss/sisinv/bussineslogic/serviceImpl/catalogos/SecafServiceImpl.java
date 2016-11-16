@@ -86,4 +86,15 @@ public class SecafServiceImpl implements SecafService {
 		return (Secaf) oSecafDAO.searchUnique(oSearch);
 	}
 
+	@SuppressWarnings("unchecked")
+	@Transactional
+	@Override
+	public List<Secaf> buscar(String descripcion, String codigo, Integer tipoCatalogo) {
+		Search oSearch = new Search();
+		oSearch.addFilter(Filter.ilike("descripcionCbs", "%"+descripcion+"%"));
+		oSearch.addFilter(Filter.ilike("cbs", "%"+codigo+"%"));
+		oSearch.addFilter(Filter.equal("tipoBien", tipoCatalogo));
+		return oSecafDAO.search(oSearch);
+	}
+
 }

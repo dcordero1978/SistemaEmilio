@@ -12,4 +12,5 @@ public interface SecafService {
 	public Secaf obtener(int id) throws EntityNotFoundException;
 	public void agregar(Secaf oSecaf) throws DAOException, BusinessException;
 	public void actualizar(Secaf oSecaf) throws DAOException,BusinessException;
+	public List<Secaf> buscar(String descripcion, String codigo, Integer tipoCatalogo);
 }

@@ -17,6 +17,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import ni.gob.inss.barista.model.entity.EntityBase;
+import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
 import ni.gob.inss.sisinv.model.entity.catalogo.Empleado;
 
 @Entity
@@ -26,14 +27,18 @@ public class Movimientos extends EntityBase implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private Integer id;
-	private Integer tipo_movimiento_id;
-	private Empleado empleado_id_origen;
-	private Empleado empleado_id_destino;
-	private Integer activo_id;
-	private Date 	fecha_movimiento;
+	private Integer tipoMovimientoId;
+	private Empleado empleadoIdOrigen;
+	private Empleado empleadoIdDestino;
+	private Activos activoId;
+	private Date 	fechaMovimiento;
 	private String 	observaciones;
 	private boolean pasivo;
 	private Integer entidadId;
+	private Integer activosId;
+	public Catalogo tipoMovimiento;
+	public Empleado idEmpleadoOrigen;
+	public Empleado idEmpleadoDestino;
 	
 	@Id
 	@Column(name="id", unique=true, nullable=false)
@@ -46,46 +51,47 @@ public class Movimientos extends EntityBase implements Serializable {
 	}
 	
 	@Column(name="tipo_movimiento_id", nullable=false)
-	public Integer getTipo_movimiento_id() {
-		return tipo_movimiento_id;
+	public Integer getTipoMovimientoId() {
+		return tipoMovimientoId;
 	}
-	public void setTipo_movimiento_id(Integer tipo_movimiento_id) {
-		this.tipo_movimiento_id = tipo_movimiento_id;
-	}
-	
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "empleado_id_origen", nullable=false, insertable=false,updatable=false)
-	public Empleado getEmpleado_id_origen() {
-		return empleado_id_origen;
-	}
-	public void setEmpleado_id_origen(Empleado empleado_id_origen) {
-		this.empleado_id_origen = empleado_id_origen;
+	public void setTipoMovimientoId(Integer tipoMovimientoId) {
+		this.tipoMovimientoId = tipoMovimientoId;
 	}
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "empleado_id_destino", nullable=false, insertable=false,updatable=false)
-	public Empleado getEmpleado_id_destino() {
-		return empleado_id_destino;
+	@JoinColumn(name = "empleado_id_origen", nullable=false)
+	public Empleado getEmpleadoIdOrigen() {
+		return empleadoIdOrigen;
 	}
-	public void setEmpleado_id_destino(Empleado empleado_id_destino) {
-		this.empleado_id_destino = empleado_id_destino;
+	public void setEmpleadoIdOrigen(Empleado empleadoIdOrigen) {
+		this.empleadoIdOrigen = empleadoIdOrigen;
 	}
 	
-	@Column(name="activo_id", nullable=false, insertable=false,updatable=false)
-	public Integer getActivo_id() {
-		return activo_id;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "empleado_id_destino", nullable=false)
+	public Empleado getEmpleadoIdDestino() {
+		return empleadoIdDestino;
 	}
-	public void setActivo_id(Integer activo_id) {
-		this.activo_id = activo_id;
+	public void setEmpleadoIdDestino(Empleado empleadoIdDestino) {
+		this.empleadoIdDestino = empleadoIdDestino;
+	}
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name="activo_id", nullable=false)
+	public Activos getActivoId() {
+		return activoId;
+	}
+	public void setActivoId(Activos activoId) {
+		this.activoId = activoId;
 	}
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="fecha_movimiento", nullable=false, length = 29)
-	public Date getFecha_movimiento() {
-		return fecha_movimiento;
+	public Date getFechaMovimiento() {
+		return fechaMovimiento;
 	}
-	public void setFecha_movimiento(Date fecha_movimiento) {
-		this.fecha_movimiento = fecha_movimiento;
+	public void setFechaMovimiento(Date fechaMovimiento) {
+		this.fechaMovimiento = fechaMovimiento;
 	}
 	
 	@Column(name = "observaciones", length = 300)
@@ -111,7 +117,43 @@ public class Movimientos extends EntityBase implements Serializable {
 	public void setEntidadId(Integer entidadId) {
 		this.entidadId = entidadId;
 	}
-	
 
+	@Column(name="activo_id", nullable=false,insertable=false, updatable=false)
+	public Integer getActivosId() {
+		return activosId;
+	}
+	public void setActivosId(Integer activosId) {
+		this.activosId = activosId;
+	}
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name="tipo_movimiento_id", insertable=false, updatable=false)
+	public Catalogo getTipoMovimiento() {
+		return tipoMovimiento;
+	}
+
+	public void setTipoMovimiento(Catalogo tipoMovimiento) {
+		this.tipoMovimiento = tipoMovimiento;
+	}
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name="empleado_id_origen", insertable=false, updatable=false)
+	public Empleado getIdEmpleadoOrigen() {
+		return idEmpleadoOrigen;
+	}
+	public void setIdEmpleadoOrigen(Empleado idEmpleadoOrigen) {
+		this.idEmpleadoOrigen = idEmpleadoOrigen;
+	}
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name="empleado_id_destino", insertable=false, updatable=false)
+	public Empleado getIdEmpleadoDestino() {
+		return idEmpleadoDestino;
+	}
+	public void setIdEmpleadoDestino(Empleado idEmpleadoDestino) {
+		this.idEmpleadoDestino = idEmpleadoDestino;
+	}
+
+	
 	
 }

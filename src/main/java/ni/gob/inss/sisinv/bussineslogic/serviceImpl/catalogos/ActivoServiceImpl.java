@@ -81,7 +81,20 @@ public class ActivoServiceImpl implements ActivoService {
 	@Override
 	public List<Activos> buscar(String codigoSecaf, String codigoSecundario,String descripcionBien, String Serie,Integer ubicacionId, Integer estadoFisicoId, Integer tipoResguardoId){
 		return oActivoDAO.buscar(codigoSecaf, codigoSecundario, descripcionBien, Serie, ubicacionId, estadoFisicoId, tipoResguardoId);
+	} 
+
+	
+	@Transactional
+	@Override
+	public Activos obtener(int activoId) throws EntityNotFoundException {
+		return oActivoDAO.find(activoId);
 	}
 	
+	
+	@Transactional
+	@Override
+	public void actualizar(Activos oActivo) throws BusinessException, DAOException {
+		oActivoDAO.updateUpper(oActivo);
+	}
 
 }

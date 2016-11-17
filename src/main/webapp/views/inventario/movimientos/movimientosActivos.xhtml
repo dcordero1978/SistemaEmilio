@@ -13,14 +13,14 @@
 	</ui:define>
 	<ui:define name="content">
 		<div id="ContainerIndent">
+		<h:form id="formMovimientoActivos" style="width: 100%;">
 			<div class="Container50 Responsive">
-			<h:form id="formMovimientoActivos" style="width: 100%;">
+			
 				<p:panel  styleClass="fondoPaneles" style="height: 590px;">
 					<f:facet name="header">
 						<h:outputText value="ID:" />
 						<p:outputPanel style="display:block" styleClass="right">
-							<p:commandButton widgetVar="btnGuardar"  icon="ui-icon-disk"
-								 value="#{labelName.btnGuardar}" onstart="PF('btnGuardar').disable();" oncomplete="PF('btnGuardar').enable();"/>
+							<p:commandButton widgetVar="btnGuardar"  icon="ui-icon-disk" value="#{labelName.btnGuardar}" onstart="PF('btnGuardar').disable();" oncomplete="PF('btnGuardar').enable();" action="#{movimientosActivosBackBean.guardar}"/>
 							<p:commandButton resetValues="true" ajax="true" value="#{labelName.btnCancelar}" icon="ui-icon-cancel" />	
 						</p:outputPanel>
 					</f:facet>
@@ -28,11 +28,11 @@
 					<p:outputLabel for="tipomovimiento" value="Movimiento"/>
 						<p:selectOneMenu  required="true" id="tipomovimiento" label="Tipo Movimiento" value="#{movimientosActivosBackBean.tipoMovimientoId}" effect="fold" style="width:88%" >
 							<f:selectItem itemValue="#{null}" itemLabel="Seleccione ..."/>
-							<f:selectItems var="tipomovimiento" value="#{movimientosActivosBackBean.listaTiposMovimientos}" itemLabel="#{tipomov.descripcion}" itemValue="#{tipomov.id}" style="width:90%"/>
+							<f:selectItems var="tipomovimiento" value="#{movimientosActivosBackBean.listaTiposMovimientos}" itemLabel="#{tipomovimiento.descripcion}" itemValue="#{tipomovimiento.id}" style="width:90%"/>
 						</p:selectOneMenu>	
 						
 						<p:outputLabel for="button" value="Fecha:" style="width:90%" />
-        				<p:calendar id="button" required="true" value="#{movimientosActivosBackBean.fecha}" effect="fold" pattern="dd/MM/yyyy" mask="true" maxdate="#{movimientosActivosBackBean.fechamax}" />
+        				<p:calendar id="button" required="true" value="#{movimientosActivosBackBean.fechaMovimiento}" effect="fold" pattern="dd/MM/yyyy" mask="true" maxdate="#{movimientosActivosBackBean.fechamax}" />
 					</h:panelGrid>
 					<p:panel id="panelactivos" styleClass="fondoPaneles" >
         				<h:panelGrid columns="5" cellpadding="5" columnClasses="Wid10,Wid40,Wid10,Wid10,Wid30" style="width:100%" >
@@ -47,7 +47,7 @@
             				<p:inputTextarea id="txtdescripcionBien"  rows="4"  readonly="true" styleClass="Wid90" value="#{movimientosActivosBackBean.txtdescripcionBien}"/>
         				</h:panelGrid>
         			</p:panel>
-        			<p:panel styleClass="fondoPaneles" >
+        			<p:panel id="panelorigen" styleClass="fondoPaneles" >
         				<p:outputLabel value="UBICACIÓN ORIGEN" style="font-weight:bold"/>
         				 <h:panelGrid columns="2" cellpadding="5" columnClasses="Wid10, Wid90" style="width:100%">
         				  <p:graphicImage library="default" name="img/icons/comunes/user.png" width="100px"/>
@@ -84,38 +84,39 @@
         			</p:panel>
 
 				</p:panel>
-			</h:form>
+			
 			</div>
 			<div class="Container50 Responsive">
-			<h:form id="formMovimientoHistorico" style="width: 100%;">
-				<p:panel styleClass="fondoPaneles" style="height: 590px;">
-						<p:dataTable style="width:100%" paginatorPosition="top" selectionMode="single"  scrollable="true" scrollHeight="450" 
-						var="oDelegacion" 
+				<p:panel id="panelhistorico" styleClass="fondoPaneles" style="height: 590px;">
+						<p:dataTable style="width:100%" paginatorPosition="top" scrollable="true" scrollHeight="450" 
+						var="oListaMov" value="#{movimientosActivosBackBean.listaMovimientos}"
 						paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="12" pageLinks="3"  paginatorTemplate="#{configApplicationBean.paginatorTemplate}"
 						currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
 							<f:facet name="header">
         						Histórico de Movimientos de Bienes
     						</f:facet>
 							<p:column headerText="Tipo Movimiento" >
-								
+								<h:outputText value="#{oListaMov.tipoMovimiento.descripcion}" />
 							</p:column>
-							
+								
 							<p:column headerText="Ubicación Origen">
-		
+								<h:outputText value="#{oListaMov.idEmpleadoOrigen.numeroEmpleado} - #{oListaMov.idEmpleadoOrigen.primerNombre} #{oListaMov.idEmpleadoOrigen.segundoNombre} #{oListaMov.idEmpleadoOrigen.primerApellido} #{oListaMov.idEmpleadoOrigen.segundoApellido} #{oListaMov.idEmpleadoOrigen.cargo}, #{oListaMov.idEmpleadoOrigen.area}" />
 							</p:column>
 							
 							<p:column headerText="Ubicación Destino">
-		
-							</p:column>
+								<h:outputText value="#{oListaMov.idEmpleadoDestino.numeroEmpleado} - #{oListaMov.idEmpleadoDestino.primerNombre} #{oListaMov.idEmpleadoDestino.segundoNombre} #{oListaMov.idEmpleadoDestino.primerApellido} #{oListaMov.idEmpleadoDestino.segundoApellido} #{oListaMov.idEmpleadoDestino.cargo}, #{oListaMov.idEmpleadoDestino.area}" />
+							</p:column> 
 						</p:dataTable>
-					
+					 
 
 				</p:panel>
-			</h:form>
+			
 			</div>
+				</h:form>
+		
 		</div>
 		<mc:buscaEmpleado nombreModal="busquedaAvanzadaEmpleado" componentesActualizar=":formMovimientoActivos:paneldestino" backBeanBase="#{movimientosActivosBackBean}" />
-		<mc:buscaActivo nombreModal="busquedaAvanzadaActivo" componentesActualizar=":formMovimientoActivos" backBeanBase="#{movimientosActivosBackBean}" />
+		<mc:buscaActivo nombreModal="busquedaAvanzadaActivo" componentesActualizar=":formMovimientoActivos:panelactivos,:formMovimientoActivos:panelorigen,:formMovimientoActivos:panelhistorico" backBeanBase="#{movimientosActivosBackBean}" />
 	</ui:define>
 </ui:composition>
 	

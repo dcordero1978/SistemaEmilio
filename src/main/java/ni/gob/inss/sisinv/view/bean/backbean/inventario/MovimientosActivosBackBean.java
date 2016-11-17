@@ -11,10 +11,14 @@ import javax.inject.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
+import ni.gob.inss.barista.businesslogic.service.BusinessException;
+import ni.gob.inss.barista.model.dao.DAOException; 
 import ni.gob.inss.barista.model.dao.EntityNotFoundException;
 import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
 import ni.gob.inss.barista.view.bean.backbean.BaseBackBean;
 import ni.gob.inss.barista.view.utils.web.MessagesResults;
+import ni.gob.inss.sisinv.bussineslogic.service.inventario.MovimientosService;
+import ni.gob.inss.sisinv.bussineslogic.service.catalogos.ActivoEmpleadoService;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.ActivoService;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.CatalogoExtService;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.DelegacionService;
@@ -22,6 +26,7 @@ import ni.gob.inss.sisinv.bussineslogic.service.catalogos.EmpleadoService;
 import ni.gob.inss.sisinv.model.entity.catalogo.Delegacion;
 import ni.gob.inss.sisinv.model.entity.catalogo.Empleado;
 import ni.gob.inss.sisinv.model.entity.inventario.Activos;
+import ni.gob.inss.sisinv.model.entity.inventario.ActivosEmpleados;
 import ni.gob.inss.sisinv.model.entity.inventario.Movimientos;
 import ni.gob.inss.sisinv.util.CatalogoGeneral;
 
@@ -54,25 +59,35 @@ public class MovimientosActivosBackBean extends BaseBackBean implements Serializ
 	private String filtroSerie;
 	private List<Catalogo> listaEstadoFisico;
 	private List<Catalogo> listaTipoResguardo;
+	private List<Movimientos> listaMovimientos;
 	private Integer ubicacionId;
 	private Integer estadoFisicoId;
 	private Integer tipoResguardoId;
 	private Integer HfEmpOrigId;
 	private Integer HFEmpDestId;
+	private Integer HFActivoId;
+	private String observaciones;
 	private List<Activos> filtroListaActivos = new ArrayList<Activos>();
 	private List<Delegacion> listaDelegaciones;
+	private Date fechaMovimiento;
 	
 	@Autowired
 	CatalogoExtService oCatalogoService;
 	
 	@Autowired
 	ActivoService oActivoService;
+	
+	@Autowired
+	ActivoEmpleadoService oActivoEmpleadoService;
 
 	@Autowired
 	DelegacionService oDelegacionService;
 	
 	@Autowired
-	EmpleadoService oEmpleadoService;
+	EmpleadoService oEmpleadoService; 
+	
+	@Autowired
+	MovimientosService oMovimientosService;
 	
 	 
 	@PostConstruct
@@ -100,6 +115,7 @@ public class MovimientosActivosBackBean extends BaseBackBean implements Serializ
 		}
 	}
 	
+
 	public void cargarListaDelegaciones(){
 		try {
 				this.setListaDelegaciones(oDelegacionService.buscarPorEstado("",false));								
@@ -108,43 +124,94 @@ public class MovimientosActivosBackBean extends BaseBackBean implements Serializ
 			}
 	}
 	
-	public void cargarDatosFiltro(){
-        this.setTxtEmpleadoDest(filtroEmpleadoSeleccionado.getNumeroEmpleado()+" - "+ filtroEmpleadoSeleccionado.getPrimerNombre()+ " "+filtroEmpleadoSeleccionado.getSegundoNombre()+ " "+filtroEmpleadoSeleccionado.getPrimerApellido()+" "+filtroEmpleadoSeleccionado.getSegundoApellido());
-        this.setTxtcargoEmpleadoDest(filtroEmpleadoSeleccionado.getCargo());
-        this.setTxtubicacionEmpleadoDest(filtroEmpleadoSeleccionado.getArea());
-        this.setHFEmpDestId(filtroEmpleadoSeleccionado.getId());
+	public void cargarDatosFiltro() throws EntityNotFoundException{
+		try {
+			if(filtroEmpleadoSeleccionado==null) throw new BusinessException(MessagesResults.SELECCIONE_UN_REGISTRO);
+				this.setTxtEmpleadoDest(filtroEmpleadoSeleccionado.getNumeroEmpleado()+" - "+ filtroEmpleadoSeleccionado.getPrimerNombre()+ " "+filtroEmpleadoSeleccionado.getSegundoNombre()+ " "+filtroEmpleadoSeleccionado.getPrimerApellido()+" "+filtroEmpleadoSeleccionado.getSegundoApellido());
+				this.setTxtcargoEmpleadoDest(filtroEmpleadoSeleccionado.getCargo());
+				this.setTxtubicacionEmpleadoDest(filtroEmpleadoSeleccionado.getArea());
+				Empleado oEmpleado = oEmpleadoService.obtener(filtroEmpleadoSeleccionado.getId());
+				this.setHFEmpDestId(oEmpleado.getId()); 
+		} catch (EntityNotFoundException e) {
+			mostrarMensajeError(this.getClass().getSimpleName(), "cargarDatos", MessagesResults.ERROR_OBTENER, e);
+		}catch(BusinessException e){
+			mostrarMensajeError(e.getMessage());
+		}
     }
 	
 	public void cargarDatosFiltroActivo(){
+		try {
         this.setTxtcodigoInventario(filtroActivoSeleccionado.getCodigoInventario());
         this.setTxtcodigoSecundario(filtroActivoSeleccionado.getCodigoSecundario());
         this.setTxtdescripcionBien(filtroActivoSeleccionado.getDescripcion()+ ", Marca: "+filtroActivoSeleccionado.marca.descripcion+", Modelo: "+filtroActivoSeleccionado.modelo.descripcion);
-        this.setTxtEmpleadoOrig(filtroActivoSeleccionado.empleado.getNumeroEmpleado()+" - "+filtroActivoSeleccionado.empleado.getPrimerNombre());
+        this.setTxtEmpleadoOrig(filtroActivoSeleccionado.empleado.getNumeroEmpleado()+" - "+filtroActivoSeleccionado.empleado.getPrimerNombre() + " "+filtroActivoSeleccionado.empleado.getSegundoNombre() + " "+filtroActivoSeleccionado.empleado.getPrimerApellido()+" "+filtroActivoSeleccionado.empleado.getSegundoApellido());
         this.setCargoEmpleadoOrig(filtroActivoSeleccionado.empleado.getCargo());
         this.setUbicacionEmpleadoOrig(filtroActivoSeleccionado.empleado.getArea());
         this.setHfEmpOrigId(filtroActivoSeleccionado.empleado.getId());
+        this.setHFActivoId(filtroActivoSeleccionado.getId());
+		cargarMovimientosActivos(filtroActivoSeleccionado.getId());
+		} catch (EntityNotFoundException e) {
+			mostrarMensajeError(this.getClass().getSimpleName(), "cargarDatos", MessagesResults.ERROR_OBTENER, e);
+		}
     }
+	
+	public void cargarMovimientosActivos(Integer activoId) throws EntityNotFoundException{
+		this.setListaMovimientos(oMovimientosService.buscar(activoId));
+	}
+	
 	
 	public void busquedaAvanzadaActivos() throws EntityNotFoundException{
 		this.setFiltroListaActivos(oActivoService.buscar(this.getFiltroCodSecaf(), this.getFiltroCodSecundario(), this.getFiltroDescripcionBien(),this.getFiltroSerie(),this.getUbicacionId(),this.getEstadoFisicoId(),this.getTipoResguardoId()));
 	}
 
 	
-	public void guardar(){
-		Movimientos oMovimientos = new Movimientos();
-		oMovimientos.setTipo_movimiento_id(this.getTipoMovimientoId());
-		oMovimientos.setEmpleado_id_origen(oEmpleadoService.obtener(this.getHfEmpOrigId()));
-		oMovimientos.setEmpleado_id_destino(); 
-		oMovimientos.setActivo_id();
-		oMovimientos.setFecha_movimiento();
-		oMovimientos.setObservaciones();
-		oMovimientos.setPasivo(false);
-		oMovimientos.setCreadoEl(this.getTimeNow());
-		oMovimientos.setCreadoEnIp(this.getRemoteIp());
-		oMovimientos.setCreadoPor(this.getUsuarioActual().getId());
-		oMovimientos.setEntidadId(this.getEntidadActual().getId());
+	public void guardar() throws DAOException, BusinessException{
 		
+		if(this.getHfEmpOrigId().equals(this.getHFEmpDestId())){
+			mostrarMensajeError("El Empleado al que se le asignará el bien no puede ser el mismo");
+		}else{
+			try {
+					Movimientos oMovimientos = new Movimientos();
+					oMovimientos.setTipoMovimientoId(this.getTipoMovimientoId());
+					oMovimientos.setEmpleadoIdOrigen(oEmpleadoService.obtener(this.getHfEmpOrigId()));
+					oMovimientos.setEmpleadoIdDestino(oEmpleadoService.obtener(this.getHFEmpDestId())); 
+					oMovimientos.setActivoId( oActivoService.obtener(this.getHFActivoId()));
+					oMovimientos.setFechaMovimiento(this.getFechaMovimiento());
+					oMovimientos.setObservaciones(this.getObservaciones());
+					oMovimientos.setPasivo(false);
+					oMovimientos.setCreadoEl(this.getTimeNow());
+					oMovimientos.setCreadoEnIp(this.getRemoteIp());
+					oMovimientos.setCreadoPor(this.getUsuarioActual().getId());
+					oMovimientos.setEntidadId(this.getEntidadActual().getId());
+					
+					Activos oActivos = new Activos();
+					oActivos = oActivoService.obtener(this.getHFActivoId());
+					oActivos.setEmpleado(oEmpleadoService.obtener(this.getHFEmpDestId()));
+					oActivos.setModificadoEl(this.getTimeNow());
+					oActivos.setModificadoEnIp(this.getRemoteIp());
+					oActivos.setModificadoPor(this.getUsuarioActual().getId());
+					
+					ActivosEmpleados oActivoEmpleado = new ActivosEmpleados();
+					oActivoEmpleado.setActivo_id(this.getHFActivoId());
+					oActivoEmpleado.setEmpleado_id(this.getHFEmpDestId());
+					oActivoEmpleado.setPasivo(false);
+					oActivoEmpleado.setFechaAsignacion(this.getTimeNow());
+					oActivoEmpleado.setCreadoEl(this.getTimeNow());
+					oActivoEmpleado.setCreadoEnIp(this.getRemoteIp());
+					oActivoEmpleado.setCreadoPor(this.getUsuarioActual().getId());
+					
+					oActivoService.actualizar(oActivos);
+					oMovimientosService.guardar(oMovimientos);
+					oActivoEmpleadoService.guardar(oActivoEmpleado);
+					mostrarMensajeInfo(MessagesResults.EXITO_GUARDAR);
+					this.cargarMovimientosActivos(this.getHFActivoId());
+					
+			} catch (BusinessException | DAOException e) {
+				mostrarMensajeError(MessagesResults.ERROR_GUARDAR);
+			}
 	}
+	}
+
 	
 	private void valoresfechas() {
 		fechamax = new Date();
@@ -371,8 +438,40 @@ public class MovimientosActivosBackBean extends BaseBackBean implements Serializ
 		return HFEmpDestId;
 	}
 
-	public void setHFEmpDestId(Integer hFEmpDestId) {
-		HFEmpDestId = hFEmpDestId;
+	public void setHFEmpDestId(Integer hfEmpDestId) {
+		HFEmpDestId = hfEmpDestId;
+	}
+
+	public Date getFechaMovimiento() {
+		return fechaMovimiento;
+	}
+
+	public void setFechaMovimiento(Date fechaMovimiento) {
+		this.fechaMovimiento = fechaMovimiento;
+	}
+
+	public Integer getHFActivoId() {
+		return HFActivoId;
+	}
+
+	public void setHFActivoId(Integer hFActivoId) {
+		HFActivoId = hFActivoId;
+	}
+
+	public String getObservaciones() {
+		return observaciones;
+	}
+
+	public void setObservaciones(String observaciones) {
+		this.observaciones = observaciones;
+	}
+
+	public List<Movimientos> getListaMovimientos() {
+		return listaMovimientos;
+	}
+
+	public void setListaMovimientos(List<Movimientos> listaMovimientos) {
+		this.listaMovimientos = listaMovimientos;
 	}
 
 	

@@ -14,7 +14,7 @@
 		<div id="ContainerIndent">
 			<div class="Container50 Responsive">
 				<h:form id="listaActivos" style="width:99%">
-					<p:panel style="height:550px" styleClass="fondoPaneles">
+					<p:panel style="height:500px" styleClass="fondoPaneles">
 						<p:panel toggleable="true">
 									<f:facet name="header">
 										<p:outputPanel style="display:block;" styleClass="left">
@@ -54,7 +54,7 @@
 			</div>
 			<div class="Container50 Responsive">
 				<h:form id="datosActivo" style="width:99%">
-					<p:panel style="height:550px" styleClass="fondoPaneles">
+					<p:panel style="height:100%" styleClass="fondoPaneles">
 						<f:facet name="header">
 							<p:outputPanel style="display:block" styleClass="left">
 								<h:outputText value="ID: #{registroActivosBackBean.activoSeleccionado.id}" rendered="#{registroActivosBackBean.activoSeleccionado != null}"/>
@@ -64,87 +64,94 @@
 								<p:commandButton value="#{labelName.btnCancelar}" id="btnCancelar" action="#{registroActivosBackBean.limpiar}" update="datosActivo"  icon="ui-icon-cancel" immediate="true"/>
 							</p:outputPanel>
 						</f:facet>
-						<p:outputPanel style="width:100%">
-							<p:panel style="width:100%" toggleable="true"> 
-								<f:facet name="header">
-									<p:outputPanel id="panelBotonCbs" style="display:block;" styleClass="left">
-										<p:commandButton id="btnBuscarCbs" icon="ui-icon-search" value="#{labelName.btnBuscar} CBS" immediate="true" onclick="PF('modalBusquedaBienes').show()" resetValues="true" update=":busquedaBienes" rendered="#{registroActivosBackBean.usuarioSeleccionado}"/>
+						
+						<p:outputPanel style="width:100%" >
+								<p:panel style="width:99%" toggleable="true"> 
+									<f:facet name="header">
+										<p:outputPanel id="panelBotonCbs" style="display:block;" styleClass="left">
+											<p:commandButton id="btnBuscarCbs" icon="ui-icon-search" value="#{labelName.btnBuscar} CBS" immediate="true" onclick="PF('modalBusquedaBienes').show()" resetValues="true" update=":busquedaBienes" rendered="#{registroActivosBackBean.usuarioSeleccionado}"/>
+										</p:outputPanel>
+									</f:facet>
+									<p:outputPanel id="datosCatalogoSecaf">
+										<h:panelGrid style="width:100%" columns="4" columnClasses="Wid20, Wid30, Wid10, Wid40">
+											<h:outputLabel for="codigoCbs" value="Código:"/>
+											<p:inputText id="codigoCbs" readonly="true" style="width:90%" value="#{registroActivosBackBean.catalogoSecafSeleccionado.cbs}"/>	
+											<h:outputLabel for="tipoCbs" value="Tipo:"/>
+											<p:inputText readonly="true" id="tipoCbs" style="width:90%" value="#{registroActivosBackBean.catalogoSecafSeleccionado.tipoBienCatalogo.descripcion}"/>									
+										</h:panelGrid>
+										<h:panelGrid style="width:100%" columns="2" columnClasses="Wid20, Wid80">
+											<h:outputLabel for="descripcionCbs" value="Descripción CBS:"/>
+											<p:inputText readonly="true" id="descripcionCbs" style="width:95%" value="#{registroActivosBackBean.catalogoSecafSeleccionado.descripcionCbs}"/>
+										</h:panelGrid>
 									</p:outputPanel>
-								</f:facet>
-								<p:outputPanel id="datosCatalogoSecaf">
-									<h:panelGrid style="width:100%" columns="4" columnClasses="Wid20, Wid30, Wid10, Wid40">
-										<h:outputLabel for="codigoCbs" value="Código:"/>
-										<p:inputText id="codigoCbs" readonly="true" style="width:90%" value="#{registroActivosBackBean.catalogoSecafSeleccionado.cbs}"/>	
-										<h:outputLabel for="tipoCbs" value="Tipo:"/>
-										<p:inputText readonly="true" id="tipoCbs" style="width:90%" value="#{registroActivosBackBean.catalogoSecafSeleccionado.tipoBienCatalogo.descripcion}"/>									
+								</p:panel>
+								<p:outputPanel>
+									<h:panelGrid style="width:100%" columns="4" columnClasses="Wid10, Wid40, Wid10, Wid40">
+										<p:outputLabel for="codigoSecundario" value="Codigo secundario:"/>
+										<p:inputText id="codigoSecundario" style="width:90%" value="#{registroActivosBackBean.oActivo.codigoSecundario}"/>
+										<p:outputLabel for="descripcionActivo" value="Descripción activo"/>
+										<p:inputText id="descripcionActivo" style="width:90%" value="#{registroActivosBackBean.oActivo.descripcion}"/>
+										<p:outputLabel for="marca" value="Marca"/>
+										<p:selectOneMenu id="marca" style="width:80%" required="true" filter="true" filterMatchMode="contains" value="#{registroActivosBackBean.oActivo.marcaId}">
+											<p:ajax update="modelo" listener="#{registroActivosBackBean.cargarListaModelosPorMarcaId}" />
+											<f:selectItem itemLabel="Seleccione" itemValue="#{null}" />
+											<f:selectItems value="#{registroActivosBackBean.listaMarcas}" var="oMarca" itemLabel="#{oMarca.descripcion}" itemValue="#{oMarca.id}"/>
+										</p:selectOneMenu>
+										<p:outputLabel for="modelo" value="Modelo:"/>
+										<p:selectOneMenu id="modelo" style="width:85%" required="true" filter="true" filterMatchMode="contains" value="#{registroActivosBackBean.oActivo.modeloId}">
+											<f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
+											<f:selectItems value="#{registroActivosBackBean.listaModelos}" var="oModelo" itemLabel="#{oModelo.descripcion}" itemValue="#{oModelo.id}" /> 
+										</p:selectOneMenu>
+										<p:outputLabel for="serie" value="Serie"/>
+										<p:inputText id="serie" style="width:90%" required="true" value="#{registroActivosBackBean.oActivo.serie}"/>
+										<p:outputLabel for="lote" value="Lote"/>
+										<p:inputText id="lote" style="width:90%" required="true" value="#{registroActivosBackBean.oActivo.lote}"/>
+										<p:outputLabel for="estado" value="Estado:"/>
+										<p:selectOneMenu id="estado" style="width:85%" required="true" value="#{registroActivosBackBean.oActivo.estadoFisicoId}" >
+											<f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
+											<f:selectItems value="#{registroActivosBackBean.listaEstadoFisico}" var="oEstadoFisico" itemLabel="#{oEstadoFisico.descripcion}" itemValue="#{oEstadoFisico.id}"/>
+										</p:selectOneMenu>
+										<p:outputLabel for="resguardo" value="Tipo Resguardo:"/>
+										<p:selectOneMenu id="resguardo" style="width:85%" required="true" value="#{registroActivosBackBean.oActivo.tipoResguardoId}">
+											<f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
+											<f:selectItems value="#{registroActivosBackBean.listaTipoResguardo}" var="oTipoResguardo" itemLabel="#{oTipoResguardo.descripcion}" itemValue="#{oTipoResguardo.id}" />
+										</p:selectOneMenu>
+										<p:outputLabel for="color" value="Color:"/>
+										<p:selectOneMenu id="color" style="width:85%" required="true" value="#{registroActivosBackBean.oActivo.color}">
+											<f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
+											<f:selectItems value="#{registroActivosBackBean.listaColores}" var="oColor" itemLabel="#{oColor.descripcion}" itemValue="#{oColor.codigo}"/>
+										</p:selectOneMenu>
+										<p:outputLabel for="numeroProyecto" value="Numero proyecto:"/>
+										<p:inputText id="numeroProyecto" style="width:90%" value="#{registroActivosBackBean.oActivo.numeroProyecto}"/>
+										<p:outputLabel for="numeroBodega" value="Numero bodega:"/>
+										<p:inputText id="numeroBodega" style="width:90%" value="#{registroActivosBackBean.oActivo.numeroBodega}"/>
+										<p:outputLabel for="valor" value="Valor:"/>
+										<p:inputText id="valor" style="width:90%" value="#{registroActivosBackBean.oActivo.valor}"/>
+										<p:outputLabel for="tipoMoneda" value="Moneda:"/>
+										<p:selectOneMenu id="tipoMoneda" style="width:85%"  value="#{registroActivosBackBean.oActivo.tipoMoneda}">
+											<f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
+											<f:selectItems value="#{registroActivosBackBean.listaTipoMoneda}" var="oMoneda" itemLabel="#{oMoneda.descripcion}" itemValue="#{oMoneda.id}" />
+										</p:selectOneMenu>
+										<p:outputLabel for="proyecto" value="Proyecto:"/>
+										<p:selectOneMenu id="proyecto" style="width:85%" required="true" value="#{registroActivosBackBean.oActivo.proyectoId}">
+											<f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
+											<f:selectItems value="#{registroActivosBackBean.listaProyectos}" var="oProyecto" itemLabel="#{oProyecto.descripcion}" itemValue="#{oProyecto.id}"/>
+										</p:selectOneMenu>
 									</h:panelGrid>
-									<h:panelGrid style="width:100%" columns="2" columnClasses="Wid20, Wid80">
-										<h:outputLabel for="descripcionCbs" value="Descripción CBS:"/>
-										<p:inputText readonly="true" id="descripcionCbs" style="width:95%" value="#{registroActivosBackBean.catalogoSecafSeleccionado.descripcionCbs}"/>
+									<h:panelGrid columns="3" columnClasses="Wid10, Wid40, Wid50" style="width:100%">
+										<p:outputLabel for="ubicacion" value="Ubicación" />
+										<p:selectOneMenu id="ubicacion" label="Ubicación" required="true" style="width:88%" value="#{registroActivosBackBean.ubicacionId}">
+											<f:selectItem itemValue="#{null}" itemLabel="Seleccione la Ubicación"/>
+											<f:selectItems value="#{registroActivosBackBean.listaUbicaciones}" var="oUbicacion"  itemLabel="#{oUbicacion.descripcion}" itemValue="#{oUbicacion.id}"/>
+										</p:selectOneMenu>
+										
+										<h:outputLink id="enlaceModalCaracteristicasEspeciales" value="#" onclick="PF('modalCaracteristicasEspeciales').show()" immediate="true" style="color: #0d6ab7 !important; font-weight:bold;" >
+											<h:outputText value="Agregar caracteristicas especiales"/>
+											<i class="fa fa-info-circle"></i>
+										</h:outputLink>
+										<p:tooltip for="enlaceModalCaracteristicasEspeciales" style="font-size:14px;background:#1d5999; color:white; border-color: #1d5999" value="Utilice esta opción si el activo es de tipo: arma de fuego, obra de arte o vehiculo." />
 									</h:panelGrid>
 								</p:outputPanel>
-							</p:panel>
-							<p:outputPanel>
-								<h:panelGrid style="width:100%" columns="4" columnClasses="Wid10, Wid40, Wid10, Wid40">
-									<p:outputLabel for="codigoSecundario" value="Codigo secundario:"/>
-									<p:inputText id="codigoSecundario" style="width:90%" value="#{registroActivosBackBean.oActivo.codigoSecundario}"/>
-									<p:outputLabel for="descripcionActivo" value="Descripción activo"/>
-									<p:inputText id="descripcionActivo" style="width:90%" value="#{registroActivosBackBean.oActivo.descripcion}"/>
-									<p:outputLabel for="marca" value="Marca"/>
-									<p:selectOneMenu id="marca" style="width:80%" required="true" filter="true" filterMatchMode="contains" value="#{registroActivosBackBean.oActivo.marcaId}">
-										<p:ajax update="modelo" listener="#{registroActivosBackBean.cargarListaModelosPorMarcaId}" />
-										<f:selectItem itemLabel="Seleccione" itemValue="#{null}" />
-										<f:selectItems value="#{registroActivosBackBean.listaMarcas}" var="oMarca" itemLabel="#{oMarca.descripcion}" itemValue="#{oMarca.id}"/>
-									</p:selectOneMenu>
-									<p:outputLabel for="modelo" value="Modelo:"/>
-									<p:selectOneMenu id="modelo" style="width:85%" required="true" filter="true" filterMatchMode="contains" value="#{registroActivosBackBean.oActivo.modeloId}">
-										<f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
-										<f:selectItems value="#{registroActivosBackBean.listaModelos}" var="oModelo" itemLabel="#{oModelo.descripcion}" itemValue="#{oModelo.id}" /> 
-									</p:selectOneMenu>
-									<p:outputLabel for="serie" value="Serie"/>
-									<p:inputText id="serie" style="width:90%" required="true" value="#{registroActivosBackBean.oActivo.serie}"/>
-									<p:outputLabel for="lote" value="Lote"/>
-									<p:inputText id="lote" style="width:90%" required="true" value="#{registroActivosBackBean.oActivo.lote}"/>
-									<p:outputLabel for="estado" value="Estado:"/>
-									<p:selectOneMenu id="estado" style="width:85%" required="true" value="#{registroActivosBackBean.oActivo.estadoFisicoId}" >
-										<f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
-										<f:selectItems value="#{registroActivosBackBean.listaEstadoFisico}" var="oEstadoFisico" itemLabel="#{oEstadoFisico.descripcion}" itemValue="#{oEstadoFisico.id}"/>
-									</p:selectOneMenu>
-									<p:outputLabel for="resguardo" value="Tipo Resguardo:"/>
-									<p:selectOneMenu id="resguardo" style="width:85%" required="true" value="#{registroActivosBackBean.oActivo.tipoResguardoId}">
-										<f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
-										<f:selectItems value="#{registroActivosBackBean.listaTipoResguardo}" var="oTipoResguardo" itemLabel="#{oTipoResguardo.descripcion}" itemValue="#{oTipoResguardo.id}" />
-									</p:selectOneMenu>
-									<p:outputLabel for="color" value="Color:"/>
-									<p:selectOneMenu id="color" style="width:85%" required="true" value="#{registroActivosBackBean.oActivo.color}">
-										<f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
-										<f:selectItems value="#{registroActivosBackBean.listaColores}" var="oColor" itemLabel="#{oColor.descripcion}" itemValue="#{oColor.codigo}"/>
-									</p:selectOneMenu>
-									<p:outputLabel for="numeroProyecto" value="Numero proyecto:"/>
-									<p:inputText id="numeroProyecto" style="width:90%" value="#{registroActivosBackBean.oActivo.numeroProyecto}"/>
-									<p:outputLabel for="numeroBodega" value="Numero bodega:"/>
-									<p:inputText id="numeroBodega" style="width:90%" value="#{registroActivosBackBean.oActivo.numeroBodega}"/>
-									<p:outputLabel for="valor" value="Valor:"/>
-									<p:inputText id="valor" style="width:90%" value="#{registroActivosBackBean.oActivo.valor}"/>
-									<p:outputLabel for="tipoMoneda" value="Moneda:"/>
-									<p:selectOneMenu id="tipoMoneda" style="width:85%"  value="#{registroActivosBackBean.oActivo.tipoMoneda}">
-										<f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
-										<f:selectItems value="#{registroActivosBackBean.listaTipoMoneda}" var="oMoneda" itemLabel="#{oMoneda.descripcion}" itemValue="#{oMoneda.id}" />
-									</p:selectOneMenu>
-									<p:outputLabel for="proyecto" value="Proyecto:"/>
-									<p:selectOneMenu id="proyecto" style="width:85%" required="true" value="#{registroActivosBackBean.oActivo.proyectoId}">
-										<f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
-										<f:selectItems value="#{registroActivosBackBean.listaProyectos}" var="oProyecto" itemLabel="#{oProyecto.descripcion}" itemValue="#{oProyecto.id}"/>
-									</p:selectOneMenu>
-									<p:outputLabel for="ubicacion" value="Ubicación" />
-									<p:selectOneMenu id="ubicacion" label="Ubicación" required="true" style="width:88%" value="#{registroActivosBackBean.ubicacionId}">
-										<f:selectItem itemValue="#{null}" itemLabel="Seleccione la Ubicación"/>
-										<f:selectItems value="#{registroActivosBackBean.listaUbicaciones}" var="oUbicacion"  itemLabel="#{oUbicacion.descripcion}" itemValue="#{oUbicacion.id}"/>
-									</p:selectOneMenu>
-									<p:outputLabel for="esActivoEspecial" value="Agregar caracteristicas"/>
-									<p:selectBooleanButton id="esActivoEspecial" offLabel="No" onLabel="Si" />
-								</h:panelGrid>
-							</p:outputPanel>
 						</p:outputPanel>
 					</p:panel>
 				</h:form>
@@ -192,7 +199,57 @@
 				</p:panel>
 			</h:form>
 		</p:dialog>
-		
+		<p:dialog modal="true" id="modalCaracteristicasEspeciales" widgetVar="modalCaracteristicasEspeciales" showHeader="false" showEffect="blind" hideEffect="blind" resizable="false" height="200" width="600">
+			<h:form id="formCaracteristicasEspeciales">
+				<p:panel styleClass="fondoPaneles">
+				<ui:param name="esTipoArmaDeFuego" value="#{registroActivosBackBean.codigoTipoActivoEspecial == 'CEA'}"/>
+				<ui:param name="esTipoVehiculo" value="#{registroActivosBackBean.codigoTipoActivoEspecial == 'CEV'}"/>
+				<ui:param name="esTipoObraArte" value="#{registroActivosBackBean.codigoTipoActivoEspecial == 'CEO'}"/>
+					<f:facet name="header">
+					<p:outputPanel style="display:block;" styleClass="left">
+						<h:panelGrid style="width:100%" columns="2" columnClasses="Wid50, Wid50">
+							<p:outputLabel for="tipoActivo" value="Tipo de activo:" style="color:white !important"/>
+							<p:selectOneMenu id="tipoActivo"  style="width:88%" value="#{registroActivosBackBean.codigoTipoActivoEspecial}">
+								<p:ajax update="formCaracteristicasEspeciales"/>
+								<f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
+								<f:selectItems value="#{registroActivosBackBean.listaTipoActivoEspecial}" var="oActivoEspecial" itemLabel="#{oActivoEspecial.descripcion}" itemValue="#{oActivoEspecial.codigo}"/>
+							</p:selectOneMenu>
+						</h:panelGrid>
+					</p:outputPanel>
+					<p:outputPanel style="display:block;" styleClass="right">
+						<p:commandButton style="color:white;" icon="fa fa-floppy-o" value="Guardar" disabled="#{registroActivosBackBean.codigoTipoActivoEspecial == null}"/>
+						<p:commandButton style="color:white;" icon="fa fa-times" value="Cancelar" immediate="true" onclick="PF('modalCaracteristicasEspeciales').hide()" />
+					</p:outputPanel>
+					</f:facet>
+					<h:panelGrid id="armaFuego" style="width:100%" columns="2" columnClasses="Wid20, Wid80" rendered="#{esTipoArmaDeFuego}">
+							<p:outputLabel for="calibre" value="Calibre:"/>
+							<p:inputText id="calibre" style="width:90%" value="#{registroActivosBackBean.caracteristicaCalibre}"/>
+					</h:panelGrid>
+					<h:panelGrid id="obraArte" style="width:100%" columns="2" columnClasses="Wid20, Wid80" rendered="#{esTipoObraArte}">
+											<p:outputLabel for="nombreObraArte" value="Nombre obra arte:"/>
+											<p:inputText id="nombreObraArte"  style="width:90%" value="#{registroActivosBackBean.caracteristicaNombreObraArte}"/>
+										</h:panelGrid>
+					<h:panelGrid id="vehiculo" style="width:100%" columns="6" columnClasses="Wid20, Wid10, Wid20, Wid10, Wid20, Wid10" rendered="#{esTipoVehiculo}">
+											<h:outputLabel for="numeroMotor" value="Número de motor:"/>
+											<p:inputText id="numeroMotor" style="width:90%" value="#{registroActivosBackBean.caracteristicaNumeroMotor}"/>
+											<h:outputLabel for="numeroChasis" value="Número chasis"/>
+											<p:inputText id="numeroChasis" style="width:90%" value="#{registroActivosBackBean.caracteristicaNumeroChasis}"/>
+											<h:outputLabel for="numeroCilindros" value="Número de Cilindros:"/>
+											<p:inputText id="numeroCilindros" style="width:90%" value="#{registroActivosBackBean.private String caracteristicaNumeroCilindros}"/>
+											<h:outputLabel for="anio" value="Año:"/>
+											<p:inputText id="anio" style="width:90%" value="#{registroActivosBackBean.caracteristicaAnio}"/>
+											<h:outputLabel for="placa" value="Placa:"/>
+											<p:inputText id="placa" style="width:90%" value="#{registroActivosBackBean.caracteristicaPlaca}"/>
+											<h:outputLabel for="numeroPasajeros" value="Número de pasajeros:"/>
+											<p:inputText id="numeroPasajeros" style="width:90%" value="#{registroActivosBackBean.caracteristicaNumeroPasajeros}"/>
+											<h:outputLabel for="capacidadCarga" value="Capacidad de carga:"/>
+											<p:inputText id="capacidadCarga" style="width:90%" value="#{registroActivosBackBean.caracteristicaCapacidadCarga}"/>
+											<h:outputLabel for="tipoCombustible" value="Tipo de combustible:"/>
+											<p:inputText id="tipoCombustible" style="width:90%" value="#{registroActivosBackBean.caracteristicaTipoComBustible}"/>
+										</h:panelGrid>
+				</p:panel>
+			</h:form>
+		</p:dialog>
 		<mc:buscaEmpleado nombreModal="busquedaEmpleado" componentesActualizar=":listaActivos, :datosActivo" backBeanBase="#{registroActivosBackBean}" />
 		
 	</ui:define>

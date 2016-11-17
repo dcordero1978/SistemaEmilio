@@ -48,6 +48,7 @@ public class RegistroActivosBackBean extends BaseBackBean implements Serializabl
 	private List<Catalogo> listaProyectos = new ArrayList<Catalogo>(); 
 	private List<Delegacion> listaUbicaciones = new ArrayList<Delegacion>(); 
 	private List<Activos> listaActivosUsuario = new ArrayList<Activos>();
+	private List<Catalogo> listaTipoActivoEspecial = new ArrayList<Catalogo>();
 	
 	private Secaf catalogoSecafSeleccionado;
 	private Activos oActivo;
@@ -55,6 +56,19 @@ public class RegistroActivosBackBean extends BaseBackBean implements Serializabl
 	@SuppressWarnings("unused")
 	private boolean usuarioSeleccionado;
 	private Activos activoSeleccionado;
+	private String codigoTipoActivoEspecial;
+	
+	private String caracteristicaCalibre;
+	private String caracteristicaNombreObraArte;
+	private String caracteristicaNumeroMotor;
+	private String caracteristicaNumeroChasis;
+	private String caracteristicaNumeroCilindros;
+	private String caracteristicaAnio;
+	private String caracteristicaPlaca;
+	private String caracteristicaNumeroPasajeros;
+	private String caracteristicaCapacidadCarga;
+	private String caracteristicaTipoComBustible;
+	
 	@Autowired EmpleadoService oEmpleadoService;
 	
 	@Autowired SecafService oSecafService;
@@ -79,6 +93,7 @@ public class RegistroActivosBackBean extends BaseBackBean implements Serializabl
 			this.listaColores = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.COLORES.getCodigoCatalogo());
 			this.listaTipoMoneda = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.MONEDA.getCodigoCatalogo());
 			this.listaProyectos = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.PROYECTOS.getCodigoCatalogo());
+			this.cargarListaTipoActivosEspeciales();
 		} catch (EntityNotFoundException e) {
 			mostrarMensajeError(MessagesResults.ERROR_OBTENER_LISTA);
 		}
@@ -108,6 +123,14 @@ public class RegistroActivosBackBean extends BaseBackBean implements Serializabl
 			mostrarMensajeError(this.getClass().getSimpleName(), "cargarDatos", MessagesResults.ERROR_OBTENER, e);
 		}catch(BusinessException e){
 			mostrarMensajeError(e.getMessage());
+		}
+	}
+	
+	public void cargarListaTipoActivosEspeciales(){
+		try {
+			this.listaTipoActivoEspecial = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.TIPO_ACTIVO_ACTIVO_ESPECIAL.getCodigoCatalogo());
+		} catch (EntityNotFoundException e) {
+			mostrarMensajeError(MessagesResults.ERROR_OBTENER_LISTA);
 		}
 	}
 	
@@ -297,6 +320,98 @@ public class RegistroActivosBackBean extends BaseBackBean implements Serializabl
 
 	public void setActivoSeleccionado(Activos activoSeleccionado) {
 		this.activoSeleccionado = activoSeleccionado;
+	}
+
+	public List<Catalogo> getListaTipoActivoEspecial() {
+		return listaTipoActivoEspecial;
+	}
+
+	public String getCodigoTipoActivoEspecial() {
+		return codigoTipoActivoEspecial;
+	}
+
+	public void setCodigoTipoActivoEspecial(String codigoTipoActivoEspecial) {
+		this.codigoTipoActivoEspecial = codigoTipoActivoEspecial;
+	}
+
+	public String getCaracteristicaCalibre() {
+		return caracteristicaCalibre;
+	}
+
+	public void setCaracteristicaCalibre(String caracteristicaCalibre) {
+		this.caracteristicaCalibre = caracteristicaCalibre;
+	}
+
+	public String getCaracteristicaNombreObraArte() {
+		return caracteristicaNombreObraArte;
+	}
+
+	public void setCaracteristicaNombreObraArte(String caracteristicaNombreObraArte) {
+		this.caracteristicaNombreObraArte = caracteristicaNombreObraArte;
+	}
+
+	public String getCaracteristicaNumeroMotor() {
+		return caracteristicaNumeroMotor;
+	}
+
+	public void setCaracteristicaNumeroMotor(String caracteristicaNumeroMotor) {
+		this.caracteristicaNumeroMotor = caracteristicaNumeroMotor;
+	}
+
+	public String getCaracteristicaNumeroChasis() {
+		return caracteristicaNumeroChasis;
+	}
+
+	public void setCaracteristicaNumeroChasis(String caracteristicaNumeroChasis) {
+		this.caracteristicaNumeroChasis = caracteristicaNumeroChasis;
+	}
+
+	public String getCaracteristicaNumeroCilindros() {
+		return caracteristicaNumeroCilindros;
+	}
+
+	public void setCaracteristicaNumeroCilindros(String caracteristicaNumeroCilindros) {
+		this.caracteristicaNumeroCilindros = caracteristicaNumeroCilindros;
+	}
+
+	public String getCaracteristicaAnio() {
+		return caracteristicaAnio;
+	}
+
+	public void setCaracteristicaAnio(String caracteristicaAnio) {
+		this.caracteristicaAnio = caracteristicaAnio;
+	}
+
+	public String getCaracteristicaPlaca() {
+		return caracteristicaPlaca;
+	}
+
+	public void setCaracteristicaPlaca(String caracteristicaPlaca) {
+		this.caracteristicaPlaca = caracteristicaPlaca;
+	}
+
+	public String getCaracteristicaNumeroPasajeros() {
+		return caracteristicaNumeroPasajeros;
+	}
+
+	public void setCaracteristicaNumeroPasajeros(String caracteristicaNumeroPasajeros) {
+		this.caracteristicaNumeroPasajeros = caracteristicaNumeroPasajeros;
+	}
+
+	public String getCaracteristicaCapacidadCarga() {
+		return caracteristicaCapacidadCarga;
+	}
+
+	public void setCaracteristicaCapacidadCarga(String caracteristicaCapacidadCarga) {
+		this.caracteristicaCapacidadCarga = caracteristicaCapacidadCarga;
+	}
+
+	public String getCaracteristicaTipoComBustible() {
+		return caracteristicaTipoComBustible;
+	}
+
+	public void setCaracteristicaTipoComBustible(String caracteristicaTipoComBustible) {
+		this.caracteristicaTipoComBustible = caracteristicaTipoComBustible;
 	}
 	
 }

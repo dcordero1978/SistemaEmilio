@@ -64,7 +64,9 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 	private List<MarcasModelos> listaModelos;
 	private List<Activos> listaActivosAsociados;
 	private List<Catalogo> listaProyectos;
+
 	
+	private String codigoSecaf;
 	private String noSerie;
 	private String noLote;
 	private String numeroProyecto;
@@ -287,6 +289,7 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 		}
 	}
 	
+
 	public void cargarListaActivos() throws EntityNotFoundException{
 		 this.listaActivosAsociados = oActivoService.obtenerListaActivosPorEmpleado(this.getHfId());
 	}
@@ -640,5 +643,13 @@ public class RegistroActivosBackBean extends BaseBackBean  implements Serializab
 	public void setActivoSeleccionado(Activos activoSeleccionado) {
 		this.activoSeleccionado = activoSeleccionado;
 	}
-	
+
+	public String getCodigoSecaf() {
+		return codigoSecaf;
+	}
+
+	public void setCodigoSecaf(String codigoSecaf) {
+		this.codigoSecaf = codigoSecaf;
+	}
+
 }

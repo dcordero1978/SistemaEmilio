@@ -64,6 +64,7 @@ public class ActivoServiceImpl implements ActivoService {
 		return codigoInventario;
 	}
 
+	//PARA REALIZAR LAS DIFERENTES BUSQUEDAS DE CONSULTA GENERAL
 	@Transactional
 	@Override
 	public List<Activos> buscar(Integer delegacionId, String codActivo, String descripcion, Integer estadoFisicoId) {
@@ -76,6 +77,24 @@ public class ActivoServiceImpl implements ActivoService {
 		
 	}
 	
-	//PARA REALIZAR LAS DIFERENTES BUSQUEDAS DE CONSULTA GENERAL
+	@Transactional
+	@Override
+	public List<Activos> buscar(String codigoSecaf, String codigoSecundario,String descripcionBien, String Serie,Integer ubicacionId, Integer estadoFisicoId, Integer tipoResguardoId){
+		return oActivoDAO.buscar(codigoSecaf, codigoSecundario, descripcionBien, Serie, ubicacionId, estadoFisicoId, tipoResguardoId);
+	} 
+
+	
+	@Transactional
+	@Override
+	public Activos obtener(int activoId) throws EntityNotFoundException {
+		return oActivoDAO.find(activoId);
+	}
+	
+	
+	@Transactional
+	@Override
+	public void actualizar(Activos oActivo) throws BusinessException, DAOException {
+		oActivoDAO.updateUpper(oActivo);
+	}
 
 }

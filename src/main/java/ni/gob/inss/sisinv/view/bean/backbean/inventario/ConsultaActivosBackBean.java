@@ -6,11 +6,9 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
-import ni.gob.inss.barista.businesslogic.service.catalogos.CatalogoService;
 import ni.gob.inss.barista.model.dao.EntityNotFoundException;
 import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
 import ni.gob.inss.barista.view.bean.backbean.BaseBackBean;
@@ -35,6 +33,8 @@ public class ConsultaActivosBackBean extends BaseBackBean implements Serializabl
 	private String txtBusquedaActivoByCodigo;
 	private String txtBusquedaActivoByDescripcion;
 	private List<Activos> listaActivos;
+
+	
 
 	@Autowired
 	DelegacionService oDelegacionService;
@@ -89,6 +89,8 @@ public class ConsultaActivosBackBean extends BaseBackBean implements Serializabl
 		}
 		
 	}
+	
+
 
 	public Integer getDelegacionId() {
 		return delegacionId;

@@ -25,8 +25,8 @@
 								</p:selectOneMenu>
 								<p:selectOneMenu  id="estadoFisico" value="#{consultaActivosBackBean.estadoFisicoId}" label="Estado Fisico:" style="width:250px">
 								<f:selectItem itemValue="#{null}" itemLabel="Seleccione Estado Fisico"/>
-								<f:selectItems var="oEstadoFisico" value="#{consultaActivosBackBean.listaEstadoFisico}" itemLabel="#{oEstadoFisico.descripcion}" itemValue="#{oEstadoFisico.id}" />I
-							</p:selectOneMenu>
+								<f:selectItems var="oEstadoFisico" value="#{consultaActivosBackBean.listaEstadoFisico}" itemLabel="#{oEstadoFisico.descripcion}" itemValue="#{oEstadoFisico.id}" />
+								</p:selectOneMenu>
 								<p:inputText value="#{consultaActivosBackBean.txtBusquedaActivoByCodigo}" maxlength="50" action="#{consultaActivosBackBean.buscarActivo}" placeholder="Buscar por Código" style="width:200px"/>
 								<p:inputText value="#{consultaActivosBackBean.txtBusquedaActivoByDescripcion}" maxlength="50" action="#{consultaActivosBackBean.buscarActivo}" placeholder="Buscar por Descripción" style="width:200px"/>
 							</h:panelGrid>

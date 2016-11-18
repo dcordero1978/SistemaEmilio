@@ -201,35 +201,33 @@
 		</p:dialog>
 		<p:dialog modal="true" id="modalCaracteristicasEspeciales" widgetVar="modalCaracteristicasEspeciales" showHeader="false" showEffect="blind" hideEffect="blind" resizable="false" height="200" width="600">
 			<h:form id="formCaracteristicasEspeciales">
-				<p:panel styleClass="fondoPaneles">
+				<p:panel styleClass="fondoPaneles" style="height:100%">
 				<ui:param name="esTipoArmaDeFuego" value="#{registroActivosBackBean.codigoTipoActivoEspecial == 'CEA'}"/>
 				<ui:param name="esTipoVehiculo" value="#{registroActivosBackBean.codigoTipoActivoEspecial == 'CEV'}"/>
 				<ui:param name="esTipoObraArte" value="#{registroActivosBackBean.codigoTipoActivoEspecial == 'CEO'}"/>
 					<f:facet name="header">
-					<p:outputPanel style="display:block;" styleClass="left">
-						<h:panelGrid style="width:100%" columns="2" columnClasses="Wid50, Wid50">
-							<p:outputLabel for="tipoActivo" value="Tipo de activo:" style="color:white !important"/>
-							<p:selectOneMenu id="tipoActivo"  style="width:88%" value="#{registroActivosBackBean.codigoTipoActivoEspecial}">
-								<p:ajax update="formCaracteristicasEspeciales"/>
-								<f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
-								<f:selectItems value="#{registroActivosBackBean.listaTipoActivoEspecial}" var="oActivoEspecial" itemLabel="#{oActivoEspecial.descripcion}" itemValue="#{oActivoEspecial.codigo}"/>
-							</p:selectOneMenu>
-						</h:panelGrid>
-					</p:outputPanel>
 					<p:outputPanel style="display:block;" styleClass="right">
 						<p:commandButton style="color:white;" icon="fa fa-floppy-o" value="Guardar" disabled="#{registroActivosBackBean.codigoTipoActivoEspecial == null}"/>
 						<p:commandButton style="color:white;" icon="fa fa-times" value="Cancelar" immediate="true" onclick="PF('modalCaracteristicasEspeciales').hide()" />
 					</p:outputPanel>
 					</f:facet>
-					<h:panelGrid id="armaFuego" style="width:100%" columns="2" columnClasses="Wid20, Wid80" rendered="#{esTipoArmaDeFuego}">
+					<h:panelGrid style="width:60%" columns="2" columnClasses="Wid40, Wid60">
+							<p:outputLabel for="tipoActivo" value="Tipo de activo:"/>
+							<p:selectOneMenu id="tipoActivo"  style="width:88%" value="#{registroActivosBackBean.codigoTipoActivoEspecial}">
+								<p:ajax update="formCaracteristicasEspeciales"/>
+								<f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
+								<f:selectItems value="#{registroActivosBackBean.listaTipoActivoEspecial}" var="oActivoEspecial" itemLabel="#{oActivoEspecial.nombre}" itemValue="#{oActivoEspecial.codigo}"/>
+							</p:selectOneMenu>
+						</h:panelGrid>
+					<h:panelGrid id="armaFuego" style="width:100%" columns="2" columnClasses="Wid20, Wid80" rendered="#{registroActivosBackBean.seleccionCaracteristicaArmaDeFuego}">
 						<p:outputLabel for="calibre" value="Calibre:"/>
 						<p:inputText id="calibre" style="width:90%" value="#{registroActivosBackBean.caracteristicaCalibre}"/>
 					</h:panelGrid>
-					<h:panelGrid id="obraArte" style="width:100%" columns="2" columnClasses="Wid20, Wid80" rendered="#{esTipoObraArte}">
+					<h:panelGrid id="obraArte" style="width:100%" columns="2" columnClasses="Wid20, Wid80" rendered="#{registroActivosBackBean.seleccionCaracteristicaObraArte}">
 						<p:outputLabel for="nombreObraArte" value="Nombre obra arte:"/>
 						<p:inputText id="nombreObraArte"  style="width:90%" value="#{registroActivosBackBean.caracteristicaNombreObraArte}"/>
 					</h:panelGrid>
-					<h:panelGrid id="vehiculo" style="width:100%" columns="6" columnClasses="Wid20, Wid10, Wid20, Wid10, Wid20, Wid10" rendered="#{esTipoVehiculo}">
+					<h:panelGrid id="vehiculo" style="width:100%" columns="6" columnClasses="Wid20, Wid10, Wid20, Wid10, Wid20, Wid10" rendered="#{registroActivosBackBean.seleccionCaracteristicaTransporte}">
 						<h:outputLabel for="numeroMotor" value="Número de motor:"/>
 						<p:inputText id="numeroMotor" style="width:90%" value="#{registroActivosBackBean.caracteristicaNumeroMotor}"/>
 						<h:outputLabel for="numeroChasis" value="Número chasis"/>

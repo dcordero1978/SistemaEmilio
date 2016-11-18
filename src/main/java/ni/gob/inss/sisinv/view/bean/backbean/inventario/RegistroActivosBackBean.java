@@ -15,6 +15,7 @@ import ni.gob.inss.barista.businesslogic.service.BusinessException;
 import ni.gob.inss.barista.model.dao.DAOException;
 import ni.gob.inss.barista.model.dao.EntityNotFoundException;
 import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
+import ni.gob.inss.barista.model.entity.catalogo.TiposCatalogo;
 import ni.gob.inss.barista.view.bean.backbean.BaseBackBean;
 import ni.gob.inss.barista.view.utils.web.MessagesResults;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.ActivoService;
@@ -22,6 +23,7 @@ import ni.gob.inss.sisinv.bussineslogic.service.catalogos.CatalogoExtService;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.DelegacionService;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.EmpleadoService;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.SecafService;
+import ni.gob.inss.sisinv.bussineslogic.service.catalogos.TipoCatalogoExtService;
 import ni.gob.inss.sisinv.model.entity.catalogo.Delegacion;
 import ni.gob.inss.sisinv.model.entity.catalogo.Empleado;
 import ni.gob.inss.sisinv.model.entity.catalogo.MarcasModelos;
@@ -48,18 +50,19 @@ public class RegistroActivosBackBean extends BaseBackBean implements Serializabl
 	private List<Catalogo> listaProyectos = new ArrayList<Catalogo>(); 
 	private List<Delegacion> listaUbicaciones = new ArrayList<Delegacion>(); 
 	private List<Activos> listaActivosUsuario = new ArrayList<Activos>();
-	private List<Catalogo> listaTipoActivoEspecial = new ArrayList<Catalogo>();
+	private List<TiposCatalogo> listaTipoActivoEspecial = new ArrayList<TiposCatalogo>();
 	
 	private Secaf catalogoSecafSeleccionado;
 	private Activos oActivo;
 	private Integer ubicacionId;
-	@SuppressWarnings("unused")
+	@SuppressWarnings("unused")//Usado en la vista
 	private boolean usuarioSeleccionado;
 	private Activos activoSeleccionado;
 	private String codigoTipoActivoEspecial;
 	
 	private String caracteristicaCalibre;
 	private String caracteristicaNombreObraArte;
+	//CARACTERISTICAS ESPECIALES DE MAQUINARIA O TRANSPORTE
 	private String caracteristicaNumeroMotor;
 	private String caracteristicaNumeroChasis;
 	private String caracteristicaNumeroCilindros;
@@ -68,6 +71,13 @@ public class RegistroActivosBackBean extends BaseBackBean implements Serializabl
 	private String caracteristicaNumeroPasajeros;
 	private String caracteristicaCapacidadCarga;
 	private String caracteristicaTipoComBustible;
+	
+	@SuppressWarnings("unused") //Usado en la vista
+	private boolean seleccionCaracteristicaArmaDeFuego;
+	@SuppressWarnings("unused")//Usado en la vista
+	private boolean seleccionCaracteristicaTransporte;
+	@SuppressWarnings("unused")//Usado en la vista
+	private boolean seleccionCaracteristicaObraArte;
 	
 	@Autowired EmpleadoService oEmpleadoService;
 	
@@ -78,6 +88,8 @@ public class RegistroActivosBackBean extends BaseBackBean implements Serializabl
 	@Autowired DelegacionService oDelegacionService;
 	
 	@Autowired ActivoService oActivoService;
+	
+	@Autowired TipoCatalogoExtService oTipoCatalogoService;
 	
 	@PostConstruct
 	public void init(){
@@ -128,10 +140,18 @@ public class RegistroActivosBackBean extends BaseBackBean implements Serializabl
 	
 	public void cargarListaTipoActivosEspeciales(){
 		try {
-			this.listaTipoActivoEspecial = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.TIPO_ACTIVO_ACTIVO_ESPECIAL.getCodigoCatalogo());
+			this.listaTipoActivoEspecial =
+					oTipoCatalogoService.obtenerListaCatalogoPorCodigo(CatalogoGeneral.CARACTERISTICA_ARMA_FUEGO.getCodigoCatalogo()
+					,CatalogoGeneral.CARACTERISTICA_OBRA_ARTE.getCodigoCatalogo()
+					,CatalogoGeneral.CARACTERISTICA_TRANSPORTE_MAQUINARIA.getCodigoCatalogo());
+					
 		} catch (EntityNotFoundException e) {
 			mostrarMensajeError(MessagesResults.ERROR_OBTENER_LISTA);
 		}
+	}
+	
+	public void agregarCaracteristicasEspeciales(){
+		
 	}
 	
 	public void cargarListaActivosAsociadosUsuario() throws EntityNotFoundException{
@@ -322,7 +342,7 @@ public class RegistroActivosBackBean extends BaseBackBean implements Serializabl
 		this.activoSeleccionado = activoSeleccionado;
 	}
 
-	public List<Catalogo> getListaTipoActivoEspecial() {
+	public List<TiposCatalogo> getListaTipoActivoEspecial() {
 		return listaTipoActivoEspecial;
 	}
 
@@ -413,5 +433,19 @@ public class RegistroActivosBackBean extends BaseBackBean implements Serializabl
 	public void setCaracteristicaTipoComBustible(String caracteristicaTipoComBustible) {
 		this.caracteristicaTipoComBustible = caracteristicaTipoComBustible;
 	}
+
+	public boolean isSeleccionCaracteristicaArmaDeFuego() {
+		return StringUtils.equals(this.getCodigoTipoActivoEspecial(), CatalogoGeneral.CARACTERISTICA_ARMA_FUEGO.getCodigoCatalogo());
+	}
+
+	public boolean isSeleccionCaracteristicaTransporte() {
+		return StringUtils.equals(this.getCodigoTipoActivoEspecial(), CatalogoGeneral.CARACTERISTICA_TRANSPORTE_MAQUINARIA.getCodigoCatalogo());
+	}
+
+	public boolean isSeleccionCaracteristicaObraArte() {
+		return StringUtils.equals(this.getCodigoTipoActivoEspecial(), CatalogoGeneral.CARACTERISTICA_OBRA_ARTE.getCodigoCatalogo());
+	}
+	
+	
 	
 }

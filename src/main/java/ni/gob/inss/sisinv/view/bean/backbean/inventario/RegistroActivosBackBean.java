@@ -2,7 +2,9 @@ package ni.gob.inss.sisinv.view.bean.backbean.inventario;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
@@ -29,6 +31,7 @@ import ni.gob.inss.sisinv.model.entity.catalogo.Empleado;
 import ni.gob.inss.sisinv.model.entity.catalogo.MarcasModelos;
 import ni.gob.inss.sisinv.model.entity.catalogo.Secaf;
 import ni.gob.inss.sisinv.model.entity.inventario.Activos;
+import ni.gob.inss.sisinv.model.entity.inventario.ActivosCaracteristicas;
 import ni.gob.inss.sisinv.util.CatalogoGeneral;
 
 @Scope("view")
@@ -51,6 +54,7 @@ public class RegistroActivosBackBean extends BaseBackBean implements Serializabl
 	private List<Delegacion> listaUbicaciones = new ArrayList<Delegacion>(); 
 	private List<Activos> listaActivosUsuario = new ArrayList<Activos>();
 	private List<TiposCatalogo> listaTipoActivoEspecial = new ArrayList<TiposCatalogo>();
+	private Map<String, ActivosCaracteristicas> caracteristicas = new HashMap<String, ActivosCaracteristicas>();
 	
 	private Secaf catalogoSecafSeleccionado;
 	private Activos oActivo;
@@ -151,7 +155,53 @@ public class RegistroActivosBackBean extends BaseBackBean implements Serializabl
 	}
 	
 	public void agregarCaracteristicasEspeciales(){
+		caracteristicas.clear();
+		try {
+			oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(this.getCodigoTipoActivoEspecial()).stream().forEach(itemCatalogo ->{
+				ActivosCaracteristicas oCaracteristica = new ActivosCaracteristicas();
+				oCaracteristica.setCreadoEl(this.getTimeNow());
+				oCaracteristica.setCreadoEnIp(this.getRemoteIp());
+				oCaracteristica.setCreadoPor(this.getUsuarioActual().getId());
+				oCaracteristica.getCaracteristica().setCaracteristicaCod(itemCatalogo.getCodigo());
+				//El Combustible es catalogo para el caso del transporte
+				if(StringUtils.equals(itemCatalogo.getCodigo(), "CMB") ){
+					oCaracteristica.setEsCatalogo(true);
+				}
+				caracteristicas.put(itemCatalogo.getCodigo(), oCaracteristica);
+			});
+		} catch (EntityNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private List<ActivosCaracteristicas> obtieneListaCaracteristicas(Activos oActivo){
+		if(this.isSeleccionCaracteristicaArmaDeFuego()){
+			aplicaValorACaracteristicaEspecial(this.getCaracteristicaCalibre(), "CLB");
+		}else if(this.isSeleccionCaracteristicaObraArte()){
+			aplicaValorACaracteristicaEspecial(this.getCaracteristicaNombreObraArte(), "NOB");
+		}else if(this.isSeleccionCaracteristicaTransporte()){
+			aplicaValorACaracteristicaEspecial(this.getCaracteristicaNumeroMotor(), "NM");
+			aplicaValorACaracteristicaEspecial(this.getCaracteristicaNumeroChasis(), "NCH");
+			aplicaValorACaracteristicaEspecial(this.getCaracteristicaNumeroCilindros(), "NC");
+			aplicaValorACaracteristicaEspecial(this.getCaracteristicaAnio(), "ANIO");
+			aplicaValorACaracteristicaEspecial(this.getCaracteristicaPlaca(), "PL");
+			aplicaValorACaracteristicaEspecial(this.getCaracteristicaNumeroPasajeros(), "NP");
+			aplicaValorACaracteristicaEspecial(this.getCaracteristicaCapacidadCarga(), "CC");
+			aplicaValorACaracteristicaEspecial(this.getCaracteristicaTipoComBustible(), "CMB");
+		}
 		
+		ArrayList<ActivosCaracteristicas> listaCaracteristicasEspecialesActivo = new ArrayList<ActivosCaracteristicas>();
+		this.caracteristicas.entrySet().stream().filter(map -> map.getValue()!=null).forEach(propiedad->{
+			propiedad.getValue().setActivo(oActivo);
+			listaCaracteristicasEspecialesActivo.add(propiedad.getValue());
+		});
+		return listaCaracteristicasEspecialesActivo;
+	}
+	
+	private void aplicaValorACaracteristicaEspecial(String valorCampo, String codigo){
+		if(StringUtils.isNotEmpty(valorCampo)){
+			this.caracteristicas.get(codigo).setValor(valorCampo);
+		}
 	}
 	
 	public void cargarListaActivosAsociadosUsuario() throws EntityNotFoundException{
@@ -179,7 +229,6 @@ public class RegistroActivosBackBean extends BaseBackBean implements Serializabl
 			}else{
 				actualizar();
 			}
-			
 			this.cargarListaActivosAsociadosUsuario();
 			limpiar();
 		} catch (EntityNotFoundException e) {
@@ -192,7 +241,7 @@ public class RegistroActivosBackBean extends BaseBackBean implements Serializabl
 			oActivo.setCreadoEl(this.getTimeNow());
 			oActivo.setCreadoEnIp(this.getRemoteIp());
 			oActivo.setCreadoPor(this.getUsuarioActual().getId());
-			
+			oActivo.setListaCaracteristicas(obtieneListaCaracteristicas(oActivo));
 			oActivoService.guardar(oActivo);
 			
 			mostrarMensajeInfo(MessagesResults.EXITO_GUARDAR);
@@ -227,6 +276,7 @@ public class RegistroActivosBackBean extends BaseBackBean implements Serializabl
 		this.oActivo = new Activos();
 		this.setUbicacionId(null);
 		this.catalogoSecafSeleccionado=null;
+		this.caracteristicas.clear();
 	}
 	
 	public void buscarBienes(){

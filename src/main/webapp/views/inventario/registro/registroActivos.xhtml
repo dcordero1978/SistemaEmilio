@@ -207,14 +207,14 @@
 				<ui:param name="esTipoObraArte" value="#{registroActivosBackBean.codigoTipoActivoEspecial == 'CEO'}"/>
 					<f:facet name="header">
 					<p:outputPanel style="display:block;" styleClass="right">
-						<p:commandButton style="color:white;" icon="fa fa-floppy-o" value="Guardar" disabled="#{registroActivosBackBean.codigoTipoActivoEspecial == null}"/>
-						<p:commandButton style="color:white;" icon="fa fa-times" value="Cancelar" immediate="true" onclick="PF('modalCaracteristicasEspeciales').hide()" />
+						<p:commandButton style="color:white;" icon="fa fa-plus-circle" value="Agregar" disabled="#{registroActivosBackBean.codigoTipoActivoEspecial == null}" oncomplete="PF('modalCaracteristicasEspeciales').hide()"/>
+						<p:commandButton style="color:white;" icon="fa fa-times-circle" value="Cancelar" immediate="true" onclick="PF('modalCaracteristicasEspeciales').hide()" />
 					</p:outputPanel>
 					</f:facet>
 					<h:panelGrid style="width:60%" columns="2" columnClasses="Wid40, Wid60">
 							<p:outputLabel for="tipoActivo" value="Tipo de activo:"/>
 							<p:selectOneMenu id="tipoActivo"  style="width:88%" value="#{registroActivosBackBean.codigoTipoActivoEspecial}">
-								<p:ajax update="formCaracteristicasEspeciales"/>
+								<p:ajax update="formCaracteristicasEspeciales" listener="#{registroActivosBackBean.agregarCaracteristicasEspeciales}"/>
 								<f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
 								<f:selectItems value="#{registroActivosBackBean.listaTipoActivoEspecial}" var="oActivoEspecial" itemLabel="#{oActivoEspecial.nombre}" itemValue="#{oActivoEspecial.codigo}"/>
 							</p:selectOneMenu>

@@ -31,6 +31,8 @@ public class ActivosCaracteristicas extends EntityBase  implements java.io.Seria
 	private String valor;
 	private boolean esCatalogo;
 	private Integer id;
+	private Integer activoId;
+	private boolean pasivo;
 	
 	
 	@Id
@@ -81,6 +83,24 @@ public class ActivosCaracteristicas extends EntityBase  implements java.io.Seria
 
 	public void setActivo(Activos activo) {
 		caracteristica.setActivoId(activo);
+	}
+
+	@Column(name="activo_id", insertable= false, updatable = false)
+	public Integer getActivoId() {
+		return activoId;
+	}
+
+	public void setActivoId(Integer activoId) {
+		this.activoId = activoId;
+	}
+
+	@Column(name="pasivo")
+	public boolean isPasivo() {
+		return pasivo;
+	}
+
+	public void setPasivo(boolean pasivo) {
+		this.pasivo = pasivo;
 	}
 	
 }

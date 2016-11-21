@@ -12,4 +12,5 @@ public interface CatalogoExtService extends CatalogoService {
 	public List<MarcasModelos> obtenerListaModelos(Integer marcaId)throws EntityNotFoundException;
 	public List<Catalogo> obtieneListaCatalogosPorRefTipoCatalogo(String refTipoCatalogo) throws EntityNotFoundException;
 	public List<Catalogo> obtieneListaCatalogosPorRefTipoCatalogo(String... refTipoCatalogo) throws EntityNotFoundException;
+	public Catalogo obtieneCatalogoPorCodigo( String codigo);
 }

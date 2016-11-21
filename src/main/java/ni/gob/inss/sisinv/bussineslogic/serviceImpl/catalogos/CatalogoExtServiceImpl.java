@@ -75,5 +75,14 @@ public class CatalogoExtServiceImpl extends CatalogoServiceImpl implements Catal
 		});*/
 		return oCatalogoDAO.search(oSearch);
 	}
+
+	@Override
+	@Transactional
+	public Catalogo obtieneCatalogoPorCodigo(String codigo) {
+		Search oSearch = new Search();
+		oSearch.addFilter(Filter.equal("codigo", codigo));
+		oSearch.addFilter(Filter.equal("pasivo", false));
+		return (Catalogo) oCatalogoDAO.searchUnique(oSearch);
+	}
 	
 }

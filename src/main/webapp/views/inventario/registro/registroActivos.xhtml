@@ -39,7 +39,7 @@
 									value="#{registroActivosBackBean.listaActivosUsuario}" selection="#{registroActivosBackBean.activoSeleccionado}"
 									paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="10" pageLinks="3"
 									paginatorTemplate="#{configApplicationBean.paginatorTemplate}" currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
-										<p:ajax update=":datosActivo" event="rowDblselect" listener="#{registroActivosBackBean.editar}"/>
+										<p:ajax update=":datosActivo,:formCaracteristicasEspeciales" event="rowDblselect" listener="#{registroActivosBackBean.editar}"/>
 										<p:column resizable="true" headerText="Código" style="text-align:center" width="20%" priority="2">
 											<h:outputText value="#{oActivo.codigoInventario}" />
 										</p:column>
@@ -146,7 +146,7 @@
 										</p:selectOneMenu>
 										
 										<h:outputLink id="enlaceModalCaracteristicasEspeciales" value="#" onclick="PF('modalCaracteristicasEspeciales').show()" immediate="true" style="color: #0d6ab7 !important; font-weight:bold;" >
-											<h:outputText value="Agregar caracteristicas especiales"/>
+											<h:outputText value="#{registroActivosBackBean.activoSeleccionado != null ? 'Editar' : 'Agregar'} caracteristicas especiales"/>
 											<i class="fa fa-info-circle"></i>
 										</h:outputLink>
 										<p:tooltip for="enlaceModalCaracteristicasEspeciales" style="font-size:14px;background:#1d5999; color:white; border-color: #1d5999" value="Utilice esta opción si el activo es de tipo: arma de fuego, obra de arte o vehiculo." />
@@ -202,9 +202,6 @@
 		<p:dialog modal="true" id="modalCaracteristicasEspeciales" widgetVar="modalCaracteristicasEspeciales" showHeader="false" showEffect="blind" hideEffect="blind" resizable="false" height="200" width="600">
 			<h:form id="formCaracteristicasEspeciales">
 				<p:panel styleClass="fondoPaneles" style="height:100%">
-				<ui:param name="esTipoArmaDeFuego" value="#{registroActivosBackBean.codigoTipoActivoEspecial == 'CEA'}"/>
-				<ui:param name="esTipoVehiculo" value="#{registroActivosBackBean.codigoTipoActivoEspecial == 'CEV'}"/>
-				<ui:param name="esTipoObraArte" value="#{registroActivosBackBean.codigoTipoActivoEspecial == 'CEO'}"/>
 					<f:facet name="header">
 					<p:outputPanel style="display:block;" styleClass="right">
 						<p:commandButton style="color:white;" icon="fa fa-plus-circle" value="Agregar" disabled="#{registroActivosBackBean.codigoTipoActivoEspecial == null}" oncomplete="PF('modalCaracteristicasEspeciales').hide()"/>
@@ -214,36 +211,36 @@
 					<h:panelGrid style="width:60%" columns="2" columnClasses="Wid40, Wid60">
 							<p:outputLabel for="tipoActivo" value="Tipo de activo:"/>
 							<p:selectOneMenu id="tipoActivo"  style="width:88%" value="#{registroActivosBackBean.codigoTipoActivoEspecial}">
-								<p:ajax update="formCaracteristicasEspeciales" listener="#{registroActivosBackBean.agregarCaracteristicasEspeciales}"/>
+								<p:ajax update="formCaracteristicasEspeciales" />
 								<f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
 								<f:selectItems value="#{registroActivosBackBean.listaTipoActivoEspecial}" var="oActivoEspecial" itemLabel="#{oActivoEspecial.nombre}" itemValue="#{oActivoEspecial.codigo}"/>
 							</p:selectOneMenu>
 						</h:panelGrid>
 					<h:panelGrid id="armaFuego" style="width:100%" columns="2" columnClasses="Wid20, Wid80" rendered="#{registroActivosBackBean.seleccionCaracteristicaArmaDeFuego}">
 						<p:outputLabel for="calibre" value="Calibre:"/>
-						<p:inputText id="calibre" style="width:90%" value="#{registroActivosBackBean.caracteristicaCalibre}"/>
+						<p:inputText id="calibre" style="width:90%" value="#{registroActivosBackBean.caracteristicaCalibre.valor}"/>
 					</h:panelGrid>
 					<h:panelGrid id="obraArte" style="width:100%" columns="2" columnClasses="Wid20, Wid80" rendered="#{registroActivosBackBean.seleccionCaracteristicaObraArte}">
 						<p:outputLabel for="nombreObraArte" value="Nombre obra arte:"/>
-						<p:inputText id="nombreObraArte"  style="width:90%" value="#{registroActivosBackBean.caracteristicaNombreObraArte}"/>
+						<p:inputText id="nombreObraArte"  style="width:90%" value="#{registroActivosBackBean.caracteristicaNombreObraArte.valor}"/>
 					</h:panelGrid>
 					<h:panelGrid id="vehiculo" style="width:100%" columns="6" columnClasses="Wid20, Wid10, Wid20, Wid10, Wid20, Wid10" rendered="#{registroActivosBackBean.seleccionCaracteristicaTransporte}">
 						<h:outputLabel for="numeroMotor" value="Número de motor:"/>
-						<p:inputText id="numeroMotor" style="width:90%" value="#{registroActivosBackBean.caracteristicaNumeroMotor}"/>
+						<p:inputText id="numeroMotor" style="width:90%" value="#{registroActivosBackBean.caracteristicaNumeroMotor.valor}"/>
 						<h:outputLabel for="numeroChasis" value="Número chasis"/>
-						<p:inputText id="numeroChasis" style="width:90%" value="#{registroActivosBackBean.caracteristicaNumeroChasis}"/>
+						<p:inputText id="numeroChasis" style="width:90%" value="#{registroActivosBackBean.caracteristicaNumeroChasis.valor}"/>
 						<h:outputLabel for="numeroCilindros" value="Número de Cilindros:"/>
-						<p:inputText id="numeroCilindros" style="width:90%" value="#{registroActivosBackBean.caracteristicaNumeroCilindros}"/>
+						<p:inputText id="numeroCilindros" style="width:90%" value="#{registroActivosBackBean.caracteristicaNumeroCilindros.valor}"/>
 						<h:outputLabel for="anio" value="Año:"/>
-						<p:inputText id="anio" style="width:90%" value="#{registroActivosBackBean.caracteristicaAnio}"/>
+						<p:inputText id="anio" style="width:90%" value="#{registroActivosBackBean.caracteristicaAnio.valor}"/>
 						<h:outputLabel for="placa" value="Placa:"/>
-						<p:inputText id="placa" style="width:90%" value="#{registroActivosBackBean.caracteristicaPlaca}"/>
+						<p:inputText id="placa" style="width:90%" value="#{registroActivosBackBean.caracteristicaPlaca.valor}"/>
 						<h:outputLabel for="numeroPasajeros" value="Número de pasajeros:"/>
-						<p:inputText id="numeroPasajeros" style="width:90%" value="#{registroActivosBackBean.caracteristicaNumeroPasajeros}"/>
+						<p:inputText id="numeroPasajeros" style="width:90%" value="#{registroActivosBackBean.caracteristicaNumeroPasajeros.valor}"/>
 						<h:outputLabel for="capacidadCarga" value="Capacidad de carga:"/>
-						<p:inputText id="capacidadCarga" style="width:90%" value="#{registroActivosBackBean.caracteristicaCapacidadCarga}"/>
+						<p:inputText id="capacidadCarga" style="width:90%" value="#{registroActivosBackBean.caracteristicaCapacidadCarga.valor}"/>
 						<h:outputLabel for="tipoCombustible" value="Tipo de combustible:"/>
-						<p:inputText id="tipoCombustible" style="width:90%" value="#{registroActivosBackBean.caracteristicaTipoComBustible}"/>
+						<p:inputText id="tipoCombustible" style="width:90%" value="#{registroActivosBackBean.caracteristicaTipoComBustible.valor}"/>
 					</h:panelGrid>
 				</p:panel>
 			</h:form>

@@ -26,6 +26,7 @@ import ni.gob.inss.sisinv.bussineslogic.service.catalogos.DelegacionService;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.EmpleadoService;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.SecafService;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.TipoCatalogoExtService;
+import ni.gob.inss.sisinv.bussineslogic.service.inventario.ActivosCaracteristicasService;
 import ni.gob.inss.sisinv.model.entity.catalogo.Delegacion;
 import ni.gob.inss.sisinv.model.entity.catalogo.Empleado;
 import ni.gob.inss.sisinv.model.entity.catalogo.MarcasModelos;
@@ -64,17 +65,17 @@ public class RegistroActivosBackBean extends BaseBackBean implements Serializabl
 	private Activos activoSeleccionado;
 	private String codigoTipoActivoEspecial;
 	
-	private String caracteristicaCalibre;
-	private String caracteristicaNombreObraArte;
+	private ActivosCaracteristicas caracteristicaCalibre = new ActivosCaracteristicas();
+	private ActivosCaracteristicas caracteristicaNombreObraArte = new ActivosCaracteristicas();
 	//CARACTERISTICAS ESPECIALES DE MAQUINARIA O TRANSPORTE
-	private String caracteristicaNumeroMotor;
-	private String caracteristicaNumeroChasis;
-	private String caracteristicaNumeroCilindros;
-	private String caracteristicaAnio;
-	private String caracteristicaPlaca;
-	private String caracteristicaNumeroPasajeros;
-	private String caracteristicaCapacidadCarga;
-	private String caracteristicaTipoComBustible;
+	private ActivosCaracteristicas caracteristicaNumeroMotor = new ActivosCaracteristicas();
+	private ActivosCaracteristicas caracteristicaNumeroChasis = new ActivosCaracteristicas();
+	private ActivosCaracteristicas caracteristicaNumeroCilindros = new ActivosCaracteristicas();
+	private ActivosCaracteristicas caracteristicaAnio = new ActivosCaracteristicas();
+	private ActivosCaracteristicas caracteristicaPlaca = new ActivosCaracteristicas();
+	private ActivosCaracteristicas caracteristicaNumeroPasajeros = new ActivosCaracteristicas();
+	private ActivosCaracteristicas caracteristicaCapacidadCarga = new ActivosCaracteristicas();
+	private ActivosCaracteristicas caracteristicaTipoComBustible = new ActivosCaracteristicas();
 	
 	@SuppressWarnings("unused") //Usado en la vista
 	private boolean seleccionCaracteristicaArmaDeFuego;
@@ -95,10 +96,13 @@ public class RegistroActivosBackBean extends BaseBackBean implements Serializabl
 	
 	@Autowired TipoCatalogoExtService oTipoCatalogoService;
 	
+	@Autowired ActivosCaracteristicasService oCaracteristicasService;
+	
 	@PostConstruct
 	public void init(){
 		this.oActivo = new Activos();
 		this.cargarListas();
+		inicializarCaracteristicas();
 	}	
 	
 	private void cargarListas(){
@@ -154,54 +158,87 @@ public class RegistroActivosBackBean extends BaseBackBean implements Serializabl
 		}
 	}
 	
-	public void agregarCaracteristicasEspeciales(){
-		caracteristicas.clear();
-		try {
-			oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(this.getCodigoTipoActivoEspecial()).stream().forEach(itemCatalogo ->{
-				ActivosCaracteristicas oCaracteristica = new ActivosCaracteristicas();
-				oCaracteristica.setCreadoEl(this.getTimeNow());
-				oCaracteristica.setCreadoEnIp(this.getRemoteIp());
-				oCaracteristica.setCreadoPor(this.getUsuarioActual().getId());
-				oCaracteristica.getCaracteristica().setCaracteristicaCod(itemCatalogo.getCodigo());
-				//El Combustible es catalogo para el caso del transporte
-				if(StringUtils.equals(itemCatalogo.getCodigo(), "CMB") ){
-					oCaracteristica.setEsCatalogo(true);
-				}
-				caracteristicas.put(itemCatalogo.getCodigo(), oCaracteristica);
-			});
-		} catch (EntityNotFoundException e) {
-			e.printStackTrace();
-		}
+	public List<ActivosCaracteristicas> obtenerCaracteristicasEspeciales(Integer activoId){
+		return oCaracteristicasService.obtieneListaCaracteristicasActivo(activoId);
 	}
 	
-	private List<ActivosCaracteristicas> obtieneListaCaracteristicas(Activos oActivo){
-		if(this.isSeleccionCaracteristicaArmaDeFuego()){
-			aplicaValorACaracteristicaEspecial(this.getCaracteristicaCalibre(), "CLB");
-		}else if(this.isSeleccionCaracteristicaObraArte()){
-			aplicaValorACaracteristicaEspecial(this.getCaracteristicaNombreObraArte(), "NOB");
-		}else if(this.isSeleccionCaracteristicaTransporte()){
-			aplicaValorACaracteristicaEspecial(this.getCaracteristicaNumeroMotor(), "NM");
-			aplicaValorACaracteristicaEspecial(this.getCaracteristicaNumeroChasis(), "NCH");
-			aplicaValorACaracteristicaEspecial(this.getCaracteristicaNumeroCilindros(), "NC");
-			aplicaValorACaracteristicaEspecial(this.getCaracteristicaAnio(), "ANIO");
-			aplicaValorACaracteristicaEspecial(this.getCaracteristicaPlaca(), "PL");
-			aplicaValorACaracteristicaEspecial(this.getCaracteristicaNumeroPasajeros(), "NP");
-			aplicaValorACaracteristicaEspecial(this.getCaracteristicaCapacidadCarga(), "CC");
-			aplicaValorACaracteristicaEspecial(this.getCaracteristicaTipoComBustible(), "CMB");
+	private void inicializarCaracteristicas(){
+		ActivosCaracteristicas oCaracteristicas = new ActivosCaracteristicas();
+		oCaracteristicas.setCreadoEl(this.getTimeNow());
+		oCaracteristicas.setCreadoEnIp(this.getRemoteIp());
+		oCaracteristicas.setCreadoPor(this.getUsuarioActual().getId());
+		
+		caracteristicaCalibre = oCaracteristicas;
+		caracteristicaCalibre.getCaracteristica().setCaracteristicaCod("CLB");
+		caracteristicaNombreObraArte = oCaracteristicas;
+		caracteristicaNombreObraArte.getCaracteristica().setCaracteristicaCod("NOB");
+		caracteristicaNumeroMotor = oCaracteristicas;
+		caracteristicaNumeroMotor.getCaracteristica().setCaracteristicaCod("NM");
+		caracteristicaNumeroChasis = oCaracteristicas;
+		caracteristicaNumeroChasis.getCaracteristica().setCaracteristicaCod("NCH");
+		caracteristicaNumeroCilindros = oCaracteristicas;
+		caracteristicaNumeroCilindros.getCaracteristica().setCaracteristicaCod("NC");
+		caracteristicaAnio = oCaracteristicas;
+		caracteristicaAnio.getCaracteristica().setCaracteristicaCod("ANIO");
+		caracteristicaPlaca = oCaracteristicas;
+		caracteristicaPlaca.getCaracteristica().setCaracteristicaCod("PL");
+		caracteristicaNumeroPasajeros = oCaracteristicas;
+		caracteristicaNumeroPasajeros.getCaracteristica().setCaracteristicaCod("NP");
+		caracteristicaCapacidadCarga = oCaracteristicas;
+		caracteristicaCapacidadCarga.getCaracteristica().setCaracteristicaCod("CC");
+		caracteristicaTipoComBustible = oCaracteristicas;
+		caracteristicaTipoComBustible.getCaracteristica().setCaracteristicaCod("CMB");
+		caracteristicaTipoComBustible.setEsCatalogo(true);		
+	}
+	
+	private List<ActivosCaracteristicas> obtieneListaCaracteristicas(Activos oActivo){		
+		ArrayList<ActivosCaracteristicas> listaCaracteristicasEspecialesActivo = new ArrayList<ActivosCaracteristicas>();
+		if(isSeleccionCaracteristicaArmaDeFuego()){
+			if(!StringUtils.isBlank(caracteristicaCalibre.getValor())){
+				caracteristicaCalibre.getCaracteristica().setActivoId(oActivo);
+				listaCaracteristicasEspecialesActivo.add(caracteristicaCalibre);
+			}
+		}else if(isSeleccionCaracteristicaObraArte()){
+			if(!StringUtils.isBlank(caracteristicaNombreObraArte.getValor())){
+				caracteristicaNombreObraArte.getCaracteristica().setActivoId(oActivo);
+				listaCaracteristicasEspecialesActivo.add(caracteristicaNombreObraArte);
+			}
+		}else if(isSeleccionCaracteristicaTransporte()){
+			if(!StringUtils.isBlank(caracteristicaNumeroMotor.getValor())){
+				caracteristicaNumeroMotor.getCaracteristica().setActivoId(oActivo);
+				listaCaracteristicasEspecialesActivo.add(caracteristicaNumeroMotor);
+			}
+			if(!StringUtils.isBlank(caracteristicaNumeroChasis.getValor())){
+				caracteristicaNumeroChasis.getCaracteristica().setActivoId(oActivo);
+				listaCaracteristicasEspecialesActivo.add(caracteristicaNumeroChasis);
+			}
+			if(!StringUtils.isBlank(caracteristicaNumeroCilindros.getValor())){
+				caracteristicaNumeroCilindros.getCaracteristica().setActivoId(oActivo);
+				listaCaracteristicasEspecialesActivo.add(caracteristicaNumeroCilindros);
+			}
+			if(!StringUtils.isBlank(caracteristicaAnio.getValor())){
+				caracteristicaAnio.getCaracteristica().setActivoId(oActivo);
+				listaCaracteristicasEspecialesActivo.add(caracteristicaAnio);
+			}
+			if(!StringUtils.isBlank(caracteristicaPlaca.getValor())){
+				caracteristicaPlaca.getCaracteristica().setActivoId(oActivo);
+				listaCaracteristicasEspecialesActivo.add(caracteristicaPlaca);
+			}
+			if(!StringUtils.isBlank(caracteristicaNumeroPasajeros.getValor())){
+				caracteristicaNumeroPasajeros.getCaracteristica().setActivoId(oActivo);
+				listaCaracteristicasEspecialesActivo.add(caracteristicaNumeroPasajeros);
+			}
+			if(!StringUtils.isBlank(caracteristicaCapacidadCarga.getValor())){
+				caracteristicaCapacidadCarga.getCaracteristica().setActivoId(oActivo);
+				listaCaracteristicasEspecialesActivo.add(caracteristicaCapacidadCarga);
+			}
+			if(!StringUtils.isBlank(caracteristicaTipoComBustible.getValor())){
+				caracteristicaTipoComBustible.getCaracteristica().setActivoId(oActivo);
+				listaCaracteristicasEspecialesActivo.add(caracteristicaTipoComBustible);
+			}			
 		}
 		
-		ArrayList<ActivosCaracteristicas> listaCaracteristicasEspecialesActivo = new ArrayList<ActivosCaracteristicas>();
-		this.caracteristicas.entrySet().stream().filter(map -> map.getValue()!=null).forEach(propiedad->{
-			propiedad.getValue().setActivo(oActivo);
-			listaCaracteristicasEspecialesActivo.add(propiedad.getValue());
-		});
 		return listaCaracteristicasEspecialesActivo;
-	}
-	
-	private void aplicaValorACaracteristicaEspecial(String valorCampo, String codigo){
-		if(StringUtils.isNotEmpty(valorCampo)){
-			this.caracteristicas.get(codigo).setValor(valorCampo);
-		}
 	}
 	
 	public void cargarListaActivosAsociadosUsuario() throws EntityNotFoundException{
@@ -267,6 +304,8 @@ public class RegistroActivosBackBean extends BaseBackBean implements Serializabl
 			oActivo = activoSeleccionado;
 			catalogoSecafSeleccionado = oActivo.getCatalogoSecaf();
 			ubicacionId = oActivo.getUbicacionId();
+			List<ActivosCaracteristicas> listCaracteristicasEspeciales =  obtenerCaracteristicasEspeciales(oActivo.getId());
+			procesarListaCaracteristicas(listCaracteristicasEspeciales);
 		}else{
 			mostrarMensajeError("POR FAVOR SELECCIONE UN REGISTRO DE LA LISTA DE ACTIVOS.");
 		}
@@ -277,6 +316,21 @@ public class RegistroActivosBackBean extends BaseBackBean implements Serializabl
 		this.setUbicacionId(null);
 		this.catalogoSecafSeleccionado=null;
 		this.caracteristicas.clear();
+	}
+	
+	private void procesarListaCaracteristicas(List<ActivosCaracteristicas> listaCaracteristicasEspeciales){
+		if(!listaCaracteristicasEspeciales.isEmpty()){
+			ActivosCaracteristicas oActivosCaractteristicas = listaCaracteristicasEspeciales.get(0);
+			String codigo = oActivosCaractteristicas.getCaracteristica().getCaracteristicaCod();
+			Catalogo oCatalogo=  oCatalogoService.obtieneCatalogoPorCodigo(codigo);
+			this.setCodigoTipoActivoEspecial(oCatalogo.getRefTipoCatalogo());
+			
+			listaCaracteristicasEspeciales.stream().forEach(caracteristica -> {
+				
+			});
+			
+		}
+		
 	}
 	
 	public void buscarBienes(){
@@ -404,84 +458,44 @@ public class RegistroActivosBackBean extends BaseBackBean implements Serializabl
 		this.codigoTipoActivoEspecial = codigoTipoActivoEspecial;
 	}
 
-	public String getCaracteristicaCalibre() {
+	public ActivosCaracteristicas getCaracteristicaCalibre() {
 		return caracteristicaCalibre;
 	}
 
-	public void setCaracteristicaCalibre(String caracteristicaCalibre) {
-		this.caracteristicaCalibre = caracteristicaCalibre;
-	}
-
-	public String getCaracteristicaNombreObraArte() {
+	public ActivosCaracteristicas getCaracteristicaNombreObraArte() {
 		return caracteristicaNombreObraArte;
 	}
 
-	public void setCaracteristicaNombreObraArte(String caracteristicaNombreObraArte) {
-		this.caracteristicaNombreObraArte = caracteristicaNombreObraArte;
-	}
-
-	public String getCaracteristicaNumeroMotor() {
+	public ActivosCaracteristicas getCaracteristicaNumeroMotor() {
 		return caracteristicaNumeroMotor;
 	}
 
-	public void setCaracteristicaNumeroMotor(String caracteristicaNumeroMotor) {
-		this.caracteristicaNumeroMotor = caracteristicaNumeroMotor;
-	}
-
-	public String getCaracteristicaNumeroChasis() {
+	public ActivosCaracteristicas getCaracteristicaNumeroChasis() {
 		return caracteristicaNumeroChasis;
 	}
 
-	public void setCaracteristicaNumeroChasis(String caracteristicaNumeroChasis) {
-		this.caracteristicaNumeroChasis = caracteristicaNumeroChasis;
-	}
-
-	public String getCaracteristicaNumeroCilindros() {
+	public ActivosCaracteristicas getCaracteristicaNumeroCilindros() {
 		return caracteristicaNumeroCilindros;
 	}
 
-	public void setCaracteristicaNumeroCilindros(String caracteristicaNumeroCilindros) {
-		this.caracteristicaNumeroCilindros = caracteristicaNumeroCilindros;
-	}
-
-	public String getCaracteristicaAnio() {
+	public ActivosCaracteristicas getCaracteristicaAnio() {
 		return caracteristicaAnio;
 	}
 
-	public void setCaracteristicaAnio(String caracteristicaAnio) {
-		this.caracteristicaAnio = caracteristicaAnio;
-	}
-
-	public String getCaracteristicaPlaca() {
+	public ActivosCaracteristicas getCaracteristicaPlaca() {
 		return caracteristicaPlaca;
 	}
 
-	public void setCaracteristicaPlaca(String caracteristicaPlaca) {
-		this.caracteristicaPlaca = caracteristicaPlaca;
-	}
-
-	public String getCaracteristicaNumeroPasajeros() {
+	public ActivosCaracteristicas getCaracteristicaNumeroPasajeros() {
 		return caracteristicaNumeroPasajeros;
 	}
 
-	public void setCaracteristicaNumeroPasajeros(String caracteristicaNumeroPasajeros) {
-		this.caracteristicaNumeroPasajeros = caracteristicaNumeroPasajeros;
-	}
-
-	public String getCaracteristicaCapacidadCarga() {
+	public ActivosCaracteristicas getCaracteristicaCapacidadCarga() {
 		return caracteristicaCapacidadCarga;
 	}
 
-	public void setCaracteristicaCapacidadCarga(String caracteristicaCapacidadCarga) {
-		this.caracteristicaCapacidadCarga = caracteristicaCapacidadCarga;
-	}
-
-	public String getCaracteristicaTipoComBustible() {
+	public ActivosCaracteristicas getCaracteristicaTipoComBustible() {
 		return caracteristicaTipoComBustible;
-	}
-
-	public void setCaracteristicaTipoComBustible(String caracteristicaTipoComBustible) {
-		this.caracteristicaTipoComBustible = caracteristicaTipoComBustible;
 	}
 
 	public boolean isSeleccionCaracteristicaArmaDeFuego() {

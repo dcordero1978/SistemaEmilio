@@ -3,10 +3,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ni.gob.inss</groupId>
-    <artifactId>sisinv</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>origami</artifactId>
+    <version>1.0</version>
     <packaging>war</packaging>
-    <name>sisinv</name>
+    <name>origami</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -15,14 +15,8 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <compiler.plugin.version>3.1</compiler.plugin.version>
         <war.plugin.version>2.4</war.plugin.version>
-        <war.name>sisinv</war.name>
-
-        <deploy.jboss.host>172.16.2.148</deploy.jboss.host>
-        <deploy.jboss.port>10199</deploy.jboss.port>
-        <deploy.jboss.user>jbossdesa</deploy.jboss.user>
-        <deploy.jboss.password>Temporal123*</deploy.jboss.password>
-        <backend.deployment-name>sisinv.war</backend.deployment-name>
-        <skipDeployment>false</skipDeployment>
+        <war.name>origami</war.name>
+        
     </properties>
 
     <dependencies>
@@ -148,13 +142,13 @@
     <profiles>
         <!-- Configuracion especifica para el ambiente de desarrollo, activado por defecto -->
         <profile>
-            <id>desarrollo</id>
+            <id>origami</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <war.name>sisinv-desarrollo</war.name>
-                <backend.deployment-name>sisinv-desarrollo.war</backend.deployment-name>
+                <war.name>origami-desarrollo</war.name>
+                <backend.deployment-name>origami-desarrollo.war</backend.deployment-name>
             </properties>
             <build>
                 <resources>
@@ -171,8 +165,8 @@
         <profile>
             <id>produccion</id>
             <properties>
-                <war.name>sisinv</war.name>
-                <backend.deployment-name>sisinv.war</backend.deployment-name>
+                <war.name>origami</war.name>
+                <backend.deployment-name>origami.war</backend.deployment-name>
             </properties>
             <build>
                 <resources>
@@ -313,7 +307,7 @@
                 	<hostname>localhost</hostname>
                 	<username>developer</username>
                 	<password>password</password>
-                	<filename>sisinv-desarrollo.war</filename>
+                	<filename>origami-desarrollo.war</filename>
                 </configuration>
             </plugin>
 

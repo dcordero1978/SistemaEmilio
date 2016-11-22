@@ -142,7 +142,7 @@
     <profiles>
         <!-- Configuracion especifica para el ambiente de desarrollo, activado por defecto -->
         <profile>
-            <id>origami</id>
+            <id>desarrollo</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>

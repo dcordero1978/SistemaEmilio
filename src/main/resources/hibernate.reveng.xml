@@ -7,7 +7,13 @@
 		<sql-type jdbc-type="VARCHAR" hibernate-type="String"></sql-type>
 		<sql-type jdbc-type="BOOLEAN" hibernate-type="Boolean"></sql-type>
 	</type-mapping>
-	<table-filter match-name="secaf" exclude="true"	match-schema="catalogo" />
-	<table-filter match-schema="inventario" match-name=".*"		exclude="true" />
-	<table-filter match-name="marcas_modelos" match-schema="catalogo" exclude="true"/>
+	<table-filter match-name="secaf" exclude="true"
+		match-schema="catalogo" />
+	<table-filter match-schema="inventario" match-name=".*"
+		exclude="true" />
+	<table-filter match-name="marcas_modelos" match-schema="catalogo"
+		exclude="true" />
+	<table-filter match-name="caracteristicas_hardware"
+		match-schema="catalogo">
+	</table-filter>
 </hibernate-reverse-engineering>

@@ -6,12 +6,60 @@
                 xmlns:pe="http://primefaces.org/ui/extensions"
                 template="/web/template/innerLayout.xhtml"
                 xmlns:mc="http://java.sun.com/jsf/composite/comps">
-
-
     <ui:param name="paramBackBean" value="#{caracteristicasHardwareBackBean}"/>
-
     <ui:define name="headerContent">
         Caracteristicas de Hardware.
     </ui:define>
-    
+    <ui:define name="content">
+		<div class="ContainerIndent">
+			<div class="Container50 Responsive">
+				<h:form id="formListaCarcteristicas" style="width: 99%;">
+					<p:panel styleClass="fondoPaneles">
+						<f:facet name="header">
+							<p:outputPanel style="display:block" styleClass="left">
+							</p:outputPanel>
+							<p:outputPanel style="display:block" styleClass="right">
+							</p:outputPanel>
+						</f:facet>
+						
+						<p:outputPanel style="tableClass">
+							<p:dataTable id="tablaCaracteristicas" 
+							 style="width:100%" 
+							 paginatorPosition="top"
+							 paginatorPosition="top"  
+							 scrollable="true" 
+							 scrollHeight="410"
+							 paginator="true" 
+							 emptyMessage="#{labelName.tableEmptyMessage}"
+                             rows="12"
+                             pageLinks="3"
+                             paginatorTemplate="#{configApplicationBean.paginatorTemplate}"
+                             currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}"> 
+								<p:column headerText="Descripción"></p:column>
+								<p:column headerText="Pasivo"></p:column>
+							</p:dataTable>
+						</p:outputPanel>
+					</p:panel>
+				</h:form>
+			</div>
+			<div class="Container50 Responsive">
+				<h:form id="datosCaracteristicaHardware">
+					<f:facet name="header">
+						<p:outputPanel style="display:block" styleClass="right">
+							<p:commandButton icon="fa fa-floppy-o" value="#{labelName.btnGuardar}" style="color:white;"/>
+							<p:commandButton icon="fa-times-circle-o" style="color:white;" value="#{labelName.btnCancelar}"/>
+						</p:outputPanel>
+					</f:facet>
+					<h:panelGrid style="width:100%" columns="2"  columnClasses="Wid20, Wid80">
+						<h:outputLabel for="descripcionCaracteristica" value="Descripción:" />
+						<h:inputText id="descripcionCaracteristica" style="width:90%" />
+						<h:outputLabel for="caracteristicaPadreId" value="Caracteristica Padre:" />
+						<h:selectOneMenu id="caracteristicaPadreId" style="width:90%" >
+							<f:selectItem itemLabel="Seleccione"  itemValue="#{null}"/>
+						</h:selectOneMenu>
+					</h:panelGrid>
+				</h:form>
+			</div>
+		</div>  
+    </ui:define>
 </ui:composition>

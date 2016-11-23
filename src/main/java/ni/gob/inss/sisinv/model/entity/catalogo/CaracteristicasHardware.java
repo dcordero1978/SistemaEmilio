@@ -15,10 +15,9 @@ public class CaracteristicasHardware extends EntityBase implements java.io.Seria
 
 	private static final long serialVersionUID = 1L;
 	private Integer id;
-	private Integer tipoCaracteristicaId;
-	private Integer caracteristicaId;
 	private String descripcion;
 	private boolean pasivo;
+	private Integer caracteristicaPadreId;
 	
 	@Id
 	@Column(name = "id", unique = true, nullable = false)
@@ -28,24 +27,6 @@ public class CaracteristicasHardware extends EntityBase implements java.io.Seria
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	@Column(name = "tipo_medida_id", nullable = false)
-	public Integer getTipoCaracteristicaId() {
-		return tipoCaracteristicaId;
-	}
-
-	public void setTipoCaracteristicaId(Integer tipoCaracteristicaId) {
-		this.tipoCaracteristicaId = tipoCaracteristicaId;
-	}
-
-	@Column(name = "medida_id", nullable = false)
-	public Integer getCaracteristicaId() {
-		return caracteristicaId;
-	}
-
-	public void setCaracteristicaId(Integer caracteristicaId) {
-		this.caracteristicaId = caracteristicaId;
 	}
 
 	@Column(name = "descripcion", nullable = false, length = 250)
@@ -64,6 +45,15 @@ public class CaracteristicasHardware extends EntityBase implements java.io.Seria
 
 	public void setPasivo(boolean pasivo) {
 		this.pasivo = pasivo;
+	}
+
+	@Column(name="caracteristica_padre_id")
+	public Integer getCaracteristicaPadreId() {
+		return caracteristicaPadreId;
+	}
+
+	public void setCaracteristicaPadreId(Integer caracteristicaPadreId) {
+		this.caracteristicaPadreId = caracteristicaPadreId;
 	}
 
 }

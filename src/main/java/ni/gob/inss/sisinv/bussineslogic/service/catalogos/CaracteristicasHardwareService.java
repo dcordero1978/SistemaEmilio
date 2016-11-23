@@ -7,4 +7,5 @@ import ni.gob.inss.sisinv.model.entity.catalogo.CaracteristicasHardware;
 
 public interface CaracteristicasHardwareService {
 	public List<CaracteristicasHardware> listaCaracteristicasHardwarePadre() throws EntityNotFoundException;
+	public List<CaracteristicasHardware> listaCaracteristicasPorDescripcion(String descripcion, Boolean pasivo) throws EntityNotFoundException;
 }

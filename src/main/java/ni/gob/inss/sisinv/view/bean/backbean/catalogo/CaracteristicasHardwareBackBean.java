@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
@@ -21,7 +22,10 @@ import ni.gob.inss.sisinv.model.entity.catalogo.CaracteristicasHardware;
 public class CaracteristicasHardwareBackBean extends BaseBackBean implements Serializable {
 
 	private Integer caracteristicaPadreId;
+	private CaracteristicasHardware oCaracteristicaHardwareSeleccionado;
+	private String filtroDescripcion;
 	private List<CaracteristicasHardware> listaCaracteristicasHardwarePadre = new ArrayList<CaracteristicasHardware>();
+	private List<CaracteristicasHardware> listaGeneralCaracteristicas = new ArrayList<CaracteristicasHardware>();
 	private static final long serialVersionUID = 1L;
 
 	@Autowired CaracteristicasHardwareService oCaracteristicasHardwareService;
@@ -34,6 +38,7 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 	public void cargarListas(){
 	 try {
 		this.listaCaracteristicasHardwarePadre = oCaracteristicasHardwareService.listaCaracteristicasHardwarePadre();
+		this.listaGeneralCaracteristicas = oCaracteristicasHardwareService.listaCaracteristicasPorDescripcion(this.getFiltroDescripcion(), null);
 	} catch (EntityNotFoundException e) {
 		mostrarMensajeError(this.getClass().getSimpleName(), "cagarListas", MessagesResults.ERROR_OBTENER_LISTA, e);
 		}
@@ -50,5 +55,26 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 	public void setCaracteristicaPadreId(Integer caracteristicaPadreId) {
 		this.caracteristicaPadreId = caracteristicaPadreId;
 	}
+
+	public List<CaracteristicasHardware> getListaGeneralCaracteristicas() {
+		return listaGeneralCaracteristicas;
+	}
+
+	public CaracteristicasHardware getoCaracteristicaHardwareSeleccionado() {
+		return oCaracteristicaHardwareSeleccionado;
+	}
+
+	public void setoCaracteristicaHardwareSeleccionado(CaracteristicasHardware oCaracteristicaHardwareSeleccionado) {
+		this.oCaracteristicaHardwareSeleccionado = oCaracteristicaHardwareSeleccionado;
+	}
+
+	public String getFiltroDescripcion() {
+		return StringUtils.defaultString(filtroDescripcion);
+	}
+
+	public void setFiltroDescripcion(String filtroDescripcion) {
+		this.filtroDescripcion = filtroDescripcion;
+	}
+	
 	
 }

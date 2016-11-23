@@ -29,5 +29,17 @@ public class CaracteristicasHardwareServiceImpl implements CaracteristicasHardwa
 		oSearch.addSort(Sort.asc("descripcion"));
 		return oCaracteristicasHardwareDao.search(oSearch);
 	}
-	
+
+	@Transactional
+	@Override
+	public List<CaracteristicasHardware> listaCaracteristicasPorDescripcion(String descripcion, Boolean pasivo)
+			throws EntityNotFoundException {
+		Search oSearch = new Search();
+		oSearch.addFilter(Filter.ilike("descripcion", "%"+descripcion+"%"));
+		oSearch.addFilter(Filter.equal("pasivo", pasivo));
+		oSearch.addSort(Sort.asc("descripcion"));
+		return oCaracteristicasHardwareDao.search(oSearch);
+	}
+
+
 }

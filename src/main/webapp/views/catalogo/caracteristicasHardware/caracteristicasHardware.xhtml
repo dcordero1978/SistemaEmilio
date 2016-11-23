@@ -18,7 +18,7 @@
 						<f:facet name="header">
 							<p:outputPanel style="display:block" styleClass="left">
 								<h:panelGrid style="width:100%" columns="2">
-									<p:inputText id="filtroDescripcion" style="width:90%" placeholder="#{labelName.placeholderBuscar}"/>
+									<p:inputText id="filtroDescripcion" style="width:90%" placeholder="#{labelName.placeholderBuscar}" value="#{caracteristicasHardwareBackBean.filtroDescripcion}"/>
 									<p:commandButton value="#{labelName.btnBuscar}" id="btnBuscar" icon="fa fa-search" style="color:white;"/>
 								</h:panelGrid>
 							</p:outputPanel>
@@ -29,19 +29,28 @@
 						</f:facet>
 						
 						<p:outputPanel style="tableClass">
-							<p:dataTable id="tablaCaracteristicas" 
+							<p:dataTable id="tablaCaracteristicas"
+							value="#{caracteristicasHardwareBackBean.listaGeneralCaracteristicas}"
+							var="oCaracteristica"
+							selection="#{caracteristicasHardwareBackBean.oCaracteristicaHardwareSeleccionado}"
+							selectionMode="single"
+							rowKey="#{oCaracteristica.id}"
 							 style="width:100%" 
 							 paginatorPosition="top"
 							 scrollable="true" 
-							 scrollHeight="410"
+							 scrollHeight="400"
 							 paginator="true" 
 							 emptyMessage="#{labelName.tableEmptyMessage}"
                              rows="12"
                              pageLinks="3"
                              paginatorTemplate="#{configApplicationBean.paginatorTemplate}"
                              currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}"> 
-								<p:column headerText="Descripción"></p:column>
-								<p:column headerText="Pasivo"></p:column>
+								<p:column headerText="Descripción">
+									<h:outputText value="#{oCaracteristica.descripcion}"/>
+								</p:column>
+								<p:column headerText="Pasivo" style="text-align:center;">
+									<p:selectBooleanCheckbox value="#{oCaracteristica.pasivo}" disabled="true" styleClass="ui-linus-enabled"/>
+								</p:column>
 							</p:dataTable>
 						</p:outputPanel>
 					</p:panel>

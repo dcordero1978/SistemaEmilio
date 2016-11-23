@@ -21,8 +21,8 @@ import ni.gob.inss.sisinv.model.entity.catalogo.CaracteristicasHardware;
 @Scope("view")
 public class CaracteristicasHardwareBackBean extends BaseBackBean implements Serializable {
 
-	private Integer caracteristicaPadreId;
 	private CaracteristicasHardware oCaracteristicaHardwareSeleccionado;
+	private CaracteristicasHardware oCaracteristica;
 	private String filtroDescripcion;
 	private List<CaracteristicasHardware> listaCaracteristicasHardwarePadre = new ArrayList<CaracteristicasHardware>();
 	private List<CaracteristicasHardware> listaGeneralCaracteristicas = new ArrayList<CaracteristicasHardware>();
@@ -32,6 +32,7 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 	
 	@PostConstruct
 	public void init(){
+		this.oCaracteristica = new CaracteristicasHardware();
 		this.cargarListas();
 	}
 	
@@ -47,17 +48,21 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 	public void buscar() throws EntityNotFoundException{
 		this.listaGeneralCaracteristicas = oCaracteristicasHardwareService.listaCaracteristicasPorDescripcion(this.getFiltroDescripcion(), null);
 	}
-
+	
+	public void agregar(){
+		this.oCaracteristica = new CaracteristicasHardware();
+	}
+	
+	public void editar(){
+		if(this.oCaracteristicaHardwareSeleccionado !=null){
+			this.oCaracteristica = this.oCaracteristicaHardwareSeleccionado;
+		}else{
+			mostrarMensajeInfo(MessagesResults.SELECCIONE_UN_REGISTRO);
+		}
+	}
+	
 	public List<CaracteristicasHardware> getListaCaracteristicasHardwarePadre() {
 		return listaCaracteristicasHardwarePadre;
-	}
-
-	public Integer getCaracteristicaPadreId() {
-		return caracteristicaPadreId;
-	}
-
-	public void setCaracteristicaPadreId(Integer caracteristicaPadreId) {
-		this.caracteristicaPadreId = caracteristicaPadreId;
 	}
 
 	public List<CaracteristicasHardware> getListaGeneralCaracteristicas() {
@@ -79,6 +84,13 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 	public void setFiltroDescripcion(String filtroDescripcion) {
 		this.filtroDescripcion = filtroDescripcion;
 	}
-	
+
+	public CaracteristicasHardware getoCaracteristica() {
+		return oCaracteristica;
+	}
+
+	public void setoCaracteristica(CaracteristicasHardware oCaracteristica) {
+		this.oCaracteristica = oCaracteristica;
+	}
 	
 }

@@ -1,0 +1,94 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                template="/web/template/innerLayout.xhtml"
+                xmlns:mc="http://java.sun.com/jsf/composite/reusables">
+
+	<ui:param name="paramBackBean" value="#{programacionMantenimientoBackBean}"/>
+	<ui:define name="headerContent">
+		Programación de Mantenimientos Preventivos
+	</ui:define>
+	<ui:define name="content">
+		<div id="ContainerIndent">
+			<div class="Container100 Responsive">
+				<h:form id="formSeguimientoActivos" style="width: 100%;">
+					<div class="Container100 Responsive">
+						<p:panel  styleClass="fondoPaneles" style="height: 590px;">
+							<f:facet name="header">
+								<p:outputPanel style="display:block" styleClass="right">
+									<p:commandButton widgetVar="btnGuardar"  icon="ui-icon-disk" value="#{labelName.btnGuardar}" onstart="PF('btnGuardar').disable();" oncomplete="PF('btnGuardar').enable();" />
+									<p:commandButton resetValues="true" ajax="true" value="#{labelName.btnCancelar}" icon="ui-icon-cancel" />	
+								</p:outputPanel>
+							</f:facet>
+							<h:panelGrid columnClasses="value">
+								<p:schedule id="programacionMto" styleClass="colorschedule" value="#{programacionMantenimientoBackBean.eventModel}" locale="tr">
+									<p:ajax event="dateSelect" listener="#{programacionMantenimientoBackBean.onDateSelect}" update="DetailsMto" oncomplete="PF('winProgMto').show();" />
+						            <p:ajax event="eventSelect" listener="#{programacionMantenimientoBackBean.onEventSelect}" update="DetailsMto" oncomplete="PF('winProgMto').show();" />
+						            <p:ajax event="eventMove" listener="#{programacionMantenimientoBackBean.onEventMove}" />
+						            <p:ajax event="eventResize" listener="#{programacionMantenimientoBackBean.onEventResize}" />
+								</p:schedule>
+							</h:panelGrid>
+							
+							
+							<p:dialog widgetVar="winProgMto" header="Datos del Mantenimiento" showEffect="clip" hideEffect="clip">
+						        <h:panelGrid id="DetailsMto" columns="2">
+						            <p:outputLabel for="asunto" value="Asunto:" />
+						            <p:inputText id="asunto"  required="true" style="width:250px" value="#{programacionMantenimientoBackBean.asunto}"/>
+						            
+						            <p:outputLabel for="delegacion" value="Delegación:" />
+						            <p:selectOneMenu id="delegacion" label="Delegación"  value="#{programacionMantenimientoBackBean.delegacionId}" effect="fold" style="width:250px" required="true">
+										<f:selectItem itemValue="#{null}" itemLabel="Seleccione una Delegación"/>
+										<f:selectItems  var="oDelegacion" value="#{programacionMantenimientoBackBean.listaDelegaciones}" itemLabel="#{oDelegacion.descripcion}" itemValue="#{oDelegacion.id}"/>									
+									</p:selectOneMenu>
+						 
+						            <p:outputLabel for="desde" value="Fecha Inicio:" />
+						            <p:calendar id="desde" effect="fold" pattern="dd/MM/yyyy" mask="true" required="true" value="#{programacionMantenimientoBackBean.fechaInicio}"/>
+						 
+						            <p:outputLabel for="hasta" value="Fecha Fin:" />
+						            <p:calendar id="hasta" effect="fold" pattern="dd/MM/yyyy" mask="true" required="true" value="#{programacionMantenimientoBackBean.fechaFin}"/>
+						
+						            <p:commandButton type="reset" value="Cancelar" />
+						            <p:commandButton id="btnGuardar" value="Guardar" icon="ui-icon-disk" onstart="PF('btnGuardar').disable();" oncomplete="PF('btnGuardar').enable();" action="#{programacionMantenimientoBackBean.guardar}"/>
+						        </h:panelGrid>
+						    </p:dialog>  
+						      
+						</p:panel>
+					
+					</div>
+				</h:form>
+				
+				
+			</div>
+		</div>
+		
+	<script type="text/javascript">
+    	PrimeFaces.locales['tr'] = {
+        currentText: 'Día Actual',
+        monthNames: ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+        monthNamesShort: ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
+        dayNames: ['Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sábado'],
+        dayNamesShort: ['Dom','Lun','Mar','Mie','Jue','Vie','Sab'],
+        dayNamesMin: ['Dom','Lun','Mar','Mie','Jue','Vie','Sab'],
+        firstDay: 1,
+        isRTL: false,
+        showMonthAfterYear: false,
+        month: 'Mes',
+        week: 'Semana',
+        day: 'Día'
+	    };
+	</script>
+
+	<style type="text/css">
+   	.value {
+        width: 1000px;
+    }
+    .colorschedule .ui-state-highlight {
+        background: yellow !important;
+    }
+	</style>
+
+	</ui:define>
+</ui:composition>

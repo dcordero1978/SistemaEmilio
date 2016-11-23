@@ -19,7 +19,7 @@
 							<p:outputPanel style="display:block" styleClass="left">
 								<h:panelGrid style="width:100%" columns="2">
 									<p:inputText id="filtroDescripcion" style="width:90%" placeholder="#{labelName.placeholderBuscar}" value="#{caracteristicasHardwareBackBean.filtroDescripcion}"/>
-									<p:commandButton value="#{labelName.btnBuscar}" id="btnBuscar" icon="fa fa-search" style="color:white;"/>
+									<p:commandButton value="#{labelName.btnBuscar}" id="btnBuscar" icon="fa fa-search" style="color:white;" action="#{caracteristicasHardwareBackBean.buscar}" update="tablaCaracteristicas"/>
 								</h:panelGrid>
 							</p:outputPanel>
 							<p:outputPanel style="display:block" styleClass="right">

@@ -7,6 +7,6 @@ import ni.gob.inss.sisinv.model.dao.catalogos.CaracteristicasHardwareDAO;
 import ni.gob.inss.sisinv.model.entity.catalogo.CaracteristicasHardware;
 
 @Repository
-public class CaracteristicasHardwareDAOImpl extends BaseGenericDAOImpl<Integer, CaracteristicasHardware> implements CaracteristicasHardwareDAO  {
+public class CaracteristicasHardwareDAOImpl extends BaseGenericDAOImpl<CaracteristicasHardware,Integer> implements CaracteristicasHardwareDAO  {
 
 }

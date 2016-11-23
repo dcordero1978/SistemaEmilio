@@ -1,5 +1,10 @@
 package ni.gob.inss.sisinv.bussineslogic.service.catalogos;
 
-public interface CaracteristicasHardwareService {
+import java.util.List;
 
+import ni.gob.inss.barista.model.dao.EntityNotFoundException;
+import ni.gob.inss.sisinv.model.entity.catalogo.CaracteristicasHardware;
+
+public interface CaracteristicasHardwareService {
+	public List<CaracteristicasHardware> listaCaracteristicasHardwarePadre() throws EntityNotFoundException;
 }

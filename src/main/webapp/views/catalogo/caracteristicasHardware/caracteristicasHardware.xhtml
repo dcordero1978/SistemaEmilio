@@ -17,8 +17,14 @@
 					<p:panel styleClass="fondoPaneles">
 						<f:facet name="header">
 							<p:outputPanel style="display:block" styleClass="left">
+								<h:panelGrid style="width:100%" columns="2">
+									<p:inputText id="filtroDescripcion" style="width:90%" placeholder="#{labelName.placeholderBuscar}"/>
+									<p:commandButton value="#{labelName.btnBuscar}" id="btnBuscar" icon="fa fa-search" style="color:white;"/>
+								</h:panelGrid>
 							</p:outputPanel>
 							<p:outputPanel style="display:block" styleClass="right">
+								<p:commandButton value="#{labelName.btnAgregar}" id="btnAgregar" icon="fa fa-plus-circle" style="color:white"/>
+								<p:commandButton value="#{labelName.btnEditar}" id="btnEditar" icon="fa fa-pencil" style="color:white;"/>
 							</p:outputPanel>
 						</f:facet>
 						
@@ -26,7 +32,6 @@
 							<p:dataTable id="tablaCaracteristicas" 
 							 style="width:100%" 
 							 paginatorPosition="top"
-							 paginatorPosition="top"  
 							 scrollable="true" 
 							 scrollHeight="410"
 							 paginator="true" 
@@ -43,21 +48,24 @@
 				</h:form>
 			</div>
 			<div class="Container50 Responsive">
-				<h:form id="datosCaracteristicaHardware">
-					<f:facet name="header">
-						<p:outputPanel style="display:block" styleClass="right">
-							<p:commandButton icon="fa fa-floppy-o" value="#{labelName.btnGuardar}" style="color:white;"/>
-							<p:commandButton icon="fa-times-circle-o" style="color:white;" value="#{labelName.btnCancelar}"/>
-						</p:outputPanel>
-					</f:facet>
-					<h:panelGrid style="width:100%" columns="2"  columnClasses="Wid20, Wid80">
-						<h:outputLabel for="descripcionCaracteristica" value="Descripción:" />
-						<h:inputText id="descripcionCaracteristica" style="width:90%" />
-						<h:outputLabel for="caracteristicaPadreId" value="Caracteristica Padre:" />
-						<h:selectOneMenu id="caracteristicaPadreId" style="width:90%" >
-							<f:selectItem itemLabel="Seleccione"  itemValue="#{null}"/>
-						</h:selectOneMenu>
-					</h:panelGrid>
+				<h:form id="datosCaracteristicaHardware" style="width:99%">
+					<p:panel styleClass="fondoPaneles" style="height:480px;"> 
+						<f:facet name="header">
+							<p:outputPanel style="display:block" styleClass="right">
+								<p:commandButton icon="fa fa-floppy-o" value="#{labelName.btnGuardar}" style="color:white;"/>
+								<p:commandButton icon="fa fa-times-circle-o" style="color:white;" value="#{labelName.btnCancelar}"/>
+							</p:outputPanel>
+						</f:facet>
+						<h:panelGrid style="width:100%" columns="2"  columnClasses="Wid20, Wid80">
+							<h:outputLabel for="descripcionCaracteristica" value="Descripción:" />
+							<p:inputText id="descripcionCaracteristica" style="width:90%" required="true"/>
+							<h:outputLabel for="caracteristicaPadreId" value="Caracteristica Padre:" />
+							<p:selectOneMenu id="caracteristicaPadreId" style="width:90%"  value="#{caracteristicasHardwareBackBean.caracteristicaPadreId}" filter="true" filterMatchMode="contains">
+								<f:selectItem itemLabel="Seleccione"  itemValue="#{null}"/>
+								<f:selectItems value="#{caracteristicasHardwareBackBean.listaCaracteristicasHardwarePadre}" var="oCaracteristicaPadre" itemLabel="#{oCaracteristicaPadre.descripcion}" itemValue="#{oCaracteristicaPadre.id}"/>
+							</p:selectOneMenu>
+						</h:panelGrid>
+					</p:panel>
 				</h:form>
 			</div>
 		</div>  

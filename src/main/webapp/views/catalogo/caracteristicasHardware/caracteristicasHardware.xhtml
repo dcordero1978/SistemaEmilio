@@ -65,8 +65,8 @@
 								<h:outputLabel value="ID: #{caracteristicasHardwareBackBean.oCaracteristica.id}" rendered="#{caracteristicasHardwareBackBean.oCaracteristica.id != null}"/>
 							</p:outputPanel>
 							<p:outputPanel style="display:block" styleClass="right">
-								<p:commandButton icon="fa fa-floppy-o" value="#{labelName.btnGuardar}" style="color:white;"/>
-								<p:commandButton icon="fa fa-times-circle-o" style="color:white;" value="#{labelName.btnCancelar}"/>
+								<p:commandButton icon="fa fa-floppy-o" value="#{labelName.btnGuardar}" action="#{caracteristicasHardwareBackBean.guardarOActualizar}" style="color:white;" update=":formListaCarcteristicas, datosCaracteristicaHardware"/>
+								<p:commandButton icon="fa fa-times-circle-o" style="color:white;" value="#{labelName.btnCancelar}" action="#{caracteristicasHardwareBackBean.agregar}" update="datosCaracteristicaHardware"/>
 							</p:outputPanel>
 						</f:facet>
 						<h:panelGrid style="width:100%" columns="2"  columnClasses="Wid20, Wid80">
@@ -77,6 +77,8 @@
 								<f:selectItem itemLabel="Seleccione"  itemValue="#{null}"/>
 								<f:selectItems value="#{caracteristicasHardwareBackBean.listaCaracteristicasHardwarePadre}" var="oCaracteristicaPadre" itemLabel="#{oCaracteristicaPadre.descripcion}" itemValue="#{oCaracteristicaPadre.id}"/>
 							</p:selectOneMenu>
+							<h:outputLabel for="pasivo" value="Pasivo:" rendered="#{caracteristicasHardwareBackBean.oCaracteristica.id != null}"/>
+							<p:selectBooleanCheckbox id="pasivo" value="#{caracteristicasHardwareBackBean.oCaracteristica.pasivo}" rendered="#{caracteristicasHardwareBackBean.oCaracteristica.id != null}"/>
 						</h:panelGrid>
 					</p:panel>
 				</h:form>

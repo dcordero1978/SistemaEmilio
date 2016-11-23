@@ -1,7 +1,10 @@
 package ni.gob.inss.sisinv.model.entity.catalogo;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import ni.gob.inss.barista.model.entity.EntityBase;
@@ -11,6 +14,7 @@ import ni.gob.inss.barista.model.entity.EntityBase;
  */
 @Entity
 @Table(name = "caracteristicas_hardware", schema = "catalogo")
+@SequenceGenerator(name="CaracateristicasHardwareSerial",  allocationSize=1, sequenceName=" catalogo.caracteristicas_hardware_id_seq")
 public class CaracteristicasHardware extends EntityBase implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -21,6 +25,7 @@ public class CaracteristicasHardware extends EntityBase implements java.io.Seria
 	
 	@Id
 	@Column(name = "id", unique = true, nullable = false)
+	@GeneratedValue(generator="CaracateristicasHardwareSerial", strategy=GenerationType.SEQUENCE)
 	public Integer getId() {
 		return this.id;
 	}

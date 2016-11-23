@@ -10,6 +10,8 @@ import com.googlecode.genericdao.search.Filter;
 import com.googlecode.genericdao.search.Search;
 import com.googlecode.genericdao.search.Sort;
 
+import ni.gob.inss.barista.businesslogic.service.BusinessException;
+import ni.gob.inss.barista.model.dao.DAOException;
 import ni.gob.inss.barista.model.dao.EntityNotFoundException;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.CaracteristicasHardwareService;
 import ni.gob.inss.sisinv.model.dao.catalogos.CaracteristicasHardwareDAO;
@@ -39,6 +41,19 @@ public class CaracteristicasHardwareServiceImpl implements CaracteristicasHardwa
 		oSearch.addFilter(Filter.equal("pasivo", pasivo));
 		oSearch.addSort(Sort.asc("descripcion"));
 		return oCaracteristicasHardwareDao.search(oSearch);
+	}
+
+	@Transactional
+	@Override
+	public void guardar(CaracteristicasHardware oCaracteristicaHardware) throws BusinessException, DAOException {
+		oCaracteristicasHardwareDao.saveUpper(oCaracteristicaHardware);
+	}
+
+	@Transactional
+	@Override
+	public void actualizar(CaracteristicasHardware oCaracteristicaHardware) throws BusinessException, DAOException {
+		oCaracteristicasHardwareDao.updateUpper(oCaracteristicaHardware);
+		
 	}
 
 

@@ -11,6 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
+import ni.gob.inss.barista.businesslogic.service.BusinessException;
+import ni.gob.inss.barista.model.dao.DAOException;
 import ni.gob.inss.barista.model.dao.EntityNotFoundException;
 import ni.gob.inss.barista.view.bean.backbean.BaseBackBean;
 import ni.gob.inss.barista.view.utils.web.MessagesResults;
@@ -34,6 +36,35 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 	public void init(){
 		this.oCaracteristica = new CaracteristicasHardware();
 		this.cargarListas();
+	}
+	
+	public void guardarOActualizar(){
+		oCaracteristica.setCreadoEl(this.getTimeNow());
+		oCaracteristica.setCreadoEnIp(this.getRemoteIp());
+		oCaracteristica.setCreadoPor(this.getUsuarioActual().getId());
+		if(oCaracteristica.getId() == null){
+			guardar();
+		}else{
+			actualizar();
+		}
+	}
+	
+	public void guardar(){
+		try {
+			oCaracteristicasHardwareService.guardar(oCaracteristica);
+			mostrarMensajeInfo(MessagesResults.EXITO_GUARDAR);
+		} catch (BusinessException | DAOException e) {
+			mostrarMensajeError(this.getClass().getSimpleName(), "guardar", MessagesResults.ERROR_GUARDAR, e);
+		}
+	}
+	
+	public void actualizar(){
+		try {
+			oCaracteristicasHardwareService.actualizar(oCaracteristica);
+			mostrarMensajeInfo(MessagesResults.EXITO_MODIFICAR);
+		} catch (BusinessException | DAOException e) {
+			mostrarMensajeError(this.getClass().getSimpleName(), "Actualizar", MessagesResults.ERROR_MODIFICAR, e);
+		}
 	}
 	
 	public void cargarListas(){

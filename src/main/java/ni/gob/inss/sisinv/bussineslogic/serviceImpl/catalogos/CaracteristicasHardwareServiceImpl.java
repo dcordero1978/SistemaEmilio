@@ -56,5 +56,13 @@ public class CaracteristicasHardwareServiceImpl implements CaracteristicasHardwa
 		
 	}
 
+	@Transactional
+	@Override
+	public List<CaracteristicasHardware> listaCaracteristicasHardwarePorPadreId(Integer padreId) throws EntityNotFoundException {
+		Search oSearch = new Search();
+		oSearch.addFilter(Filter.equal("caracteristicaPadreId", padreId));
+		return oCaracteristicasHardwareDao.search(oSearch);
+	}
+
 
 }

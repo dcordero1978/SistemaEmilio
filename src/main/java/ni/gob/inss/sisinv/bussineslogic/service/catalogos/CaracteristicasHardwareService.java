@@ -12,4 +12,6 @@ public interface CaracteristicasHardwareService {
 	public List<CaracteristicasHardware> listaCaracteristicasPorDescripcion(String descripcion, Boolean pasivo) throws EntityNotFoundException;
 	public void guardar(CaracteristicasHardware oCaracteristicaHardware) throws BusinessException, DAOException;
 	public void actualizar(CaracteristicasHardware oCaracteristicaHardware) throws BusinessException, DAOException;
+	List<CaracteristicasHardware> listaCaracteristicasHardwarePorPadreId(Integer padreId)
+			throws EntityNotFoundException;
 }

@@ -43,6 +43,10 @@ public class ProgramacionMantenimientoBackBean extends BaseBackBean implements S
     private Date fechaInicio;
     private Date fechaFin;
     private String asunto;
+    
+    private Date fechaIniciotxt;
+    private Date fechaFintxt;
+    private String asuntotxt;
    
     
 	
@@ -75,8 +79,9 @@ public class ProgramacionMantenimientoBackBean extends BaseBackBean implements S
 	
 	public void cargarMantenimientosProgramados(){
 		this.listaMtoProgramado=oMantenimientosService.buscar();
+		eventModel.clear();
 		this.listaMtoProgramado.forEach(resultado->{
-			eventModel.addEvent(new DefaultScheduleEvent(resultado.getAsunto(), resultado.getFechaInicio(),resultado.getFechaFin()));
+			this.getEventModel().addEvent(new DefaultScheduleEvent(resultado.getAsunto(), resultado.getFechaInicio(),resultado.getFechaFin()));
 		});
 	}
 	
@@ -89,23 +94,28 @@ public class ProgramacionMantenimientoBackBean extends BaseBackBean implements S
 	
 	public void guardar(){
 		try{
-			ProgramacionMantenimiento oProgramacionMantenimiento = new ProgramacionMantenimiento();
-			oProgramacionMantenimiento.setDelegacion_Id(delegacionId);
-			oProgramacionMantenimiento.setAsunto(asunto);
-			oProgramacionMantenimiento.setFechaInicio(this.getFechaInicio());
-			oProgramacionMantenimiento.setFechaFin(this.getFechaFin());
-			oProgramacionMantenimiento.setEstadoMto(1000);
-			oProgramacionMantenimiento.setPasivo(false);
-			oProgramacionMantenimiento.setCreadoEl(this.getTimeNow());
-			oProgramacionMantenimiento.setCreadoEnIp(this.getRemoteIp());
-			oProgramacionMantenimiento.setCreadoPor(this.getUsuarioActual().getId());
-			oProgramacionMantenimiento.setEntidadId(this.getEntidadActual().getId());
-			
-			oMantenimientosService.guardarProgramacion(oProgramacionMantenimiento);
-			RequestContext.getCurrentInstance().execute("PF('winProgMto').hide()");
-			mostrarMensajeInfo(MessagesResults.EXITO_GUARDAR);
-			limpiarVentanaMto();
-			cargarMantenimientosProgramados();
+			if(this.getDelegacionId()==null){
+				mostrarMensajeError("Debe seleccionar una delegacion");
+				RequestContext.getCurrentInstance().execute("PF('winProgMto').show()");
+			}else{
+				ProgramacionMantenimiento oProgramacionMantenimiento = new ProgramacionMantenimiento();
+				oProgramacionMantenimiento.setDelegacion_Id(delegacionId);
+				oProgramacionMantenimiento.setAsunto(asunto);
+				oProgramacionMantenimiento.setFechaInicio(this.getFechaInicio());
+				oProgramacionMantenimiento.setFechaFin(this.getFechaFin());
+				oProgramacionMantenimiento.setEstadoMto(1000);
+				oProgramacionMantenimiento.setPasivo(false);
+				oProgramacionMantenimiento.setCreadoEl(this.getTimeNow());
+				oProgramacionMantenimiento.setCreadoEnIp(this.getRemoteIp());
+				oProgramacionMantenimiento.setCreadoPor(this.getUsuarioActual().getId());
+				oProgramacionMantenimiento.setEntidadId(this.getEntidadActual().getId());
+				
+				oMantenimientosService.guardarProgramacion(oProgramacionMantenimiento);
+				RequestContext.getCurrentInstance().execute("PF('winProgMto').hide()");
+				mostrarMensajeInfo(MessagesResults.EXITO_GUARDAR);
+				limpiarVentanaMto();
+				cargarMantenimientosProgramados();
+			}
 			
 		} catch (DAOException e) {
 			mostrarMensajeError(MessagesResults.ERROR_GUARDAR);
@@ -132,11 +142,15 @@ public class ProgramacionMantenimientoBackBean extends BaseBackBean implements S
 	}
 	
 	public void onEventSelect(SelectEvent selectEvent) {
-        event = (ScheduleEvent) selectEvent.getObject();
+		 event = (ScheduleEvent) selectEvent.getObject();
+		 this.setAsuntotxt(event.getTitle());
+		 this.setFechaIniciotxt(event.getStartDate());
+		 this.setFechaFintxt(event.getEndDate());
     }
      
     public void onDateSelect(SelectEvent selectEvent) {
-        event = new DefaultScheduleEvent();
+    	 this.setFechaInicio((Date) selectEvent.getObject());
+    	 this.setFechaFin((Date) selectEvent.getObject());
     }
      
     
@@ -215,5 +229,37 @@ public class ProgramacionMantenimientoBackBean extends BaseBackBean implements S
 	public void setListaMtoProgramado(List<ProgramacionMantenimiento> listaMtoProgramado) {
 		this.listaMtoProgramado = listaMtoProgramado;
 	}
+
+
+	public Date getFechaIniciotxt() {
+		return fechaIniciotxt;
+	}
+
+
+	public void setFechaIniciotxt(Date fechaIniciotxt) {
+		this.fechaIniciotxt = fechaIniciotxt;
+	}
+
+
+	public Date getFechaFintxt() {
+		return fechaFintxt;
+	}
+
+
+	public void setFechaFintxt(Date fechaFintxt) {
+		this.fechaFintxt = fechaFintxt;
+	}
+
+
+	public String getAsuntotxt() {
+		return asuntotxt;
+	}
+
+
+	public void setAsuntotxt(String asuntotxt) {
+		this.asuntotxt = asuntotxt;
+	}
+	
+	
 
 }

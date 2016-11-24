@@ -15,19 +15,13 @@
 		<div id="ContainerIndent">
 			<div class="Container100 Responsive">
 				<h:form id="formSeguimientoActivos" style="width: 100%;">
-					<div class="Container100 Responsive">
-						<p:panel  styleClass="fondoPaneles" style="height: 590px;">
-							<f:facet name="header">
-								<p:outputPanel style="display:block" styleClass="right">
-									<p:commandButton widgetVar="btnGuardar"  icon="ui-icon-disk" value="#{labelName.btnGuardar}" onstart="PF('btnGuardar').disable();" oncomplete="PF('btnGuardar').enable();" />
-									<p:commandButton resetValues="true" ajax="true" value="#{labelName.btnCancelar}" icon="ui-icon-cancel" />	
-								</p:outputPanel>
-							</f:facet>
+					<div class="Container50 Responsive">
+						<p:panel  styleClass="fondoPaneles" >
 							<h:panelGrid columnClasses="value">
-								<p:schedule id="programacionMto" styleClass="colorschedule" value="#{programacionMantenimientoBackBean.eventModel}" locale="tr">
+								<p:schedule timeZone="CST" id="programacionMto" styleClass="colorschedule" value="#{programacionMantenimientoBackBean.eventModel}" locale="tr" >
 									<p:ajax event="dateSelect" listener="#{programacionMantenimientoBackBean.onDateSelect}" update="DetailsMto" oncomplete="PF('winProgMto').show();" />
-						            <p:ajax event="eventSelect" listener="#{programacionMantenimientoBackBean.onEventSelect}" update="DetailsMto" oncomplete="PF('winProgMto').show();" />
-						            <p:ajax event="eventMove" listener="#{programacionMantenimientoBackBean.onEventMove}" />
+						            <p:ajax event="eventSelect" value="#{scheduleView.event.startDate}" listener="#{programacionMantenimientoBackBean.onEventSelect}" update="DetMantenimiento" />
+						            <p:ajax event="eventMove" value="#{scheduleView.event.endDate}" listener="#{programacionMantenimientoBackBean.onEventMove}" />
 						            <p:ajax event="eventResize" listener="#{programacionMantenimientoBackBean.onEventResize}" />
 								</p:schedule>
 							</h:panelGrid>
@@ -39,24 +33,41 @@
 						            <p:inputText id="asunto"  required="true" style="width:250px" value="#{programacionMantenimientoBackBean.asunto}"/>
 						            
 						            <p:outputLabel for="delegacion" value="Delegación:" />
-						            <p:selectOneMenu id="delegacion" label="Delegación"  value="#{programacionMantenimientoBackBean.delegacionId}" effect="fold" style="width:250px" required="true">
+						            <p:selectOneMenu id="delegacion" label="Delegación"  value="#{programacionMantenimientoBackBean.delegacionId}" effect="fold" style="width:250px" >
 										<f:selectItem itemValue="#{null}" itemLabel="Seleccione una Delegación"/>
 										<f:selectItems  var="oDelegacion" value="#{programacionMantenimientoBackBean.listaDelegaciones}" itemLabel="#{oDelegacion.descripcion}" itemValue="#{oDelegacion.id}"/>									
 									</p:selectOneMenu>
 						 
 						            <p:outputLabel for="desde" value="Fecha Inicio:" />
-						            <p:calendar id="desde" effect="fold" pattern="dd/MM/yyyy" mask="true" required="true" value="#{programacionMantenimientoBackBean.fechaInicio}"/>
+						            <p:calendar id="desde" effect="fold"  pattern="dd/MM/yyyy" mask="true" required="true" value="#{programacionMantenimientoBackBean.fechaInicio}"/>
 						 
 						            <p:outputLabel for="hasta" value="Fecha Fin:" />
-						            <p:calendar id="hasta" effect="fold" pattern="dd/MM/yyyy" mask="true" required="true" value="#{programacionMantenimientoBackBean.fechaFin}"/>
+						            <p:calendar id="hasta" effect="fold"  pattern="dd/MM/yyyy HH" mask="true" required="true" value="#{programacionMantenimientoBackBean.fechaFin}"/>
 						
 						            <p:commandButton type="reset" value="Cancelar" />
-						            <p:commandButton id="btnGuardar" value="Guardar" icon="ui-icon-disk" onstart="PF('btnGuardar').disable();" oncomplete="PF('btnGuardar').enable();" action="#{programacionMantenimientoBackBean.guardar}"/>
+						            <p:commandButton id="btnGuardar" value="Guardar" icon="ui-icon-disk" onstart="PF('btnGuardar').disable();" oncomplete="PF('btnGuardar').enable();" action="#{programacionMantenimientoBackBean.guardar}" ajax="true"/>
 						        </h:panelGrid>
 						    </p:dialog>  
 						      
 						</p:panel>
 					
+					</div>
+					<div class="Container50 Responsive">
+						<p:panel  styleClass="fondoPaneles"  style="height:755px;">
+							<f:facet name="header">
+								<h:outputText value="DETALLES DE MANTENIMIENTO" />
+							</f:facet>
+							 <p:panel id="paneldatos" styleClass="fondoPaneles" >
+							 <h:panelGrid id="DetMantenimiento" columns="2">
+							 	 <p:outputLabel for="asuntotxt" value="Asunto:" />
+						         <p:inputText id="asuntotxt"  readOnly="true" style="width:250px" value="#{programacionMantenimientoBackBean.asuntotxt}"/>
+						         <p:outputLabel for="desdetxt" value="Fecha Inicio:" />
+						         <p:calendar id="desdetxt" readOnly="true" style="width:250px"  pattern="dd/MM/yyyy" mask="true" value="#{programacionMantenimientoBackBean.fechaIniciotxt}"/>
+						         <p:outputLabel for="hastatxt" value="Fecha Fin:" />
+						         <p:calendar id="hastatxt" style="width:250px" readOnly="true"  pattern="dd/MM/yyyy" mask="true" value="#{programacionMantenimientoBackBean.fechaFintxt}"/>
+							 </h:panelGrid>
+							 </p:panel>
+						</p:panel>
 					</div>
 				</h:form>
 				

@@ -30,6 +30,7 @@ public class MarcasModelos extends EntityBase implements java.io.Serializable {
 	private Integer id;
 	public String descripcion;
 	private Integer padreId;
+	private boolean pasivo;
 	private List<Activos> listaMarcaActivo = new ArrayList<Activos>();
 	private List<Activos> listaModeloActivo = new ArrayList<Activos>();
 	
@@ -80,6 +81,13 @@ public class MarcasModelos extends EntityBase implements java.io.Serializable {
 		this.listaModeloActivo = listaModeloActivo;
 	}
 
-	
+	@Column(name="pasivo", nullable=false)
+	public boolean isPasivo() {
+		return pasivo;
+	}
+
+	public void setPasivo(boolean pasivo) {
+		this.pasivo = pasivo;
+	}	
 	
 }

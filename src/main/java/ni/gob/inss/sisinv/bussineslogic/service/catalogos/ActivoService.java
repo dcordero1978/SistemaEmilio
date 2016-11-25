@@ -13,7 +13,7 @@ public interface ActivoService {
 	public List<Activos> obtenerListaActivosPorEmpleado(Integer EmpleadoId) throws EntityNotFoundException;
 	public List<Activos> buscar(Integer delegacionId, String codActivo, String descripcion, Integer estadoFisicoI);
 	public List<Activos> buscar(String codigoSecaf, String codigoSecundario,String descripcionBien, String Serie,Integer ubicacionId, Integer estadoFisicoId, Integer tipoResguardoId);
-	public Activos obtener(int activoId) throws ni.gob.inss.barista.model.dao.EntityNotFoundException;
-	
+	public Activos obtener(int activoId) throws EntityNotFoundException;
+
 }
  

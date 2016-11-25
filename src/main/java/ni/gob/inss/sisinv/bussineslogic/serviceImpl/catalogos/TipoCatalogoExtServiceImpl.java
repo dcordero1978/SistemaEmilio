@@ -1,5 +1,8 @@
 package ni.gob.inss.sisinv.bussineslogic.serviceImpl.catalogos;
 
+import java.util.List;
+import java.util.stream.IntStream;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -32,6 +35,19 @@ public class TipoCatalogoExtServiceImpl extends TipoCatalogoServiceImpl implemen
 		oSearch.addFilter(Filter.equal("codigo", codigo));
 		tipoCatalogo = (TiposCatalogo) oTipoCatalogoDAO.searchUnique(oSearch);
 		return tipoCatalogo;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	@Transactional
+	public List<TiposCatalogo> obtenerListaCatalogoPorCodigo(String... codigo) throws EntityNotFoundException {
+		Search oSearch = new Search();
+		Filter[] oFilters = new Filter[codigo.length];
+		IntStream.range(0, codigo.length).forEach(iterador -> {
+			oFilters[iterador] = new Filter("codigo", codigo[iterador]);
+		});
+		oSearch.addFilterOr(oFilters);
+		return oTipoCatalogoDAO.search(oSearch);
 	}
 	
 }

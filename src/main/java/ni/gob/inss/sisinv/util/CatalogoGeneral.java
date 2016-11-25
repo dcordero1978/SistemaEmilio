@@ -12,7 +12,9 @@ public enum CatalogoGeneral {
 	TIPO_COMBUSTIBLE("TCB"),
 	COLORES("COL"),
 	PROYECTOS("PRY"),
-	TIPOSMOVIMIENTO("TMB");
+	TIPOSMOVIMIENTO("TMB"),
+	TIPO_ACTIVO_ACTIVO_ESPECIAL("TCE");
+
 	
 	private final String catalogo ;
 	

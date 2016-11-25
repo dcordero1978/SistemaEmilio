@@ -1,0 +1,88 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                template="/web/template/innerLayout.xhtml"
+                xmlns:mc="http://java.sun.com/jsf/composite/comps">
+    <ui:param name="paramBackBean" value="#{caracteristicasHardwareBackBean}"/>
+    <ui:define name="headerContent">
+        Caracteristicas de Hardware.
+    </ui:define>
+    <ui:define name="content">
+		<div class="ContainerIndent">
+			<div class="Container50 Responsive">
+				<h:form id="formListaCarcteristicas" style="width: 99%;">
+					<p:panel styleClass="fondoPaneles">
+						<f:facet name="header">
+							<p:outputPanel style="display:block" styleClass="left">
+								<h:panelGrid style="width:100%" columns="2">
+									<p:inputText id="filtroDescripcion" style="width:90%" placeholder="#{labelName.placeholderBuscar}" value="#{caracteristicasHardwareBackBean.filtroDescripcion}"/>
+									<p:commandButton value="#{labelName.btnBuscar}" id="btnBuscar" icon="fa fa-search" style="color:white;" action="#{caracteristicasHardwareBackBean.buscar}" update="tablaCaracteristicas"/>
+								</h:panelGrid>
+							</p:outputPanel>
+							<p:outputPanel style="display:block" styleClass="right">
+								<p:commandButton value="#{labelName.btnAgregar}" id="btnAgregar" icon="fa fa-plus-circle" style="color:white" action="#{caracteristicasHardwareBackBean.agregar}" update=":datosCaracteristicaHardware"/>
+								<p:commandButton value="#{labelName.btnEditar}" id="btnEditar" icon="fa fa-pencil" style="color:white;" action="#{caracteristicasHardwareBackBean.editar}" update=":datosCaracteristicaHardware"/>
+							</p:outputPanel>
+						</f:facet>
+						
+						<p:outputPanel style="tableClass">
+							<p:dataTable id="tablaCaracteristicas"
+							value="#{caracteristicasHardwareBackBean.listaGeneralCaracteristicas}"
+							var="oCaracteristica"
+							selection="#{caracteristicasHardwareBackBean.oCaracteristicaHardwareSeleccionado}"
+							selectionMode="single"
+							rowKey="#{oCaracteristica.id}"
+							 style="width:100%" 
+							 paginatorPosition="top"
+							 scrollable="true" 
+							 scrollHeight="400"
+							 paginator="true" 
+							 emptyMessage="#{labelName.tableEmptyMessage}"
+                             rows="12"
+                             pageLinks="3"
+                             paginatorTemplate="#{configApplicationBean.paginatorTemplate}"
+                             currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
+                             <p:ajax event="rowDblselect" update=":datosCaracteristicaHardware" listener="#{caracteristicasHardwareBackBean.editar}"/> 
+								<p:column headerText="Descripción">
+									<h:outputText value="#{oCaracteristica.descripcion}"/>
+								</p:column>
+								<p:column headerText="Pasivo" style="text-align:center;">
+									<p:selectBooleanCheckbox value="#{oCaracteristica.pasivo}" disabled="true" styleClass="ui-linus-enabled"/>
+								</p:column>
+							</p:dataTable>
+						</p:outputPanel>
+					</p:panel>
+				</h:form>
+			</div>
+			<div class="Container50 Responsive">
+				<h:form id="datosCaracteristicaHardware" style="width:99%">
+					<p:panel styleClass="fondoPaneles" style="height:480px;"> 
+						<f:facet name="header">
+							<p:outputPanel style="display:block" styleClass="left">
+								<h:outputLabel value="ID: #{caracteristicasHardwareBackBean.oCaracteristica.id}" rendered="#{caracteristicasHardwareBackBean.oCaracteristica.id != null}"/>
+							</p:outputPanel>
+							<p:outputPanel style="display:block" styleClass="right">
+								<p:commandButton icon="fa fa-floppy-o" value="#{labelName.btnGuardar}" action="#{caracteristicasHardwareBackBean.guardarOActualizar}" style="color:white;" update=":formListaCarcteristicas, datosCaracteristicaHardware"/>
+								<p:commandButton icon="fa fa-times-circle-o" style="color:white;" value="#{labelName.btnCancelar}" action="#{caracteristicasHardwareBackBean.agregar}" update="datosCaracteristicaHardware"/>
+							</p:outputPanel>
+						</f:facet>
+						<h:panelGrid style="width:100%" columns="2"  columnClasses="Wid20, Wid80">
+							<h:outputLabel for="descripcionCaracteristica" value="Descripción:" />
+							<p:inputText id="descripcionCaracteristica" style="width:90%" required="true" value="#{caracteristicasHardwareBackBean.oCaracteristica.descripcion}"/>
+							<h:outputLabel for="caracteristicaPadreId" value="Caracteristica Padre:" />
+							<p:selectOneMenu id="caracteristicaPadreId" style="width:90%"  value="#{caracteristicasHardwareBackBean.oCaracteristica.caracteristicaPadreId}" filter="true" filterMatchMode="contains" >
+								<f:selectItem itemLabel="Seleccione"  itemValue="#{null}"/>
+								<f:selectItems value="#{caracteristicasHardwareBackBean.listaCaracteristicasHardwarePadre}" var="oCaracteristicaPadre" itemLabel="#{oCaracteristicaPadre.descripcion}" itemValue="#{oCaracteristicaPadre.id}"/>
+							</p:selectOneMenu>
+							<h:outputLabel for="pasivo" value="Pasivo:" rendered="#{caracteristicasHardwareBackBean.oCaracteristica.id != null}"/>
+							<p:selectBooleanCheckbox id="pasivo" value="#{caracteristicasHardwareBackBean.oCaracteristica.pasivo}" rendered="#{caracteristicasHardwareBackBean.oCaracteristica.id != null}"/>
+						</h:panelGrid>
+					</p:panel>
+				</h:form>
+			</div>
+		</div>  
+    </ui:define>
+</ui:composition>

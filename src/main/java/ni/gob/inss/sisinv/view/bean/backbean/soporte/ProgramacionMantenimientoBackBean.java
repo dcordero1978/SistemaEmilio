@@ -1,6 +1,7 @@
 package ni.gob.inss.sisinv.view.bean.backbean.soporte;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -21,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
 import ni.gob.inss.barista.model.dao.DAOException;
-import ni.gob.inss.barista.model.dao.EntityNotFoundException;
 import ni.gob.inss.barista.view.bean.backbean.BaseBackBean;
 import ni.gob.inss.barista.view.utils.web.MessagesResults;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.CatalogoExtService;
@@ -66,8 +66,8 @@ public class ProgramacionMantenimientoBackBean extends BaseBackBean implements S
 		eventModel = new DefaultScheduleModel();	
 		limpiarVentanaMto();
 		cargarMantenimientosProgramados();
+		
 	}
-
 
 	public void cargarListaDelegaciones(){
 		try {
@@ -83,6 +83,7 @@ public class ProgramacionMantenimientoBackBean extends BaseBackBean implements S
 		this.listaMtoProgramado.forEach(resultado->{
 			this.getEventModel().addEvent(new DefaultScheduleEvent(resultado.getAsunto(), resultado.getFechaInicio(),resultado.getFechaFin()));
 		});
+		
 	}
 	
 	public void limpiarVentanaMto(){

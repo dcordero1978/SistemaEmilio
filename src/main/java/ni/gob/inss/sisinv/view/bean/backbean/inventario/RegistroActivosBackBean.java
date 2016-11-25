@@ -302,6 +302,7 @@ public class RegistroActivosBackBean extends BaseBackBean implements Serializabl
 	public void editar(){
 		if(activoSeleccionado !=null){
 			oActivo = activoSeleccionado;
+			cargarListaModelosPorMarcaId();
 			catalogoSecafSeleccionado = oActivo.getCatalogoSecaf();
 			ubicacionId = oActivo.getUbicacionId();
 			List<ActivosCaracteristicas> listCaracteristicasEspeciales =  obtenerCaracteristicasEspeciales(oActivo.getId());
@@ -313,6 +314,7 @@ public class RegistroActivosBackBean extends BaseBackBean implements Serializabl
 	
 	public void limpiar(){
 		this.oActivo = new Activos();
+		this.activoSeleccionado = null;
 		this.setUbicacionId(null);
 		this.catalogoSecafSeleccionado=null;
 		this.caracteristicas.clear();

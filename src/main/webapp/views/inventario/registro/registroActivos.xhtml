@@ -61,7 +61,7 @@
 							</p:outputPanel>
 							<p:outputPanel style="display:block" styleClass="right">
 								<p:commandButton value="#{labelName.btnGuardar}" id="btnGuardar" action="#{registroActivosBackBean.guardarOactualizar}" icon="ui-icon-disk" ajax="true" update="datosActivo,:listaActivos" rendered="#{registroActivosBackBean.usuarioSeleccionado}"/>
-								<p:commandButton value="#{labelName.btnCancelar}" id="btnCancelar" action="#{registroActivosBackBean.limpiar}" update="datosActivo"  icon="ui-icon-cancel" immediate="true"/>
+								<p:commandButton value="#{labelName.btnCancelar}" id="btnCancelar" action="#{registroActivosBackBean.limpiar}" update="datosActivo" resetValues="true" icon="ui-icon-cancel" immediate="true"/>
 							</p:outputPanel>
 						</f:facet>
 						
@@ -85,7 +85,7 @@
 										</h:panelGrid>
 									</p:outputPanel>
 								</p:panel>
-								<p:outputPanel>
+								<p:outputPanel id="activoData">
 									<h:panelGrid style="width:100%" columns="4" columnClasses="Wid10, Wid40, Wid10, Wid40">
 										<p:outputLabel for="codigoSecundario" value="Codigo secundario:"/>
 										<p:inputText id="codigoSecundario" style="width:90%" value="#{registroActivosBackBean.oActivo.codigoSecundario}"/>

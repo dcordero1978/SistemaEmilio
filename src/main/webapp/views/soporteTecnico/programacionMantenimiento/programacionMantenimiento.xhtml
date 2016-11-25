@@ -14,11 +14,12 @@
 	<ui:define name="content">
 		<div id="ContainerIndent">
 			<div class="Container100 Responsive">
+			<p:panel  styleClass="fondoPaneles" >
 				<h:form id="formSeguimientoActivos" style="width: 100%;">
 					<div class="Container50 Responsive">
 						<p:panel  styleClass="fondoPaneles" >
 							<h:panelGrid columnClasses="value">
-								<p:schedule timeZone="CST" id="programacionMto" styleClass="colorschedule" value="#{programacionMantenimientoBackBean.eventModel}" locale="tr" >
+								<p:schedule timeZone="CST" id="programacionMto" styleClass="colorschedule" value="#{programacionMantenimientoBackBean.eventModel}" locale="tr" widgetVar="scheduleProg" >
 									<p:ajax event="dateSelect" listener="#{programacionMantenimientoBackBean.onDateSelect}" update="DetailsMto" oncomplete="PF('winProgMto').show();" />
 						            <p:ajax event="eventSelect" value="#{scheduleView.event.startDate}" listener="#{programacionMantenimientoBackBean.onEventSelect}" update="DetMantenimiento" />
 						            <p:ajax event="eventMove" value="#{scheduleView.event.endDate}" listener="#{programacionMantenimientoBackBean.onEventMove}" />
@@ -45,7 +46,7 @@
 						            <p:calendar id="hasta" effect="fold"  pattern="dd/MM/yyyy HH" mask="true" required="true" value="#{programacionMantenimientoBackBean.fechaFin}"/>
 						
 						            <p:commandButton type="reset" value="Cancelar" />
-						            <p:commandButton id="btnGuardar" value="Guardar" icon="ui-icon-disk" onstart="PF('btnGuardar').disable();" oncomplete="PF('btnGuardar').enable();" action="#{programacionMantenimientoBackBean.guardar}" ajax="true"/>
+						            <p:commandButton id="btnGuardar" value="Guardar" icon="ui-icon-disk" onstart="PF('btnGuardar').disable();" oncomplete="PF('btnGuardar').enable();PF('scheduleProg').update();" action="#{programacionMantenimientoBackBean.guardar}" ajax="true"/>
 						        </h:panelGrid>
 						    </p:dialog>  
 						      
@@ -60,18 +61,18 @@
 							 <p:panel id="paneldatos" styleClass="fondoPaneles" >
 							 <h:panelGrid id="DetMantenimiento" columns="2">
 							 	 <p:outputLabel for="asuntotxt" value="Asunto:" />
-						         <p:inputText id="asuntotxt"  readOnly="true" style="width:250px" value="#{programacionMantenimientoBackBean.asuntotxt}"/>
+						         <p:inputText id="asuntotxt"  readonly="true" style="width:250px" value="#{programacionMantenimientoBackBean.asuntotxt}"/>
 						         <p:outputLabel for="desdetxt" value="Fecha Inicio:" />
-						         <p:calendar id="desdetxt" readOnly="true" style="width:250px"  pattern="dd/MM/yyyy" mask="true" value="#{programacionMantenimientoBackBean.fechaIniciotxt}"/>
+						         <p:calendar id="desdetxt" readonly="true" style="width:250px"  pattern="dd/MM/yyyy" mask="true" value="#{programacionMantenimientoBackBean.fechaIniciotxt}"/>
 						         <p:outputLabel for="hastatxt" value="Fecha Fin:" />
-						         <p:calendar id="hastatxt" style="width:250px" readOnly="true"  pattern="dd/MM/yyyy" mask="true" value="#{programacionMantenimientoBackBean.fechaFintxt}"/>
+						         <p:calendar id="hastatxt" style="width:250px" readonly="true"  pattern="dd/MM/yyyy" mask="true" value="#{programacionMantenimientoBackBean.fechaFintxt}"/>
 							 </h:panelGrid>
 							 </p:panel>
 						</p:panel>
 					</div>
 				</h:form>
 				
-				
+			</p:panel>
 			</div>
 		</div>
 		

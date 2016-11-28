@@ -111,6 +111,17 @@
 							<p:inputText id="cbs" label="CBS" maxlength="20" required="true" value="#{secafBackBean.codigoCbs}" disabled="#{!secafBackBean.autorizadoParaEditar}"/>
 							<h:outputLabel for="descripcionCbs" value="Descripción CBS"/>
 							<p:inputText  id="descripcionCbs" maxlength="250" required="true" label="Descripción CBS" styleClass="Wid90" value="#{secafBackBean.descripcionCbs}" disabled="#{!secafBackBean.autorizadoParaEditar}"/>
+							<p:outputLabel for="tipoMantenimiento" value="Tip de Mantenimiento"/>
+							<p:selectOneMenu id="tipoMantenimiento" value="#{secafBackBean.tipoMantenimientoId}" style="width:90%">
+								<f:selectItem itemLabel="Seleccione" itemValue="#{null}"/>
+								<f:selectItems value="#{secafBackBean.listaTipoMantenimiento}" var="oTipoBien" itemLabel="#{oTipoBien.descripcion}" itemValue="#{oTipoBien.id}"/>
+							</p:selectOneMenu>
+							<p:outputLabel for="tipoActivo" value="Tipo Activo"/>
+							<p:selectOneMenu id="tipoActivo" style="width:90%" value="#{secafBackBean.tipoActivoId}">
+								<f:selectItem itemLabel="Seleccione" itemValue="#{null}" />
+								<f:selectItems value="#{secafBackBean.listaTipoActivo}" var="oTipoActivo" itemLabel="#{oTipoActivo.descripcion}" itemValue="#{oTipoActivo.id}"/>
+							</p:selectOneMenu>
+							
 							<h:outputLabel for="pasivo" value="Pasivo"  rendered="#{!secafBackBean.nuevoRegistro}"/>
 							<p:selectBooleanButton offLabel="No" onLabel="Si" id="pasivo" value="#{secafBackBean.pasivo}" rendered="#{!secafBackBean.nuevoRegistro}" disabled="#{!secafBackBean.autorizadoParaEditar}"/>
 						</h:panelGrid>

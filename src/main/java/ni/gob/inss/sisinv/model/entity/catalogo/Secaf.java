@@ -12,13 +12,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
-
-import com.sun.faces.mgbean.ManagedBeanPreProcessingException.Type;
 
 import ni.gob.inss.barista.model.entity.EntityBase;
 import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
@@ -30,6 +30,9 @@ import ni.gob.inss.sisinv.model.entity.inventario.Activos;
 @Entity
 @Table(name = "secaf", schema = "catalogo", uniqueConstraints = {@UniqueConstraint(columnNames={"cuenta","subcuenta","digito_auxiliar","objeto"})})
 @SequenceGenerator(name="Secaf_SEQ", sequenceName="catalogo.secaf_id_seq")
+@NamedNativeQueries(
+		@NamedNativeQuery(name="selectSecafPorDescripcion", query="SELECT * FROM catalogo.secaf where descripcion_cbs ilike '%'||:descripcion||'%' and pasivo is false order by descripcion_cbs asc", resultClass=Secaf.class)
+)
 public class Secaf extends EntityBase implements java.io.Serializable {
 
 	

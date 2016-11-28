@@ -26,14 +26,7 @@ public class SecafServiceImpl implements SecafService {
 	@Transactional
 	@Override
 	public List<Secaf> buscar(String txtCriterio) throws EntityNotFoundException {
-		String txtBusqueda = StringUtils.isEmpty(txtCriterio) ? "" : txtCriterio;
-		
-		Search oSearch = new Search();		
-		oSearch.addFilterOr(Filter.ilike("descripcionCbs", "%"+txtBusqueda+"%"));
-		oSearch.addFilter(Filter.notEqual("descripcionCbs", StringUtils.EMPTY));
-		oSearch.addSortAsc("descripcionCbs");
-		
-		return oSecafDAO.search(oSearch);
+		return oSecafDAO.obtieneListaCatalogoSecafPorDescripcion(StringUtils.defaultString(txtCriterio));
 	}
 
 	@Transactional

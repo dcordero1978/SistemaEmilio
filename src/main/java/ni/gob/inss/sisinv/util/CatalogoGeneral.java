@@ -13,7 +13,9 @@ public enum CatalogoGeneral {
 	COLORES("COL"),
 	PROYECTOS("PRY"),
 	TIPOSMOVIMIENTO("TMB"),
-	TIPO_ACTIVO_ACTIVO_ESPECIAL("TCE");
+	TIPO_ACTIVO_ACTIVO_ESPECIAL("TCE"),
+	TIPO_ACTIVO("TAC"),
+	TIPO_MANTENIMIENTO("TMT");
 
 	
 	private final String catalogo ;

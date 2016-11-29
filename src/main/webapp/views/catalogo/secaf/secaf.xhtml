@@ -77,7 +77,7 @@
 							<h:outputText value="ID: #{secafBackBean.hfId}" rendered="#{!secafBackBean.nuevoRegistro}"/>
 							<p:outputPanel style="display:block" styleClass="right">
 								<p:commandButton widgetVar="btnGuardar" icon="ui-icon-disk" value="#{labelName.btnGuardar}" action="#{secafBackBean.guardarOactualizar}" ajax="true" update=":formLista formDatosSecaf" rendered="#{secafBackBean.autorizadoParaEditar}"/>
-								<p:commandButton widgetVar="btnCancelar" icon="ui-icon-cancel" value="#{labelName.btnCancelar}" action="#{secafBackBean.limpiar}" update="formDatosSecaf"/>
+								<p:commandButton widgetVar="btnCancelar" icon="ui-icon-cancel" value="#{labelName.btnCancelar}" action="#{secafBackBean.limpiar}" update="formDatosSecaf" immediate="true"/>
 							</p:outputPanel>
 						</f:facet>						
 						<h:panelGrid columns="2" style="width:100%" columnClasses="Wid20, Wid80">

@@ -1,0 +1,76 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                template="/web/template/innerLayout.xhtml"
+                xmlns:mc="http://java.sun.com/jsf/composite/comps">
+    <ui:param name="paramBackBean" value="#{equipoInformaticoBackBean}"/>
+    <ui:define name="headerContent">
+        ASOCIACION DE EQUIPO INFORMATICO CON CARACTERISTICAS DE HARDWARE.
+    </ui:define>
+    <ui:define name="content">
+    	<div class="ContainerIndent">
+    		<div class="Container50 Responsive">
+    			<h:form id="formListaTiposActivoInformatico" style="width: 99%;">
+    				<p:panel styleClass="fondoPaneles">
+    					<p:outputPanel styleClass="tableClass">
+    						<p:dataTable id="tablaTiposEquipoInformatico"
+							value="#{equipoInformaticoBackBean.listaTipoEquipoInformatico}"
+							var="oEquipoInformatico"
+							selection="#{equipoInformaticoBackBean.equipoInformaticoSeleccionado}"
+							selectionMode="single"
+							rowKey="#{oEquipoInformatico.id}"
+							 style="width:100%" 
+							 paginatorPosition="top"
+							 scrollable="true" 
+							 scrollHeight="400"
+							 paginator="true" 
+							 emptyMessage="#{labelName.tableEmptyMessage}" 
+                             rows="12"
+                             pageLinks="3"
+                             paginatorTemplate="#{configApplicationBean.paginatorTemplate}"
+                             currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
+                             	<p:ajax event="rowDblselect" listener="#{equipoInformaticoBackBean.editar}" update=":formAsociacion"/>
+								<p:column headerText="Descripción">
+									<h:outputText value="#{oEquipoInformatico.descripcion}"/>
+								</p:column>
+							</p:dataTable>
+    					</p:outputPanel>
+    				</p:panel>
+    			</h:form>
+    		</div>
+    		<div class="Container50 Responsive">
+    			<h:form id="formAsociacion" style="width: 99%;">
+    				<p:panel styleClass="fondoPaneles" style="height:450px;">
+	    				<f:facet name="header">
+	    					<p:outputPanel style="display:block;" styleClass="left">
+	    						<h:outputLabel value="ID: #{equipoInformaticoBackBean.oTipoActivo.id}" rendered="#{equipoInformaticoBackBean.oTipoActivo.id != null}"/>
+	    					</p:outputPanel>
+	    					<p:outputPanel style="display:block;" styleClass="right">
+	    						<p:commandButton value="#{labelName.btnCancelar}" id="btnCancelar" immediate="true"/>
+	    					</p:outputPanel>
+	    				</f:facet> 
+    					<p:outputPanel styleClass="tableClass">
+	    					<p:pickList style="width:100%" id="listaCaracteristicasPadres" 
+	    								value="#{equipoInformaticoBackBean.listaCaracteristicasHardware}"
+	    								var="oCaracteristicaHardware"
+	    								effect="bounce"
+	    								showSourceControls="true"
+	    								showSourceFilter="true"
+	    								showTargetFilter="true"
+	    								filterMatchMode="contains"
+	    								itemValue="#{oCaracteristicaHardware.id}"
+	    								itemLabel="#{oCaracteristicaHardware.descripcion}">
+	    						<f:facet name="sourceCaption">Disponibles</f:facet>
+	    						<f:facet name="targetCaption">Agregados</f:facet>
+	    						 <p:ajax event="transfer" listener="#{equipoInformaticoBackBean.guardar}" />
+	    					</p:pickList>
+    					</p:outputPanel>
+    				</p:panel>
+    			</h:form>
+    		</div>
+    	</div>
+    </ui:define>
+</ui:composition>

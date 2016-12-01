@@ -17,6 +17,5 @@
 		match-schema="catalogo">
 	</table-filter>
 	<table-filter match-name="tipo_activo_caracteristicas_hardware" exclude="true"
-		match-schema="catalogo">
-	</table-filter>
+		match-schema="catalogo"/>
 </hibernate-reverse-engineering>

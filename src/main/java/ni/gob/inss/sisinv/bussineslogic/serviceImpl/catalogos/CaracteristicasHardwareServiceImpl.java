@@ -63,6 +63,25 @@ public class CaracteristicasHardwareServiceImpl implements CaracteristicasHardwa
 		oSearch.addFilter(Filter.equal("caracteristicaPadreId", padreId));
 		return oCaracteristicasHardwareDao.search(oSearch);
 	}
+	
+	@Transactional
+	@Override
+	public List<CaracteristicasHardware> obtieneListaCaracteristicasHardwareDisponiblePorTipoActivoId(Integer tipoActivoId) {
+		return oCaracteristicasHardwareDao.obtieneListaCaracteristicasHardwareDisponiblePorTipoActivoId(tipoActivoId);
+	}
 
+	@Transactional
+	@Override
+	public CaracteristicasHardware obtieneCaracteritisticaHardwarePorId(Integer caracteristicaId) {
+		Search oSearch = new Search();
+		oSearch.addFilter(Filter.equal("id", caracteristicaId));
+		return (CaracteristicasHardware) oCaracteristicasHardwareDao.searchUnique(oSearch);
+	}
+
+	@Transactional
+	@Override
+	public List<CaracteristicasHardware> obtieneListaCaracteristicasHardwareAsociadoActivo(Integer tipoActivoId) {
+		return oCaracteristicasHardwareDao.obtieneListaCaracteristicasHardwareAgregadoPorTipoActivoId(tipoActivoId);
+	}
 
 }

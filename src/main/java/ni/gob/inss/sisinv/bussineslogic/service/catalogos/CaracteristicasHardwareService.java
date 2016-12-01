@@ -14,4 +14,7 @@ public interface CaracteristicasHardwareService {
 	public void actualizar(CaracteristicasHardware oCaracteristicaHardware) throws BusinessException, DAOException;
 	List<CaracteristicasHardware> listaCaracteristicasHardwarePorPadreId(Integer padreId)
 			throws EntityNotFoundException;
+	public List<CaracteristicasHardware> obtieneListaCaracteristicasHardwareDisponiblePorTipoActivoId(Integer tipoActivoId);
+	public CaracteristicasHardware obtieneCaracteritisticaHardwarePorId(Integer caracteristicaId);
+	public List<CaracteristicasHardware> obtieneListaCaracteristicasHardwareAsociadoActivo(Integer tipoActivoId);
 }

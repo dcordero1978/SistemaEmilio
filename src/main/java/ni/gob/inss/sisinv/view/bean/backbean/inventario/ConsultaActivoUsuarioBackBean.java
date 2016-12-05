@@ -3,7 +3,6 @@ package ni.gob.inss.sisinv.view.bean.backbean.inventario;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,14 +10,11 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
 
-import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
 import ni.gob.inss.barista.businesslogic.service.BusinessException;
 import ni.gob.inss.barista.businesslogic.service.core.jasperclient.JasperRestService;
-import ni.gob.inss.barista.model.dao.DAOException;
 import ni.gob.inss.barista.model.dao.EntityNotFoundException;
 import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
 import ni.gob.inss.barista.view.bean.backbean.BaseBackBean;
@@ -35,7 +31,6 @@ import ni.gob.inss.sisinv.model.entity.catalogo.MarcasModelos;
 import ni.gob.inss.sisinv.model.entity.catalogo.Secaf;
 import ni.gob.inss.sisinv.model.entity.inventario.Activos;
 import ni.gob.inss.sisinv.model.entity.inventario.ActivosCaracteristicas;
-import ni.gob.inss.sisinv.util.CatalogoGeneral;
 import ni.gob.inss.sisinv.util.RegExpresionExtends;
 
 @Named
@@ -81,7 +76,6 @@ public class ConsultaActivoUsuarioBackBean extends BaseBackBean  implements Seri
 	private String regExpDecimales;
 	private String regExpDescripcion;
 	
-	private Map<String, ActivosCaracteristicas> caracteristicas = new HashMap<>();
 	
 	private boolean activoEspecial;
 	
@@ -123,7 +117,6 @@ public class ConsultaActivoUsuarioBackBean extends BaseBackBean  implements Seri
 	@PostConstruct
 	public void init(){
 		this.limpiar();
-		this.cargarListas();
 		this.regExpSoloLetras = RegExpresionExtends.regExpSoloLetrasConEspacio;
 		this.regExpSoloNumeros = RegExpresionExtends.regExpSoloNumeros;
 		this.regExpDecimales = RegExpresionExtends.regExpDecimales;
@@ -151,62 +144,10 @@ public class ConsultaActivoUsuarioBackBean extends BaseBackBean  implements Seri
 		this.setActivoSeleccionado(null);
 	}
 	
-	public void limpiarFormularioRegistro(){
-		this.setUbicacionId(null);
-		this.setCatalogoSecafId(null);
-		this.setMarcaId(null);
-		this.setCodigoColor(StringUtils.EMPTY);
-		this.setEstadoFisicoId(null);
-		this.setTipoResguardoId(null);
-		this.setTipoMonedaId(null);
-		this.setModeloId(null);
-		this.setNoSerie(StringUtils.EMPTY);
-		this.setNoLote(StringUtils.EMPTY);
-		this.setNumeroBodega(StringUtils.EMPTY);
-		this.setNumeroProyecto(StringUtils.EMPTY);
-		this.setValor(null);
-		this.setFechaAdquisicion(null);
-		this.setDescripcionActivo(StringUtils.EMPTY);
-		this.setCodigoSecundario(StringUtils.EMPTY);
-		this.setProyectoId(null);
-		this.setActivoEspecial(false);
-	}
-	
 	public void iniciarFormularioRegistro(){
 		this.cargarListasFormularioRegistro();
 	}
 	
-	//TODO: SE REQUIERE REFACTORIZAR ESTE METODO 
-	public void cargarListas(){
-		try {
-						
-			this.listaCatalogoSecaf = oSecafService.buscar("");
-			this.listaColores = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.COLORES.getCodigoCatalogo());
-			this.listaEstadoFisico = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.ESTADO_FISICO.getCodigoCatalogo());
-			this.listaTipoResguardo = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.TIPO_RESGUARDO.getCodigoCatalogo());
-			this.listaTipoMoneda = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.MONEDA.getCodigoCatalogo());
-			this.listaProyectos = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.PROYECTOS.getCodigoCatalogo());
-			this.listaMarcas = oCatalogoService.obtenerListaMarcas();
-
-			List<Catalogo> listaCaracteristicas =  oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.CARACTERISTICA_ARMA_FUEGO.getCodigoCatalogo()
-																	,CatalogoGeneral.CARACTERISTICA_OBRA_ARTE.getCodigoCatalogo(),
-																	CatalogoGeneral.CARACTERISTICA_TRANSPORTE_MAQUINARIA.getCodigoCatalogo());
-			listaCaracteristicas.stream().forEach(caracteristica -> {
-				ActivosCaracteristicas oCaracteristica = new ActivosCaracteristicas();
-				oCaracteristica.setCreadoEl(this.getTimeNow());
-				oCaracteristica.setCreadoEnIp(this.getRemoteIp());
-				oCaracteristica.setCreadoPor(this.getUsuarioActual().getId());
-				oCaracteristica.getCaracteristica().setCaracteristicaCod(caracteristica.getCodigo());
-				//El Combustible es catalogo para el caso del transporte
-				if(StringUtils.equalsIgnoreCase(caracteristica.getCodigo(), "CMB")){
-					oCaracteristica.setEsCatalogo(true);
-				}
-				this.caracteristicas.put(caracteristica.getCodigo(), oCaracteristica);
-			});
-		} catch (EntityNotFoundException  e) {
-			mostrarMensajeError(this.getClass().getSimpleName(), "cargarListas", MessagesResults.ERROR_OBTENER_LISTA, e);
-		}
-	}
 	
 	public void cargarListasFormularioRegistro(){
 		try {
@@ -235,72 +176,6 @@ public class ConsultaActivoUsuarioBackBean extends BaseBackBean  implements Seri
 			mostrarMensajeError(this.getClass().getSimpleName(), "cargarDatos", MessagesResults.ERROR_OBTENER, e);
 		}catch(BusinessException e){
 			mostrarMensajeError(e.getMessage());
-		}
-	}
-	
-	public void guardar(){
-		try {
-			Activos oActivo = new Activos();
-			oActivo.setSecaf(oSecafService.obtener(this.getCatalogoSecafId()));
-			oActivo.setDescripcion(this.getDescripcionActivo());
-			oActivo.setMarcaId(this.getMarcaId());
-			oActivo.setModeloId(this.getModeloId());
-			oActivo.setSerie(this.getNoSerie());
-			oActivo.setFechaAdquisicion(this.getFechaAdquisicion());
-			oActivo.setEstadoFisicoId(this.getEstadoFisicoId());
-			oActivo.setTipoResguardoId(this.getTipoResguardoId());
-			oActivo.setNumeroBodega(this.getNumeroBodega());
-			oActivo.setNumeroProyecto(this.getNumeroProyecto());
-			oActivo.setPasivo(false);
-			oActivo.setValor(this.getValor());
-			oActivo.setTipoMoneda(this.getTipoMonedaId());
-			oActivo.setLote(this.getNoLote());
-			oActivo.setEmpleado(oEmpleadoService.obtener(this.getHfId()));
-			oActivo.setUbicacion(oDelegacionService.obtener(this.getUbicacionId()));
-			oActivo.setColor(this.getCodigoColor());
-			oActivo.setCodigoSecundario(this.getCodigoSecundario());
-			oActivo.setProyectoId(this.getProyectoId());
-			oActivo.setCreadoEl(this.getTimeNow());
-			oActivo.setCreadoEnIp(this.getRemoteIp());
-			oActivo.setCreadoPor(this.getUsuarioActual().getId());
-			oActivo.setEntidadId(this.getEntidadActual().getId());
-			oActivo.setListaCaracteristicas(this.obtieneListaCaracteristicasActivos(oActivo));
-			
-			oActivoService.guardar(oActivo);
-			RequestContext.getCurrentInstance().execute("PF('modalRegistroActivo').hide()");
-			mostrarMensajeInfo(MessagesResults.EXITO_GUARDAR);
-			this.cargarListaActivos();
-		} catch (BusinessException | DAOException e) {
-			mostrarMensajeError(MessagesResults.ERROR_GUARDAR);
-		}
-	}
-	
-	
-	private List<ActivosCaracteristicas> obtieneListaCaracteristicasActivos(Activos oActivo){
-		aplicaValorActivoCaracteristica(this.getCalibre(), "CLB");
-		aplicaValorActivoCaracteristica(this.getNombreObreArte(), "NOB");
-		aplicaValorActivoCaracteristica(this.getNumeroMotor(), "NM");
-		aplicaValorActivoCaracteristica(this.getNumeroChasis(), "NCH");
-		aplicaValorActivoCaracteristica(this.getNumeroCilindros(), "NC");
-		aplicaValorActivoCaracteristica(this.getAnio(), "ANIO");
-		aplicaValorActivoCaracteristica(this.getPlaca(), "PL");
-		aplicaValorActivoCaracteristica(this.getNumeroPasajeros(), "NP");
-		aplicaValorActivoCaracteristica(this.getCapacidadCarga(), "CC");
-		aplicaValorActivoCaracteristica(this.getCombustible(), "CMB");
-		
-		List<ActivosCaracteristicas> listaPropiedades = new ArrayList<ActivosCaracteristicas>();
-		this.caracteristicas.entrySet().stream()
-			.filter(map -> map.getValue().getValor()!=null).forEach(mapa -> {
-				mapa.getValue().setActivo(oActivo);
-				listaPropiedades.add(mapa.getValue());
-		});
-		
-		return listaPropiedades;
-	}
-	
-	private void aplicaValorActivoCaracteristica(String campo, String codigo){
-		if(StringUtils.isNotEmpty(campo)){
-			this.caracteristicas.get(codigo).setValor(campo);
 		}
 	}
 	

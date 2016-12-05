@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.googlecode.genericdao.search.Filter;
 import com.googlecode.genericdao.search.Search;
+import com.googlecode.genericdao.search.Sort;
 
 import ni.gob.inss.barista.businesslogic.service.BusinessException;
 import ni.gob.inss.barista.model.dao.DAOException;
@@ -38,6 +39,7 @@ public class ActivoServiceImpl implements ActivoService {
 	public List<Activos> obtenerListaActivosPorEmpleado(Integer empleadoId) throws EntityNotFoundException {
 		Search oSearch = new Search();
 		oSearch.addFilter(Filter.equal("empleadoId", empleadoId));
+		oSearch.addSort(Sort.asc("descripcion"));
 		return oActivoDAO.search(oSearch);		
 	}
 

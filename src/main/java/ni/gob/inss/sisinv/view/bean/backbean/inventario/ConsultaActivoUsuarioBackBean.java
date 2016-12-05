@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
 import ni.gob.inss.barista.businesslogic.service.BusinessException;
+import ni.gob.inss.barista.businesslogic.service.core.jasperclient.JasperRestService;
 import ni.gob.inss.barista.model.dao.DAOException;
 import ni.gob.inss.barista.model.dao.EntityNotFoundException;
 import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
@@ -116,6 +117,9 @@ public class ConsultaActivoUsuarioBackBean extends BaseBackBean  implements Seri
 	@Autowired
 	ActivoService oActivoService;
 	
+	@Autowired
+	JasperRestService oJasperReportService;
+	
 	@PostConstruct
 	public void init(){
 		this.limpiar();
@@ -125,6 +129,19 @@ public class ConsultaActivoUsuarioBackBean extends BaseBackBean  implements Seri
 		this.regExpDecimales = RegExpresionExtends.regExpDecimales;
 		this.regExpDescripcion = RegExpresionExtends.regExpDescripcion;
 		this.setActivoEspecial(false);
+	}
+	
+	public void imprimeReporteActivoPorUsuario(){
+		Map<String, String> parametros = new HashMap<String, String>();
+		parametros.put("psEntidad",this.getEntidadActual().getId().toString());
+		parametros.put("psEmpleadoId",this.filtroEmpleadoSeleccionado.getId().toString());
+		//TODO: ESTE ES EL ID DEL REPORTE DEL CUAL SE OBTIENE EL ENCABEZADO. PENDIENTE MEJORAR
+		parametros.put("IdReporte","1");
+		try {
+			oJasperReportService.getReport("/reports/reports/Inventario/rpt_activosxempleado", "pdf", parametros, "ReporteActivoPorUsuario");
+		} catch (Exception e) {
+			mostrarMensajeError("OCURRIO UN ERROR AL GENERAR EL REPORTE");
+		}
 	}
 	
 	public void limpiar(){

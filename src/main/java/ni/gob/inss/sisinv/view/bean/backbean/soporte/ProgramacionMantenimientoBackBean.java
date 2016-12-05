@@ -1,14 +1,16 @@
 package ni.gob.inss.sisinv.view.bean.backbean.soporte;
 
 import java.io.Serializable;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
+import javax.persistence.EntityNotFoundException;
 
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.ScheduleEntryMoveEvent;
@@ -28,6 +30,7 @@ import ni.gob.inss.sisinv.bussineslogic.service.catalogos.CatalogoExtService;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.DelegacionService;
 import ni.gob.inss.sisinv.bussineslogic.service.soporte.MantenimientosService;
 import ni.gob.inss.sisinv.model.entity.catalogo.Delegacion;
+import ni.gob.inss.sisinv.model.entity.soporte.Mantenimientos;
 import ni.gob.inss.sisinv.model.entity.soporte.ProgramacionMantenimiento;
 
 @Named
@@ -40,13 +43,16 @@ public class ProgramacionMantenimientoBackBean extends BaseBackBean implements S
 	private Integer delegacionId;
 	private List<Delegacion> listaDelegaciones;
 	private List<ProgramacionMantenimiento> listaMtoProgramado;
+	private List<Mantenimientos> listaMantenimientos;
     private Date fechaInicio;
     private Date fechaFin;
     private String asunto;
+    private Integer mantenimientoprogId;
     
     private Date fechaIniciotxt;
     private Date fechaFintxt;
     private String asuntotxt;
+    private Integer estadoId=1000;
    
     
 	
@@ -66,7 +72,7 @@ public class ProgramacionMantenimientoBackBean extends BaseBackBean implements S
 		eventModel = new DefaultScheduleModel();	
 		limpiarVentanaMto();
 		cargarMantenimientosProgramados();
-		
+		cargarMantenimientosPorEstado();
 	}
 
 	public void cargarListaDelegaciones(){
@@ -76,6 +82,7 @@ public class ProgramacionMantenimientoBackBean extends BaseBackBean implements S
             	mostrarMensajeError(this.getClass().getSimpleName(),"cargarListaDelegaciones()",MessagesResults.ERROR_OBTENER_LISTA, e);
 			}
 	}
+
 	
 	public void cargarMantenimientosProgramados(){
 		this.listaMtoProgramado=oMantenimientosService.buscar();
@@ -84,6 +91,17 @@ public class ProgramacionMantenimientoBackBean extends BaseBackBean implements S
 			this.getEventModel().addEvent(new DefaultScheduleEvent(resultado.getAsunto(), resultado.getFechaInicio(),resultado.getFechaFin()));
 		});
 		
+	}
+	
+	public void cargarMantenimientosPorEstado(){
+		this.listaMantenimientos=oMantenimientosService.obtenerlistaMantenimientos(estadoId);
+	}
+	
+	public void cargarFechasMto() throws EntityNotFoundException, ni.gob.inss.barista.model.dao.EntityNotFoundException{
+		ProgramacionMantenimiento oMantenimiento = oMantenimientosService.obtener(mantenimientoprogId);
+		this.setFechaInicio(oMantenimiento.getFechaInicio());
+		this.setFechaFin(oMantenimiento.getFechaFin());
+		RequestContext.getCurrentInstance().execute("PF('btnaddUser').enable();");
 	}
 	
 	public void limpiarVentanaMto(){
@@ -259,6 +277,22 @@ public class ProgramacionMantenimientoBackBean extends BaseBackBean implements S
 
 	public void setAsuntotxt(String asuntotxt) {
 		this.asuntotxt = asuntotxt;
+	}
+
+	public List<Mantenimientos> getListaMantenimientos() {
+		return listaMantenimientos;
+	}
+
+	public void setListaMantenimientos(List<Mantenimientos> listaMantenimientos) {
+		this.listaMantenimientos = listaMantenimientos;
+	}
+
+	public Integer getMantenimientoprogId() {
+		return mantenimientoprogId;
+	}
+
+	public void setMantenimientoprogId(Integer mantenimientoprogId) {
+		this.mantenimientoprogId = mantenimientoprogId;
 	}
 	
 	

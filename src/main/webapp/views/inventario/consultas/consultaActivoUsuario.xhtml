@@ -53,10 +53,7 @@
 								paginatorTemplate="#{configApplicationBean.paginatorTemplate}" currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
 								<p:ajax event="rowDblselect" update=":formPropiedadesActivo"/>
 									<f:facet name="header">
-										<h:outputText value="ID: #{consultaActivoUsuarioBackBean.hfId}" rendered="#{consultaActivoUsuarioBackBean.modoEdicion}"/> - Lista de activos asociados.																	
-										<p:outputPanel style="display" styleClass="right">
-											<p:commandButton value="Asociar activo" oncomplete="PF('modalRegistroActivo').show();" process="@this" ajax="true" action="#{consultaActivoUsuarioBackBean.iniciarFormularioRegistro}" update=":datosActivo"  icon="ui-icon-document" style="margin-top:-5px;" rendered="#{consultaActivoUsuarioBackBean.modoEdicion}"/>
-										</p:outputPanel> 																	
+										<h:outputText value="ID: #{consultaActivoUsuarioBackBean.hfId}" rendered="#{consultaActivoUsuarioBackBean.modoEdicion}"/> - Lista de activos asociados.
 									</f:facet>
 									<p:column resizable="true" headerText="Código" style="text-align:center" width="20%" priority="2">
 										<h:outputText value="#{oActivo.codigoInventario}" />

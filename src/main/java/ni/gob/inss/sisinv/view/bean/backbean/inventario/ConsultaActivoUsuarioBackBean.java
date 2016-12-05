@@ -133,7 +133,7 @@ public class ConsultaActivoUsuarioBackBean extends BaseBackBean  implements Seri
 		try {
 			oJasperReportService.getReport("/reports/reports/Inventario/rpt_activosxempleado", "pdf", parametros, "ReporteActivoPorUsuario");
 		} catch (Exception e) {
-			mostrarMensajeError("OCURRIO UN ERROR AL GENERAR EL REPORTE");
+			mostrarMensajeError(this.getClass().getSimpleName(), "imprimeReporteActivoPorUsuario", "OCURRIO UN ERROR AL GENERAR EL REPORTE", e);
 		}
 	}
 	

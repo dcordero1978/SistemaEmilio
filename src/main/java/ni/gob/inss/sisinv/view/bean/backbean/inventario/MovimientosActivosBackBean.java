@@ -203,13 +203,30 @@ public class MovimientosActivosBackBean extends BaseBackBean implements Serializ
 					oActivoService.actualizar(oActivos);
 					oMovimientosService.guardar(oMovimientos);
 					oActivoEmpleadoService.guardar(oActivoEmpleado);
+					cargarMovimientosActivos(this.getHFActivoId());
 					mostrarMensajeInfo(MessagesResults.EXITO_GUARDAR);
-					this.cargarMovimientosActivos(this.getHFActivoId());
+					
 					
 			} catch (BusinessException | DAOException e) {
 				mostrarMensajeError(MessagesResults.ERROR_GUARDAR);
 			}
 	}
+	}
+	
+	public void cancelar(){
+		this.setCargoEmpleadoOrig("");
+		this.setFechaMovimiento(null);
+		this.setTipoMovimientoId(null);
+		this.setTxtcodigoInventario("");
+		this.setFiltroCodSecundario("");
+		this.setTxtdescripcionBien("");
+		this.setTxtEmpleadoOrig("");
+		this.setUbicacionEmpleadoOrig("");
+		this.setTxtubicacionEmpleadoDest("");
+		this.setTxtcargoEmpleadoDest("");
+		this.setListaMovimientos(null);
+		this.setHFActivoId(null);
+		this.setTxtEmpleadoDest("");
 	}
 
 	

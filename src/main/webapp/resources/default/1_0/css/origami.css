@@ -1,0 +1,3 @@
+.ui-button-icon-only .ui-icon, .ui-button-text-icon-left .ui-icon, .ui-button-text-icon-right .ui-icon {margin-left: -10px !important;margin-top: -9px !important;}
+.ui-picklist > div { float: none; !important}
+.ui-picklist .ui-picklist-list { width: 97%; !important}

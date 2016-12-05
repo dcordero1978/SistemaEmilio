@@ -6,6 +6,7 @@
                 xmlns:pe="http://primefaces.org/ui/extensions"
                 template="/web/template/innerLayout.xhtml"
                 xmlns:mc="http://java.sun.com/jsf/composite/comps">
+	<h:outputStylesheet library="css" name="default/1_0/css/origami.css"  />
     <ui:param name="paramBackBean" value="#{equipoInformaticoBackBean}"/>
     <ui:define name="headerContent">
         ASOCIACION DE EQUIPO INFORMATICO CON CARACTERISTICAS DE HARDWARE.
@@ -33,6 +34,14 @@
                              paginatorTemplate="#{configApplicationBean.paginatorTemplate}"
                              currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
                              	<p:ajax event="rowDblselect" listener="#{equipoInformaticoBackBean.editar}" update=":formAsociacion"/>
+                             	<f:facet name="header">
+                             		<p:outputPanel  style="float: left; width: 50%; text-align: left;">                             		
+                             			<h:outputLabel value="LISTA DE TIPOS DE ACTIVOS INFORMATICOS" />
+                             		</p:outputPanel>
+                             		<p:outputPanel  style="text-align: right;">
+                             			<p:commandButton value="Asociar caracteristicas" icon="fa fa-plus-circle" style="color:white;" update=":formAsociacion" action="#{equipoInformaticoBackBean.editar}"/>
+                             		</p:outputPanel>
+                             	</f:facet>
 								<p:column headerText="Descripción">
 									<h:outputText value="#{oEquipoInformatico.descripcion}"/>
 								</p:column>
@@ -43,13 +52,13 @@
     		</div>
     		<div class="Container50 Responsive">
     			<h:form id="formAsociacion" style="width: 99%;">
-    				<p:panel styleClass="fondoPaneles" style="height:450px;">
+    				<p:panel styleClass="fondoPaneles" style="height:500px;">
 	    				<f:facet name="header">
 	    					<p:outputPanel style="display:block;" styleClass="left">
 	    						<h:outputLabel value="ID: #{equipoInformaticoBackBean.oTipoActivo.id}" rendered="#{equipoInformaticoBackBean.oTipoActivo.id != null}"/>
 	    					</p:outputPanel>
 	    					<p:outputPanel style="display:block;" styleClass="right">
-	    						<p:commandButton value="#{labelName.btnCancelar}" id="btnCancelar" immediate="true"/>
+	    						<p:commandButton value="#{labelName.btnCancelar}" id="btnCancelar" immediate="true" action="#{equipoInformaticoBackBean.limpiar}" update="formAsociacion"/>
 	    					</p:outputPanel>
 	    				</f:facet> 
     					<p:outputPanel styleClass="tableClass">
@@ -57,7 +66,6 @@
 	    								value="#{equipoInformaticoBackBean.listaCaracteristicasHardware}"
 	    								var="oCaracteristicaHardware"
 	    								effect="bounce"
-	    								showSourceControls="true"
 	    								showSourceFilter="true"
 	    								showTargetFilter="true"
 	    								filterMatchMode="contains"
@@ -74,3 +82,4 @@
     	</div>
     </ui:define>
 </ui:composition>
+

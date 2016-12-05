@@ -8,6 +8,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
+import org.primefaces.context.RequestContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
@@ -25,9 +26,12 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 
 	private CaracteristicasHardware oCaracteristicaHardwareSeleccionado;
 	private CaracteristicasHardware oCaracteristica;
+	private CaracteristicasHardware oCaracteristicaHardwareHijaSeleccionada;
+	private CaracteristicasHardware oCaracteristicaHija;
 	private String filtroDescripcion;
 	private List<CaracteristicasHardware> listaCaracteristicasHardwarePadre = new ArrayList<CaracteristicasHardware>();
 	private List<CaracteristicasHardware> listaGeneralCaracteristicas = new ArrayList<CaracteristicasHardware>();
+	private List<CaracteristicasHardware> listaCaracteristicasHijas = new ArrayList<CaracteristicasHardware>();
 	private static final long serialVersionUID = 1L;
 
 	@Autowired CaracteristicasHardwareService oCaracteristicasHardwareService;
@@ -39,9 +43,7 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 	}
 	
 	public void guardarOActualizar(){
-		oCaracteristica.setCreadoEl(this.getTimeNow());
-		oCaracteristica.setCreadoEnIp(this.getRemoteIp());
-		oCaracteristica.setCreadoPor(this.getUsuarioActual().getId());
+	
 		if(oCaracteristica.getId() == null){
 			guardar();
 		}else{
@@ -50,6 +52,9 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 	}
 	
 	public void guardar(){
+		oCaracteristica.setCreadoEl(this.getTimeNow());
+		oCaracteristica.setCreadoEnIp(this.getRemoteIp());
+		oCaracteristica.setCreadoPor(this.getUsuarioActual().getId());
 		try {
 			oCaracteristicasHardwareService.guardar(oCaracteristica);
 			mostrarMensajeInfo(MessagesResults.EXITO_GUARDAR);
@@ -60,6 +65,9 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 	
 	public void actualizar(){
 		try {
+			oCaracteristica.setModificadoEl(this.getTimeNow());
+			oCaracteristica.setModificadoEnIp(this.getRemoteIp());
+			oCaracteristica.setModificadoPor(this.getUsuarioActual().getId());
 			oCaracteristicasHardwareService.actualizar(oCaracteristica);
 			mostrarMensajeInfo(MessagesResults.EXITO_MODIFICAR);
 		} catch (BusinessException | DAOException e) {
@@ -67,24 +75,32 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 		}
 	}
 	
+	public void crearNuevaCaracteristicaHija(){
+		oCaracteristicaHija = new CaracteristicasHardware();
+	}
+	
+	public void editarCaracteristicaHija(){
+		if(oCaracteristicaHardwareHijaSeleccionada != null){
+			oCaracteristicaHija = oCaracteristicaHardwareHijaSeleccionada;
+			RequestContext.getCurrentInstance().execute("PF('datosCaracteristicaHija').show()");
+		}else{
+			mostrarMensajeError(MessagesResults.SELECCIONE_UN_REGISTRO);
+		}
+		
+	}
+	
 	public void cargarListas(){
 	 try {
-		this.listaCaracteristicasHardwarePadre = oCaracteristicasHardwareService.listaCaracteristicasHardwarePadre();
+		this.listaCaracteristicasHardwarePadre = oCaracteristicasHardwareService.listaCaracteristicasHardwarePadre(null);
+		
 		this.buscar();
 	} catch (EntityNotFoundException e) {
 		mostrarMensajeError(this.getClass().getSimpleName(), "cagarListas", MessagesResults.ERROR_OBTENER_LISTA, e);
 		}
 	}
 	
-	public List<CaracteristicasHardware> obtieneListaCaracteristicasAsociadas(){
-		try {
-			if(this.oCaracteristica.getId()!=null){
-				return oCaracteristicasHardwareService.listaCaracteristicasHardwarePorPadreId(this.oCaracteristica.getId());
-			}
-		} catch (EntityNotFoundException e) {
-			mostrarMensajeError(MessagesResults.ERROR_OBTENER_LISTA);
-		}
-		return null;
+	private void cargarListaCaracteristicasHijas(){
+		this.listaCaracteristicasHijas = oCaracteristicasHardwareService.obtieneListaCaracteristicasHardwarePorPadreId(null, this.oCaracteristica.getId());
 	}
 	
 	public void buscar() throws EntityNotFoundException{
@@ -93,11 +109,13 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 	
 	public void agregar(){
 		this.oCaracteristica = new CaracteristicasHardware();
+		this.listaCaracteristicasHijas.clear();
 	}
 	
 	public void editar(){
 		if(this.oCaracteristicaHardwareSeleccionado !=null){
 			this.oCaracteristica = this.oCaracteristicaHardwareSeleccionado;
+			this.cargarListaCaracteristicasHijas();
 		}else{
 			mostrarMensajeInfo(MessagesResults.SELECCIONE_UN_REGISTRO);
 		}
@@ -133,6 +151,27 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 
 	public void setoCaracteristica(CaracteristicasHardware oCaracteristica) {
 		this.oCaracteristica = oCaracteristica;
+	}
+
+	public List<CaracteristicasHardware> getListaCaracteristicasHijas() {
+		return listaCaracteristicasHijas;
+	}
+
+	public CaracteristicasHardware getoCaracteristicaHardwareHijaSeleccionada() {
+		return oCaracteristicaHardwareHijaSeleccionada;
+	}
+
+	public void setoCaracteristicaHardwareHijaSeleccionada(
+			CaracteristicasHardware oCaracteristicaHardwareHijaSeleccionada) {
+		this.oCaracteristicaHardwareHijaSeleccionada = oCaracteristicaHardwareHijaSeleccionada;
+	}
+
+	public CaracteristicasHardware getoCaracteristicaHija() {
+		return oCaracteristicaHija;
+	}
+
+	public void setoCaracteristicaHija(CaracteristicasHardware oCaracteristicaHija) {
+		this.oCaracteristicaHija = oCaracteristicaHija;
 	}
 	
 }

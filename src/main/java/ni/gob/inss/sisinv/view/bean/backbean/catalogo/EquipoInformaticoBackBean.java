@@ -63,6 +63,12 @@ public class EquipoInformaticoBackBean extends BaseBackBean implements Serializa
 		}
 	}
 	
+	public void limpiar(){
+		this.oTipoActivo = new Catalogo();
+		this.listaHardwareAgregado.clear();
+		this.listaHardwareDisponible.clear();
+	}
+	
 	public void guardar(TransferEvent event){
 		if(event.isAdd()){ //TODO: AGREGAR ELEMENTO
 			event.getItems().stream().forEach(caracteristica -> {
@@ -86,6 +92,9 @@ public class EquipoInformaticoBackBean extends BaseBackBean implements Serializa
 				 }else{
 					 if(Boolean.TRUE.equals(oAsociacion.getPasivo())){
 						 oAsociacion.setPasivo(Boolean.FALSE);
+						 oAsociacion.setModificadoEl(this.getTimeNow());
+						 oAsociacion.setModificadoEnIp(this.getRemoteIp());
+						 oAsociacion.setModificadoPor(this.getUsuarioActual().getId());
 						 try {
 							oTipoActivoCaracteristicaHardwareService.actualizar(oAsociacion);
 						} catch (DAOException e) {
@@ -93,6 +102,7 @@ public class EquipoInformaticoBackBean extends BaseBackBean implements Serializa
 						}
 					 } 
 				 }
+				 mostrarMensajeInfo("SE HA GUARDADO CORRECTAMENTE EL REGISTRO");
 			});
 		}else{ //TODO: REMOVER ELEMENTO
 			event.getItems().stream().forEach(caracteristica -> {
@@ -101,13 +111,18 @@ public class EquipoInformaticoBackBean extends BaseBackBean implements Serializa
 						 .obtieneTipoActivoCaracteristicaHardware(oTipoActivo.getId(),caracteristicaId);
 				 if(Boolean.FALSE.equals(oAsociacion.getPasivo())){
 					 oAsociacion.setPasivo(Boolean.TRUE);
+					 oAsociacion.setModificadoEl(this.getTimeNow());
+					 oAsociacion.setModificadoEnIp(this.getRemoteIp());
+					 oAsociacion.setModificadoPor(this.getUsuarioActual().getId());
 					 try {
 						oTipoActivoCaracteristicaHardwareService.actualizar(oAsociacion);
+						mostrarMensajeInfo("SE HA REMOVIDO CORRECTAMENTE EL REGISTRO");
 					} catch (DAOException e) {
 						mostrarMensajeError(MessagesResults.ERROR_MODIFICAR);
 					}
 				 }
 			});
+			
 		}
 	}
 	

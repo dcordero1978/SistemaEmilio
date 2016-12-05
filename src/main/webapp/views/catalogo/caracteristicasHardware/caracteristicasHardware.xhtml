@@ -30,7 +30,7 @@
 						
 						<p:outputPanel style="tableClass">
 							<p:dataTable id="tablaCaracteristicas"
-							value="#{caracteristicasHardwareBackBean.listaGeneralCaracteristicas}"
+							value="#{caracteristicasHardwareBackBean.listaCaracteristicasHardwarePadre}"
 							var="oCaracteristica"
 							selection="#{caracteristicasHardwareBackBean.oCaracteristicaHardwareSeleccionado}"
 							selectionMode="single"
@@ -59,7 +59,7 @@
 			</div>
 			<div class="Container50 Responsive">
 				<h:form id="datosCaracteristicaHardware" style="width:99%">
-					<p:panel styleClass="fondoPaneles" style="height:480px;"> 
+					<p:panel styleClass="fondoPaneles" style="height:520px;"> 
 						<f:facet name="header">
 							<p:outputPanel style="display:block" styleClass="left">
 								<h:outputLabel value="ID: #{caracteristicasHardwareBackBean.oCaracteristica.id}" rendered="#{caracteristicasHardwareBackBean.oCaracteristica.id != null}"/>
@@ -72,17 +72,69 @@
 						<h:panelGrid style="width:100%" columns="2"  columnClasses="Wid20, Wid80">
 							<h:outputLabel for="descripcionCaracteristica" value="Descripción:" />
 							<p:inputText id="descripcionCaracteristica" style="width:90%" required="true" value="#{caracteristicasHardwareBackBean.oCaracteristica.descripcion}"/>
-							<h:outputLabel for="caracteristicaPadreId" value="Caracteristica Padre:" />
-							<p:selectOneMenu id="caracteristicaPadreId" style="width:90%"  value="#{caracteristicasHardwareBackBean.oCaracteristica.caracteristicaPadreId}" filter="true" filterMatchMode="contains" >
-								<f:selectItem itemLabel="Seleccione"  itemValue="#{null}"/>
-								<f:selectItems value="#{caracteristicasHardwareBackBean.listaCaracteristicasHardwarePadre}" var="oCaracteristicaPadre" itemLabel="#{oCaracteristicaPadre.descripcion}" itemValue="#{oCaracteristicaPadre.id}"/>
-							</p:selectOneMenu>
 							<h:outputLabel for="pasivo" value="Pasivo:" rendered="#{caracteristicasHardwareBackBean.oCaracteristica.id != null}"/>
 							<p:selectBooleanCheckbox id="pasivo" value="#{caracteristicasHardwareBackBean.oCaracteristica.pasivo}" rendered="#{caracteristicasHardwareBackBean.oCaracteristica.id != null}"/>
 						</h:panelGrid>
+						<p:panel id="listaCaracteristicasHijas" rendered="#{caracteristicasHardwareBackBean.oCaracteristica.id != null}">
+							<f:facet name="header">
+								<p:outputPanel style="display:block" styleClass="left">
+									<h:outputLabel value="ID: #{caracteristicasHardwareBackBean.oCaracteristicaHardwareHijaSeleccionada.id}" rendered="#{caracteristicasHardwareBackBean.oCaracteristicaHardwareHijaSeleccionada.id != null}" />
+								</p:outputPanel>
+								<p:outputPanel style="display:block;" styleClass="right">
+										<p:commandButton value="Nuevo" icon="fa fa-plus" style="color:white" action="#{caracteristicasHardwareBackBean.crearNuevaCaracteristicaHija}" immediate="true" oncomplete="PF('datosCaracteristicaHija').show()"/>
+										<p:commandButton value="Editar" icon="fa fa-pencil" style="color:white" immediate="true" action="#{caracteristicasHardwareBackBean.editarCaracteristicaHija}" />
+								</p:outputPanel>
+							</f:facet>
+							<p:dataTable id="tablaCaracteristicasHijas"
+								value="#{caracteristicasHardwareBackBean.listaCaracteristicasHijas}"
+								var="oCaracteristicaHija"
+								selection="#{caracteristicasHardwareBackBean.oCaracteristicaHardwareHijaSeleccionada}"
+								selectionMode="single"
+								rowKey="#{oCaracteristicaHija.id}"
+								 style="width:100%" 
+								 paginatorPosition="top"
+								 scrollable="true" 
+								 scrollHeight="250"
+								 paginator="true" 
+								 emptyMessage="#{labelName.tableEmptyMessage}" 
+	                             rows="12"	
+	                             pageLinks="3"
+	                             paginatorTemplate="#{configApplicationBean.paginatorTemplate}"
+	                             currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
+	                             <p:ajax event="rowDblselect" update=":nuevaCaracteristicaHija" listener="#{caracteristicasHardwareBackBean.editarCaracteristicaHija}"/> 
+									<p:column headerText="Descripción">
+										<h:outputText value="#{oCaracteristicaHija.descripcion}"/>
+									</p:column>
+									<p:column headerText="Pasivo" style="text-align:center;">
+										<p:selectBooleanCheckbox value="#{oCaracteristicaHija.pasivo}" disabled="true" styleClass="ui-linus-enabled"/>
+									</p:column>
+								</p:dataTable>
+						</p:panel>
 					</p:panel>
+					
 				</h:form>
 			</div>
+			<p:dialog header="false" widgetVar="datosCaracteristicaHija" width="400"  height="120" closable="false" showHeader="false" modal="true" resizable="false">
+				<h:form id="nuevaCaracteristicaHija">
+					<p:panel styleClass="fondoPaneles" style="height:100px">
+						<f:facet name="header">
+							<p:outputPanel style="display:block" styleClass="left">
+								<h:outputLabel value="ID: #{caracteristicasHardwareBackBean.oCaracteristicaHardwareHijaSeleccionada.id}" rendered="#{caracteristicasHardwareBackBean.oCaracteristicaHardwareHijaSeleccionada.id != null}" />
+							</p:outputPanel>
+							<p:outputPanel style="display:block" styleClass="right">
+								<p:commandButton value="#{labelName.btnGuardar}" icon="fa fa-floppy-o"  style="color:white"/>
+								<p:commandButton value="#{labelName.btnCancelar}" icon="fa fa-times" style="color:white" action="#{caracteristicasHardwareBackBean.crearNuevaCaracteristicaHija}"  immediate="true" onclick="PF('datosCaracteristicaHijo').hide()"/>
+							</p:outputPanel>
+						</f:facet>
+						<h:panelGrid columns="2" columnClasses="Wid20, Wid80" style="width:100%">
+							<h:outputLabel for="descripcion" value="Descripcion" />
+							<p:inputText id="descripcion" style="width:90%"/>
+							<h:outputLabel for="pasivo" value="Pasivo" rendered="#{caracteristicasHardwareBackBean.oCaracteristicaHija.id != null}"/>
+							<p:selectBooleanCheckbox id="pasivo" rendered="#{caracteristicasHardwareBackBean.oCaracteristicaHija.id != null}"/>
+						</h:panelGrid>
+					</p:panel>
+				</h:form>
+			</p:dialog>
 		</div>  
     </ui:define>
 </ui:composition>

@@ -24,10 +24,20 @@ public class CaracteristicasHardwareServiceImpl implements CaracteristicasHardwa
 	
 	@Transactional
 	@Override
-	public List<CaracteristicasHardware> listaCaracteristicasHardwarePadre() throws EntityNotFoundException{
+	public List<CaracteristicasHardware> listaCaracteristicasHardwarePadre(Boolean obtenerPasivos) throws EntityNotFoundException{
 		Search oSearch = new Search();
-		oSearch.addFilter(Filter.equal("pasivo", false));
+		oSearch.addFilter(Filter.equal("pasivo",  obtenerPasivos));
 		oSearch.addFilter(Filter.isNull("caracteristicaPadreId"));
+		oSearch.addSort(Sort.asc("descripcion"));
+		return oCaracteristicasHardwareDao.search(oSearch);
+	}
+	
+	@Transactional
+	@Override
+	public List<CaracteristicasHardware> obtieneListaCaracteristicasHardwarePorPadreId(Boolean obtenerPasivos, Integer caracteristicaPadreId) {
+		Search oSearch = new Search();
+		oSearch.addFilter(Filter.equal("pasivo", obtenerPasivos));
+		oSearch.addFilter(Filter.equal("caracteristicaPadreId", caracteristicaPadreId));
 		oSearch.addSort(Sort.asc("descripcion"));
 		return oCaracteristicasHardwareDao.search(oSearch);
 	}
@@ -83,5 +93,4 @@ public class CaracteristicasHardwareServiceImpl implements CaracteristicasHardwa
 	public List<CaracteristicasHardware> obtieneListaCaracteristicasHardwareAsociadoActivo(Integer tipoActivoId) {
 		return oCaracteristicasHardwareDao.obtieneListaCaracteristicasHardwareAgregadoPorTipoActivoId(tipoActivoId);
 	}
-
 }

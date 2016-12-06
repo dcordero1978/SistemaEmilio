@@ -8,16 +8,21 @@ import javax.annotation.PostConstruct;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
+import org.primefaces.context.RequestContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
 import ni.gob.inss.barista.businesslogic.service.BusinessException;
 import ni.gob.inss.barista.model.dao.DAOException;
 import ni.gob.inss.barista.model.dao.EntityNotFoundException;
+import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
 import ni.gob.inss.barista.view.bean.backbean.BaseBackBean;
 import ni.gob.inss.barista.view.utils.web.MessagesResults;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.CaracteristicasHardwareService;
+import ni.gob.inss.sisinv.bussineslogic.service.catalogos.CatalogoExtService;
 import ni.gob.inss.sisinv.model.entity.catalogo.CaracteristicasHardware;
+import ni.gob.inss.sisinv.util.CatalogoGeneral;
+import ni.gob.inss.sisinv.util.RegExpresionExtends;
 
 @Named
 @Scope("view")
@@ -25,12 +30,20 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 
 	private CaracteristicasHardware oCaracteristicaHardwareSeleccionado;
 	private CaracteristicasHardware oCaracteristica;
+	private CaracteristicasHardware oCaracteristicaHardwareHijaSeleccionada;
+	private CaracteristicasHardware oCaracteristicaHija;
 	private String filtroDescripcion;
+	private String regExpDescripcion = RegExpresionExtends.regExpDescripcion;
 	private List<CaracteristicasHardware> listaCaracteristicasHardwarePadre = new ArrayList<CaracteristicasHardware>();
 	private List<CaracteristicasHardware> listaGeneralCaracteristicas = new ArrayList<CaracteristicasHardware>();
+	private List<CaracteristicasHardware> listaCaracteristicasHijas = new ArrayList<CaracteristicasHardware>();
+	private List<Catalogo> listaTipoActivos = new ArrayList<Catalogo>();
+	
+	
 	private static final long serialVersionUID = 1L;
 
 	@Autowired CaracteristicasHardwareService oCaracteristicasHardwareService;
+	@Autowired CatalogoExtService oCatalogoService;
 	
 	@PostConstruct
 	public void init(){
@@ -39,9 +52,7 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 	}
 	
 	public void guardarOActualizar(){
-		oCaracteristica.setCreadoEl(this.getTimeNow());
-		oCaracteristica.setCreadoEnIp(this.getRemoteIp());
-		oCaracteristica.setCreadoPor(this.getUsuarioActual().getId());
+	
 		if(oCaracteristica.getId() == null){
 			guardar();
 		}else{
@@ -50,6 +61,9 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 	}
 	
 	public void guardar(){
+		oCaracteristica.setCreadoEl(this.getTimeNow());
+		oCaracteristica.setCreadoEnIp(this.getRemoteIp());
+		oCaracteristica.setCreadoPor(this.getUsuarioActual().getId());
 		try {
 			oCaracteristicasHardwareService.guardar(oCaracteristica);
 			mostrarMensajeInfo(MessagesResults.EXITO_GUARDAR);
@@ -60,6 +74,9 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 	
 	public void actualizar(){
 		try {
+			oCaracteristica.setModificadoEl(this.getTimeNow());
+			oCaracteristica.setModificadoEnIp(this.getRemoteIp());
+			oCaracteristica.setModificadoPor(this.getUsuarioActual().getId());
 			oCaracteristicasHardwareService.actualizar(oCaracteristica);
 			mostrarMensajeInfo(MessagesResults.EXITO_MODIFICAR);
 		} catch (BusinessException | DAOException e) {
@@ -67,37 +84,83 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 		}
 	}
 	
+	public void guardarOActualizarCaracteristicaHija(){
+		if(oCaracteristicaHija.getId() == null){
+			guardarCaracteristicaHija();
+		}else{
+			actualizarCaracteristicaHija();
+		}
+		this.crearNuevaCaracteristicaHija();
+		RequestContext.getCurrentInstance().execute("PF('datosCaracteristicaHija').hide()");
+	}
+	
+	public void guardarCaracteristicaHija(){
+		try {
+			oCaracteristicaHija.setCreadoEl(this.getTimeNow());
+			oCaracteristicaHija.setCreadoEnIp(this.getRemoteIp());
+			oCaracteristicaHija.setCreadoPor(this.getUsuarioActual().getId());
+			oCaracteristicaHija.setCaracteristicaPadreId(this.oCaracteristica.getId());
+			oCaracteristicasHardwareService.guardar(oCaracteristicaHija);
+			mostrarMensajeInfo(MessagesResults.EXITO_GUARDAR);
+		} catch (BusinessException | DAOException e) {
+			mostrarMensajeError(this.getClass().getSimpleName(), "guardarCaracteristicaHija",MessagesResults.ERROR_GUARDAR, e);
+		}
+	}
+	
+	public void actualizarCaracteristicaHija(){
+		try {
+			oCaracteristicaHija.setModificadoEl(this.getTimeNow());
+			oCaracteristicaHija.setModificadoEnIp(this.getRemoteIp());
+			oCaracteristicaHija.setModificadoPor(this.getUsuarioActual().getId());
+			oCaracteristicasHardwareService.actualizar(oCaracteristicaHija);
+			mostrarMensajeInfo(MessagesResults.EXITO_MODIFICAR);
+		} catch (BusinessException | DAOException e) {
+			mostrarMensajeError(this.getClass().getSimpleName(), "actualizarCaracteristicaHija", MessagesResults.ERROR_MODIFICAR, e);
+
+		}
+	}
+	
+	public void crearNuevaCaracteristicaHija(){
+		oCaracteristicaHija = new CaracteristicasHardware();
+	}
+	
+	public void editarCaracteristicaHija(){
+		if(oCaracteristicaHardwareHijaSeleccionada != null){
+			oCaracteristicaHija = oCaracteristicaHardwareHijaSeleccionada;
+			RequestContext.getCurrentInstance().execute("PF('datosCaracteristicaHija').show()");
+		}else{
+			mostrarMensajeError(MessagesResults.SELECCIONE_UN_REGISTRO);
+		}
+		
+	}
+	
 	public void cargarListas(){
 	 try {
-		this.listaCaracteristicasHardwarePadre = oCaracteristicasHardwareService.listaCaracteristicasHardwarePadre();
+		this.listaCaracteristicasHardwarePadre = oCaracteristicasHardwareService.listaCaracteristicasHardwarePadre(null, this.getFiltroDescripcion());
+		this.listaTipoActivos = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.TIPO_ACTIVO.getCodigoCatalogo()); 
 		this.buscar();
 	} catch (EntityNotFoundException e) {
 		mostrarMensajeError(this.getClass().getSimpleName(), "cagarListas", MessagesResults.ERROR_OBTENER_LISTA, e);
 		}
 	}
 	
-	public List<CaracteristicasHardware> obtieneListaCaracteristicasAsociadas(){
-		try {
-			if(this.oCaracteristica.getId()!=null){
-				return oCaracteristicasHardwareService.listaCaracteristicasHardwarePorPadreId(this.oCaracteristica.getId());
-			}
-		} catch (EntityNotFoundException e) {
-			mostrarMensajeError(MessagesResults.ERROR_OBTENER_LISTA);
-		}
-		return null;
+	private void cargarListaCaracteristicasHijas(){
+		this.listaCaracteristicasHijas = oCaracteristicasHardwareService.obtieneListaCaracteristicasHardwarePorPadreId(null, this.oCaracteristica.getId());
 	}
 	
 	public void buscar() throws EntityNotFoundException{
-		this.listaGeneralCaracteristicas = oCaracteristicasHardwareService.listaCaracteristicasPorDescripcion(this.getFiltroDescripcion(), null);
+		this.listaCaracteristicasHardwarePadre = oCaracteristicasHardwareService.listaCaracteristicasHardwarePadre(null, this.getFiltroDescripcion());
 	}
 	
 	public void agregar(){
 		this.oCaracteristica = new CaracteristicasHardware();
+		this.listaCaracteristicasHijas.clear();
 	}
 	
 	public void editar(){
 		if(this.oCaracteristicaHardwareSeleccionado !=null){
 			this.oCaracteristica = this.oCaracteristicaHardwareSeleccionado;
+			this.cargarListaCaracteristicasHijas();
 		}else{
 			mostrarMensajeInfo(MessagesResults.SELECCIONE_UN_REGISTRO);
 		}
@@ -134,5 +197,33 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 	public void setoCaracteristica(CaracteristicasHardware oCaracteristica) {
 		this.oCaracteristica = oCaracteristica;
 	}
-	
+
+	public List<CaracteristicasHardware> getListaCaracteristicasHijas() {
+		return listaCaracteristicasHijas;
+	}
+
+	public CaracteristicasHardware getoCaracteristicaHardwareHijaSeleccionada() {
+		return oCaracteristicaHardwareHijaSeleccionada;
+	}
+
+	public void setoCaracteristicaHardwareHijaSeleccionada(
+			CaracteristicasHardware oCaracteristicaHardwareHijaSeleccionada) {
+		this.oCaracteristicaHardwareHijaSeleccionada = oCaracteristicaHardwareHijaSeleccionada;
+	}
+
+	public CaracteristicasHardware getoCaracteristicaHija() {
+		return oCaracteristicaHija;
+	}
+
+	public void setoCaracteristicaHija(CaracteristicasHardware oCaracteristicaHija) {
+		this.oCaracteristicaHija = oCaracteristicaHija;
+	}
+
+	public String getRegExpDescripcion() {
+		return regExpDescripcion;
+	}
+
+	public List<Catalogo> getListaTipoActivos() {
+		return listaTipoActivos;
+	}	
 }

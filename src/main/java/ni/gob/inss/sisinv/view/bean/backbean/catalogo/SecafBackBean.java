@@ -16,6 +16,7 @@ import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
 import ni.gob.inss.barista.model.entity.catalogo.TiposCatalogo;
 import ni.gob.inss.barista.view.bean.backbean.BaseBackBean;
 import ni.gob.inss.barista.view.utils.web.MessagesResults;
+import ni.gob.inss.sisinv.bussineslogic.service.catalogos.CatalogoExtService;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.SecafService;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.TipoCatalogoExtService;
 import ni.gob.inss.sisinv.bussineslogic.service.seguridad.UsuarioExtService;
@@ -47,6 +48,8 @@ public class SecafBackBean extends BaseBackBean implements Serializable{
 	private Boolean nuevoRegistro;
 	private Integer tipoBien;
 	private Integer gasto;
+	private Integer tipoActivoId;
+	private Integer tipoMantenimientoId;
 	
 	private Secaf catalogoSeleccionado; 
 	
@@ -55,6 +58,8 @@ public class SecafBackBean extends BaseBackBean implements Serializable{
 	
 	private List<Secaf> listaCatalogoSecaf;
 	private List<Catalogo> listaTipoBienes;
+	private List<Catalogo> listaTipoMantenimiento;
+	private List<Catalogo> listaTipoActivo;
 	
 	private boolean autorizadoParaEditar;
 	
@@ -66,13 +71,27 @@ public class SecafBackBean extends BaseBackBean implements Serializable{
 	
 	@Autowired
 	private UsuarioExtService oUsuarioService;
+	
+	@Autowired
+	private CatalogoExtService oCatalogoService; 
+	
 	@PostConstruct
 	public void init(){
 		limpiar();
 		this.cargarExpresionesRegulares();
 		this.cargarListaCatalogo();
+		this.cargarListas();
 		this.buscar();
 		autorizadoParaEditar =  oUsuarioService.usuarioTieneAutorizacion(this.getUsuarioActual(), this.getEntidadActual(), "ESEC");
+	}
+	
+	private void cargarListas(){
+		try {
+			this.listaTipoActivo = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.TIPO_ACTIVO.getCodigoCatalogo());
+			this.listaTipoMantenimiento = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.TIPO_MANTENIMIENTO.getCodigoCatalogo());
+		} catch (EntityNotFoundException e) {
+				mostrarMensajeError(MessagesResults.ERROR_OBTENER_LISTA);
+		}
 	}
 	
 	public void limpiar(){
@@ -139,11 +158,11 @@ public class SecafBackBean extends BaseBackBean implements Serializable{
 			this.setPasivo(oSecaf.isPasivo());
 			this.setGasto(oSecaf.getGasto());
 			this.setNuevoRegistro(false);
+			this.setTipoActivoId(oSecaf.getTipoActivo());
+			this.setTipoMantenimientoId(oSecaf.getTipoMantenimiento());
 		} catch (EntityNotFoundException e) {
 			mostrarMensajeError(this.getClass().getSimpleName(), "cargarDatosSecaf", MessagesResults.ERROR_OBTENER, e);
 		}
-		
-		
 	}
 	
 	private void guardar() throws BusinessException, DAOException{
@@ -196,6 +215,8 @@ public class SecafBackBean extends BaseBackBean implements Serializable{
 			oSecaf.setCbs(this.getCodigoCbs());
 			oSecaf.setTipoBien(this.getTipoBien());
 			oSecaf.setDescripcionCbs(this.getDescripcionCbs());
+			oSecaf.setTipoMantenimiento(this.getTipoMantenimientoId());
+			oSecaf.setTipoActivo(this.getTipoActivoId());
 			oSecaf.setGasto(this.getGasto());
 		} catch (Exception e) {
 			mostrarMensajeError(this.getClass().getSimpleName(), "obtieneCatalogoSecafPreparado", MessagesResults.ERROR_OBTENER, e);
@@ -341,6 +362,30 @@ public class SecafBackBean extends BaseBackBean implements Serializable{
 
 	public boolean isAutorizadoParaEditar() {
 		return autorizadoParaEditar;
+	}
+
+	public List<Catalogo> getListaTipoMantenimiento() {
+		return listaTipoMantenimiento;
+	}
+
+	public List<Catalogo> getListaTipoActivo() {
+		return listaTipoActivo;
+	}
+
+	public Integer getTipoActivoId() {
+		return tipoActivoId;
+	}
+
+	public void setTipoActivoId(Integer tipoActivoId) {
+		this.tipoActivoId = tipoActivoId;
+	}
+
+	public Integer getTipoMantenimientoId() {
+		return tipoMantenimientoId;
+	}
+
+	public void setTipoMantenimientoId(Integer tipoMantenimientoId) {
+		this.tipoMantenimientoId = tipoMantenimientoId;
 	}
 	
 }

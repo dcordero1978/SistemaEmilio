@@ -12,6 +12,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -28,6 +30,9 @@ import ni.gob.inss.sisinv.model.entity.inventario.Activos;
 @Entity
 @Table(name = "secaf", schema = "catalogo", uniqueConstraints = {@UniqueConstraint(columnNames={"cuenta","subcuenta","digito_auxiliar","objeto"})})
 @SequenceGenerator(name="Secaf_SEQ", sequenceName="catalogo.secaf_id_seq")
+@NamedNativeQueries(
+		@NamedNativeQuery(name="selectSecafPorDescripcion", query="SELECT * FROM catalogo.secaf where descripcion_cbs ilike '%'||:descripcion||'%' and pasivo is false order by descripcion_cbs asc", resultClass=Secaf.class)
+)
 public class Secaf extends EntityBase implements java.io.Serializable {
 
 	
@@ -45,6 +50,12 @@ public class Secaf extends EntityBase implements java.io.Serializable {
 	private Catalogo tipoBienCatalogo;
 	private List<Activos> listaActivos = new ArrayList<Activos>();
 
+	private Integer tipoMantenimiento;
+	private Catalogo oTipoMantenimiento;
+	private Integer tipoActivo;
+	private Catalogo oTipoActivo;
+	
+	
 	@Id
 	@Column(name = "id", unique = true, nullable = false, columnDefinition="serial")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="Secaf_SEQ")
@@ -158,4 +169,42 @@ public class Secaf extends EntityBase implements java.io.Serializable {
 		this.tipoBienCatalogo = tipoBienCatalogo;
 	}
 
+	@Column(name="tipo_mantenimiento")
+	public Integer getTipoMantenimiento() {
+		return tipoMantenimiento;
+	}
+
+	public void setTipoMantenimiento(Integer tipoMantenimiento) {
+		this.tipoMantenimiento = tipoMantenimiento;
+	}
+	
+	
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="tipo_mantenimiento", updatable=false, insertable=false)
+	public Catalogo getoTipoMantenimiento() {
+		return oTipoMantenimiento;
+	}
+
+	public void setoTipoMantenimiento(Catalogo oTipoMantenimiento) {
+		this.oTipoMantenimiento = oTipoMantenimiento;
+	}
+
+	@Column(name="tipo_activo")
+	public Integer getTipoActivo() {
+		return tipoActivo;
+	}
+
+	public void setTipoActivo(Integer tipoActivo) {
+		this.tipoActivo = tipoActivo;
+	}
+
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="tipo_activo", updatable=false, insertable= false)
+	public Catalogo getoTipoActivo() {
+		return oTipoActivo;
+	}
+
+	public void setoTipoActivo(Catalogo oTipoActivo) {
+		this.oTipoActivo = oTipoActivo;
+	}
 }

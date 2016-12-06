@@ -77,7 +77,7 @@
 							<h:outputText value="ID: #{secafBackBean.hfId}" rendered="#{!secafBackBean.nuevoRegistro}"/>
 							<p:outputPanel style="display:block" styleClass="right">
 								<p:commandButton widgetVar="btnGuardar" icon="ui-icon-disk" value="#{labelName.btnGuardar}" action="#{secafBackBean.guardarOactualizar}" ajax="true" update=":formLista formDatosSecaf" rendered="#{secafBackBean.autorizadoParaEditar}"/>
-								<p:commandButton widgetVar="btnCancelar" icon="ui-icon-cancel" value="#{labelName.btnCancelar}" action="#{secafBackBean.limpiar}" update="formDatosSecaf"/>
+								<p:commandButton widgetVar="btnCancelar" icon="ui-icon-cancel" value="#{labelName.btnCancelar}" action="#{secafBackBean.limpiar}" update="formDatosSecaf" immediate="true"/>
 							</p:outputPanel>
 						</f:facet>						
 						<h:panelGrid columns="2" style="width:100%" columnClasses="Wid20, Wid80">
@@ -111,6 +111,17 @@
 							<p:inputText id="cbs" label="CBS" maxlength="20" required="true" value="#{secafBackBean.codigoCbs}" disabled="#{!secafBackBean.autorizadoParaEditar}"/>
 							<h:outputLabel for="descripcionCbs" value="Descripción CBS"/>
 							<p:inputText  id="descripcionCbs" maxlength="250" required="true" label="Descripción CBS" styleClass="Wid90" value="#{secafBackBean.descripcionCbs}" disabled="#{!secafBackBean.autorizadoParaEditar}"/>
+							<p:outputLabel for="tipoMantenimiento" value="Tip de Mantenimiento"/>
+							<p:selectOneMenu id="tipoMantenimiento" value="#{secafBackBean.tipoMantenimientoId}" style="width:90%">
+								<f:selectItem itemLabel="Seleccione" itemValue="#{null}"/>
+								<f:selectItems value="#{secafBackBean.listaTipoMantenimiento}" var="oTipoBien" itemLabel="#{oTipoBien.descripcion}" itemValue="#{oTipoBien.id}"/>
+							</p:selectOneMenu>
+							<p:outputLabel for="tipoActivo" value="Tipo Activo"/>
+							<p:selectOneMenu id="tipoActivo" style="width:90%" value="#{secafBackBean.tipoActivoId}">
+								<f:selectItem itemLabel="Seleccione" itemValue="#{null}" />
+								<f:selectItems value="#{secafBackBean.listaTipoActivo}" var="oTipoActivo" itemLabel="#{oTipoActivo.descripcion}" itemValue="#{oTipoActivo.id}"/>
+							</p:selectOneMenu>
+							
 							<h:outputLabel for="pasivo" value="Pasivo"  rendered="#{!secafBackBean.nuevoRegistro}"/>
 							<p:selectBooleanButton offLabel="No" onLabel="Si" id="pasivo" value="#{secafBackBean.pasivo}" rendered="#{!secafBackBean.nuevoRegistro}" disabled="#{!secafBackBean.autorizadoParaEditar}"/>
 						</h:panelGrid>

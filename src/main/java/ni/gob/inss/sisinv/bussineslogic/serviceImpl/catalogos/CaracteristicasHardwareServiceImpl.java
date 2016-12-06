@@ -24,10 +24,21 @@ public class CaracteristicasHardwareServiceImpl implements CaracteristicasHardwa
 	
 	@Transactional
 	@Override
-	public List<CaracteristicasHardware> listaCaracteristicasHardwarePadre() throws EntityNotFoundException{
+	public List<CaracteristicasHardware> listaCaracteristicasHardwarePadre(Boolean obtenerPasivos, String descripcion) throws EntityNotFoundException{
 		Search oSearch = new Search();
-		oSearch.addFilter(Filter.equal("pasivo", false));
+		oSearch.addFilter(Filter.equal("pasivo",  obtenerPasivos));
 		oSearch.addFilter(Filter.isNull("caracteristicaPadreId"));
+		oSearch.addFilter(Filter.ilike("descripcion", "%"+descripcion+"%"));
+		oSearch.addSort(Sort.asc("descripcion"));
+		return oCaracteristicasHardwareDao.search(oSearch);
+	}
+	
+	@Transactional
+	@Override
+	public List<CaracteristicasHardware> obtieneListaCaracteristicasHardwarePorPadreId(Boolean obtenerPasivos, Integer caracteristicaPadreId) {
+		Search oSearch = new Search();
+		oSearch.addFilter(Filter.equal("pasivo", obtenerPasivos));
+		oSearch.addFilter(Filter.equal("caracteristicaPadreId", caracteristicaPadreId));
 		oSearch.addSort(Sort.asc("descripcion"));
 		return oCaracteristicasHardwareDao.search(oSearch);
 	}
@@ -46,6 +57,9 @@ public class CaracteristicasHardwareServiceImpl implements CaracteristicasHardwa
 	@Transactional
 	@Override
 	public void guardar(CaracteristicasHardware oCaracteristicaHardware) throws BusinessException, DAOException {
+		if(!this.obtieneListaCaracteristicasHardwarePorDescripcion(Boolean.FALSE, oCaracteristicaHardware.getDescripcion()).isEmpty()){
+			throw new BusinessException("YA EXISTE UN REGISTRO CON ESTA DESCRIPCION.");
+		}
 		oCaracteristicasHardwareDao.saveUpper(oCaracteristicaHardware);
 	}
 
@@ -53,7 +67,6 @@ public class CaracteristicasHardwareServiceImpl implements CaracteristicasHardwa
 	@Override
 	public void actualizar(CaracteristicasHardware oCaracteristicaHardware) throws BusinessException, DAOException {
 		oCaracteristicasHardwareDao.updateUpper(oCaracteristicaHardware);
-		
 	}
 
 	@Transactional
@@ -63,6 +76,33 @@ public class CaracteristicasHardwareServiceImpl implements CaracteristicasHardwa
 		oSearch.addFilter(Filter.equal("caracteristicaPadreId", padreId));
 		return oCaracteristicasHardwareDao.search(oSearch);
 	}
+	
+	@Transactional
+	@Override
+	public List<CaracteristicasHardware> obtieneListaCaracteristicasHardwareDisponiblePorTipoActivoId(Integer tipoActivoId) {
+		return oCaracteristicasHardwareDao.obtieneListaCaracteristicasHardwareDisponiblePorTipoActivoId(tipoActivoId);
+	}
 
+	@Transactional
+	@Override
+	public CaracteristicasHardware obtieneCaracteritisticaHardwarePorId(Integer caracteristicaId) {
+		Search oSearch = new Search();
+		oSearch.addFilter(Filter.equal("id", caracteristicaId));
+		return (CaracteristicasHardware) oCaracteristicasHardwareDao.searchUnique(oSearch);
+	}
 
+	@Transactional
+	@Override
+	public List<CaracteristicasHardware> obtieneListaCaracteristicasHardwareAsociadoActivo(Integer tipoActivoId) {
+		return oCaracteristicasHardwareDao.obtieneListaCaracteristicasHardwareAgregadoPorTipoActivoId(tipoActivoId);
+	}
+	
+	@Transactional
+	@Override
+	public List<CaracteristicasHardware> obtieneListaCaracteristicasHardwarePorDescripcion(Boolean obtenerPasivo, String descripcion){
+		Search oSearch = new Search();
+		oSearch.addFilter(Filter.equal("descripcion", descripcion));
+		oSearch.addFilter(Filter.equal("pasivo", obtenerPasivo));
+		return oCaracteristicasHardwareDao.search(oSearch);
+	}
 }

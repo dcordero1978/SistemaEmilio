@@ -56,6 +56,9 @@ public class CaracteristicasHardwareServiceImpl implements CaracteristicasHardwa
 	@Transactional
 	@Override
 	public void guardar(CaracteristicasHardware oCaracteristicaHardware) throws BusinessException, DAOException {
+		if(!this.obtieneListaCaracteristicasHardwarePorDescripcion(Boolean.FALSE, oCaracteristicaHardware.getDescripcion()).isEmpty()){
+			throw new BusinessException("YA EXISTE UN REGISTRO CON ESTA DESCRIPCION.");
+		}
 		oCaracteristicasHardwareDao.saveUpper(oCaracteristicaHardware);
 	}
 
@@ -63,7 +66,6 @@ public class CaracteristicasHardwareServiceImpl implements CaracteristicasHardwa
 	@Override
 	public void actualizar(CaracteristicasHardware oCaracteristicaHardware) throws BusinessException, DAOException {
 		oCaracteristicasHardwareDao.updateUpper(oCaracteristicaHardware);
-		
 	}
 
 	@Transactional
@@ -92,5 +94,14 @@ public class CaracteristicasHardwareServiceImpl implements CaracteristicasHardwa
 	@Override
 	public List<CaracteristicasHardware> obtieneListaCaracteristicasHardwareAsociadoActivo(Integer tipoActivoId) {
 		return oCaracteristicasHardwareDao.obtieneListaCaracteristicasHardwareAgregadoPorTipoActivoId(tipoActivoId);
+	}
+	
+	@Transactional
+	@Override
+	public List<CaracteristicasHardware> obtieneListaCaracteristicasHardwarePorDescripcion(Boolean obtenerPasivo, String descripcion){
+		Search oSearch = new Search();
+		oSearch.addFilter(Filter.equal("descripcion", descripcion));
+		oSearch.addFilter(Filter.equal("pasivo", obtenerPasivo));
+		return oCaracteristicasHardwareDao.search(oSearch);
 	}
 }

@@ -18,4 +18,6 @@ public interface CaracteristicasHardwareService {
 	public CaracteristicasHardware obtieneCaracteritisticaHardwarePorId(Integer caracteristicaId);
 	public List<CaracteristicasHardware> obtieneListaCaracteristicasHardwareAsociadoActivo(Integer tipoActivoId);
 	public List<CaracteristicasHardware> obtieneListaCaracteristicasHardwarePorPadreId(Boolean obtenerPasivos, Integer caracteristicaPadreId);
+	List<CaracteristicasHardware> obtieneListaCaracteristicasHardwarePorDescripcion(Boolean obtenerPasivo,
+			String descripcion);
 }

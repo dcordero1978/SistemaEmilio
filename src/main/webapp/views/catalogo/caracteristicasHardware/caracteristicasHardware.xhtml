@@ -19,7 +19,7 @@
 							<p:outputPanel style="display:block" styleClass="left">
 								<h:panelGrid style="width:100%" columns="2">
 									<p:inputText id="filtroDescripcion" style="width:90%" placeholder="#{labelName.placeholderBuscar}" value="#{caracteristicasHardwareBackBean.filtroDescripcion}"/>
-									<p:commandButton value="#{labelName.btnBuscar}" id="btnBuscar" icon="fa fa-search" style="color:white;" action="#{caracteristicasHardwareBackBean.buscar}" update="tablaCaracteristicas"/>
+									<p:commandButton value="#{labelName.btnBuscar}" id="btnBuscar" icon="fa fa-search" style="color:white;" action="#{caracteristicasHardwareBackBean.buscar}" update="formListaCarcteristicas"/>
 								</h:panelGrid>
 							</p:outputPanel>
 							<p:outputPanel style="display:block" styleClass="right">
@@ -46,8 +46,11 @@
                              paginatorTemplate="#{configApplicationBean.paginatorTemplate}"
                              currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
                              <p:ajax event="rowDblselect" update=":datosCaracteristicaHardware" listener="#{caracteristicasHardwareBackBean.editar}"/> 
-								<p:column headerText="Descripción">
+								<p:column headerText="Descripción" width="50%">
 									<h:outputText value="#{oCaracteristica.descripcion}"/>
+								</p:column>
+								<p:column headerText="Tipo de Activo">
+									<h:outputText value="#{oCaracteristica.oTipoActivo.descripcion}"/>
 								</p:column>
 								<p:column headerText="Pasivo" style="text-align:center;">
 									<p:selectBooleanCheckbox value="#{oCaracteristica.pasivo}" disabled="true" styleClass="ui-linus-enabled"/>

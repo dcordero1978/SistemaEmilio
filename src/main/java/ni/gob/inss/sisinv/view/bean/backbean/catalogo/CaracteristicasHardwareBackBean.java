@@ -136,7 +136,7 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 	
 	public void cargarListas(){
 	 try {
-		this.listaCaracteristicasHardwarePadre = oCaracteristicasHardwareService.listaCaracteristicasHardwarePadre(null);
+		this.listaCaracteristicasHardwarePadre = oCaracteristicasHardwareService.listaCaracteristicasHardwarePadre(null, this.getFiltroDescripcion());
 		this.listaTipoActivos = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.TIPO_ACTIVO.getCodigoCatalogo()); 
 		this.buscar();
 	} catch (EntityNotFoundException e) {
@@ -149,7 +149,7 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 	}
 	
 	public void buscar() throws EntityNotFoundException{
-		this.listaGeneralCaracteristicas = oCaracteristicasHardwareService.listaCaracteristicasPorDescripcion(this.getFiltroDescripcion(), null);
+		this.listaCaracteristicasHardwarePadre = oCaracteristicasHardwareService.listaCaracteristicasHardwarePadre(null, this.getFiltroDescripcion());
 	}
 	
 	public void agregar(){

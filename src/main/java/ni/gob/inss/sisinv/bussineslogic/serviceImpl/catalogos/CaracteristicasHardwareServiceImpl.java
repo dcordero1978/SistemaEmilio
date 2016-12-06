@@ -24,10 +24,11 @@ public class CaracteristicasHardwareServiceImpl implements CaracteristicasHardwa
 	
 	@Transactional
 	@Override
-	public List<CaracteristicasHardware> listaCaracteristicasHardwarePadre(Boolean obtenerPasivos) throws EntityNotFoundException{
+	public List<CaracteristicasHardware> listaCaracteristicasHardwarePadre(Boolean obtenerPasivos, String descripcion) throws EntityNotFoundException{
 		Search oSearch = new Search();
 		oSearch.addFilter(Filter.equal("pasivo",  obtenerPasivos));
 		oSearch.addFilter(Filter.isNull("caracteristicaPadreId"));
+		oSearch.addFilter(Filter.ilike("descripcion", "%"+descripcion+"%"));
 		oSearch.addSort(Sort.asc("descripcion"));
 		return oCaracteristicasHardwareDao.search(oSearch);
 	}

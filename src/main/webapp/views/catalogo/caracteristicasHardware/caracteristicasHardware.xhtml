@@ -71,17 +71,20 @@
 						</f:facet>
 						<h:panelGrid style="width:100%" columns="2"  columnClasses="Wid20, Wid80">
 							<h:outputLabel for="descripcionCaracteristica" value="Descripción:" />
-							<p:inputText id="descripcionCaracteristica" style="width:90%" required="true" value="#{caracteristicasHardwareBackBean.oCaracteristica.descripcion}"/>
+							<p:inputText id="descripcionCaracteristica" style="width:90%" required="true" value="#{caracteristicasHardwareBackBean.oCaracteristica.descripcion}" label="Descripción">
+								<f:validateRegex pattern="#{caracteristicasHardwareBackBean.regExpDescripcion}"/>
+								<f:validateLength minimum="1" maximum="50"/>
+							</p:inputText>
 							<h:outputLabel for="pasivo" value="Pasivo:" rendered="#{caracteristicasHardwareBackBean.oCaracteristica.id != null}"/>
 							<p:selectBooleanCheckbox id="pasivo" value="#{caracteristicasHardwareBackBean.oCaracteristica.pasivo}" rendered="#{caracteristicasHardwareBackBean.oCaracteristica.id != null}"/>
 						</h:panelGrid>
 						<p:panel id="listaCaracteristicasHijas" rendered="#{caracteristicasHardwareBackBean.oCaracteristica.id != null}">
 							<f:facet name="header">
 								<p:outputPanel style="display:block" styleClass="left">
-									<h:outputLabel value="ID: #{caracteristicasHardwareBackBean.oCaracteristicaHardwareHijaSeleccionada.id}" rendered="#{caracteristicasHardwareBackBean.oCaracteristicaHardwareHijaSeleccionada.id != null}" />
+									<h:outputLabel value="Lista de Caracteristicas Hijas" />
 								</p:outputPanel>
 								<p:outputPanel style="display:block;" styleClass="right">
-										<p:commandButton value="Nuevo" icon="fa fa-plus" style="color:white" action="#{caracteristicasHardwareBackBean.crearNuevaCaracteristicaHija}" immediate="true" oncomplete="PF('datosCaracteristicaHija').show()"/>
+										<p:commandButton resetValues="true" update=":nuevaCaracteristicaHija" value="Nuevo" icon="fa fa-plus" style="color:white" action="#{caracteristicasHardwareBackBean.crearNuevaCaracteristicaHija}" immediate="true" oncomplete="PF('datosCaracteristicaHija').show()"/>
 										<p:commandButton value="Editar" icon="fa fa-pencil" style="color:white" immediate="true" action="#{caracteristicasHardwareBackBean.editarCaracteristicaHija}" />
 								</p:outputPanel>
 							</f:facet>
@@ -114,27 +117,31 @@
 					
 				</h:form>
 			</div>
-			<p:dialog header="false" widgetVar="datosCaracteristicaHija" width="400"  height="120" closable="false" showHeader="false" modal="true" resizable="false">
-				<h:form id="nuevaCaracteristicaHija">
-					<p:panel styleClass="fondoPaneles" style="height:100px">
-						<f:facet name="header">
-							<p:outputPanel style="display:block" styleClass="left">
-								<h:outputLabel value="ID: #{caracteristicasHardwareBackBean.oCaracteristicaHardwareHijaSeleccionada.id}" rendered="#{caracteristicasHardwareBackBean.oCaracteristicaHardwareHijaSeleccionada.id != null}" />
-							</p:outputPanel>
-							<p:outputPanel style="display:block" styleClass="right">
-								<p:commandButton value="#{labelName.btnGuardar}" icon="fa fa-floppy-o"  style="color:white"/>
-								<p:commandButton value="#{labelName.btnCancelar}" icon="fa fa-times" style="color:white" action="#{caracteristicasHardwareBackBean.crearNuevaCaracteristicaHija}"  immediate="true" onclick="PF('datosCaracteristicaHijo').hide()"/>
-							</p:outputPanel>
-						</f:facet>
-						<h:panelGrid columns="2" columnClasses="Wid20, Wid80" style="width:100%">
-							<h:outputLabel for="descripcion" value="Descripcion" />
-							<p:inputText id="descripcion" style="width:90%"/>
-							<h:outputLabel for="pasivo" value="Pasivo" rendered="#{caracteristicasHardwareBackBean.oCaracteristicaHija.id != null}"/>
-							<p:selectBooleanCheckbox id="pasivo" rendered="#{caracteristicasHardwareBackBean.oCaracteristicaHija.id != null}"/>
-						</h:panelGrid>
-					</p:panel>
-				</h:form>
-			</p:dialog>
+			<h:form id="nuevaCaracteristicaHija">
+				<p:dialog header="false" id="modalCaracteristicasHijas" widgetVar="datosCaracteristicaHija"  width="400"  height="120" closable="false" showHeader="false" modal="true" resizable="false" showEffect="blind" hideEffect="blind">
+						<p:panel styleClass="fondoPaneles" style="height:100px">
+							<f:facet name="header">
+								<p:outputPanel style="display:block" styleClass="left">
+									<h:outputLabel value="ID: #{caracteristicasHardwareBackBean.oCaracteristicaHija.id}" rendered="#{caracteristicasHardwareBackBean.oCaracteristicaHija.id != null}" />
+								</p:outputPanel>
+								<p:outputPanel style="display:block" styleClass="right">
+									<p:commandButton value="#{labelName.btnGuardar}" icon="fa fa-floppy-o"  style="color:white" action="#{caracteristicasHardwareBackBean.guardarOActualizarCaracteristicaHija}" update=":datosCaracteristicaHardware"/>
+									<p:commandButton value="#{labelName.btnCancelar}" icon="fa fa-times" style="color:white" action="#{caracteristicasHardwareBackBean.crearNuevaCaracteristicaHija}"  immediate="true" onclick="PF('datosCaracteristicaHija').hide()"/>
+								</p:outputPanel>
+							</f:facet>
+							<h:panelGrid columns="2" columnClasses="Wid20, Wid80" style="width:100%">
+								<h:outputLabel for="descripcion" value="Descripcion" />
+								<p:inputText label="Descripción" required="true" id="descripcion" style="width:90%" value="#{caracteristicasHardwareBackBean.oCaracteristicaHija.descripcion}">
+									<f:validateRegex pattern="#{caracteristicasHardwareBackBean.regExpDescripcion}"/>
+									<f:validateLength minimum="1" maximum="50"/>
+								</p:inputText>
+								
+								<h:outputLabel for="pasivo" value="Pasivo" rendered="#{caracteristicasHardwareBackBean.oCaracteristicaHija.id != null}"/>
+								<p:selectBooleanCheckbox value="#{caracteristicasHardwareBackBean.oCaracteristicaHija.pasivo}" id="pasivo" rendered="#{caracteristicasHardwareBackBean.oCaracteristicaHija.id != null}"/>
+							</h:panelGrid>
+						</p:panel>
+				</p:dialog>
+			</h:form>
 		</div>  
     </ui:define>
 </ui:composition>

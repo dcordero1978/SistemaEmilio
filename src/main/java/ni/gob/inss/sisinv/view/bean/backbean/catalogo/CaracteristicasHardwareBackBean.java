@@ -19,6 +19,7 @@ import ni.gob.inss.barista.view.bean.backbean.BaseBackBean;
 import ni.gob.inss.barista.view.utils.web.MessagesResults;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.CaracteristicasHardwareService;
 import ni.gob.inss.sisinv.model.entity.catalogo.CaracteristicasHardware;
+import ni.gob.inss.sisinv.util.RegExpresionExtends;
 
 @Named
 @Scope("view")
@@ -29,6 +30,7 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 	private CaracteristicasHardware oCaracteristicaHardwareHijaSeleccionada;
 	private CaracteristicasHardware oCaracteristicaHija;
 	private String filtroDescripcion;
+	private String regExpDescripcion = RegExpresionExtends.regExpDescripcion;
 	private List<CaracteristicasHardware> listaCaracteristicasHardwarePadre = new ArrayList<CaracteristicasHardware>();
 	private List<CaracteristicasHardware> listaGeneralCaracteristicas = new ArrayList<CaracteristicasHardware>();
 	private List<CaracteristicasHardware> listaCaracteristicasHijas = new ArrayList<CaracteristicasHardware>();
@@ -72,6 +74,42 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 			mostrarMensajeInfo(MessagesResults.EXITO_MODIFICAR);
 		} catch (BusinessException | DAOException e) {
 			mostrarMensajeError(this.getClass().getSimpleName(), "Actualizar", MessagesResults.ERROR_MODIFICAR, e);
+		}
+	}
+	
+	public void guardarOActualizarCaracteristicaHija(){
+		if(oCaracteristicaHija.getId() == null){
+			guardarCaracteristicaHija();
+		}else{
+			actualizarCaracteristicaHija();
+		}
+		this.crearNuevaCaracteristicaHija();
+		RequestContext.getCurrentInstance().execute("PF('datosCaracteristicaHija').hide()");
+	}
+	
+	public void guardarCaracteristicaHija(){
+		try {
+			oCaracteristicaHija.setCreadoEl(this.getTimeNow());
+			oCaracteristicaHija.setCreadoEnIp(this.getRemoteIp());
+			oCaracteristicaHija.setCreadoPor(this.getUsuarioActual().getId());
+			oCaracteristicaHija.setCaracteristicaPadreId(this.oCaracteristica.getId());
+			oCaracteristicasHardwareService.guardar(oCaracteristicaHija);
+			mostrarMensajeInfo(MessagesResults.EXITO_GUARDAR);
+		} catch (BusinessException | DAOException e) {
+			mostrarMensajeError(this.getClass().getSimpleName(), "guardarCaracteristicaHija",MessagesResults.ERROR_GUARDAR, e);
+		}
+	}
+	
+	public void actualizarCaracteristicaHija(){
+		try {
+			oCaracteristicaHija.setModificadoEl(this.getTimeNow());
+			oCaracteristicaHija.setModificadoEnIp(this.getRemoteIp());
+			oCaracteristicaHija.setModificadoPor(this.getUsuarioActual().getId());
+			oCaracteristicasHardwareService.actualizar(oCaracteristicaHija);
+			mostrarMensajeInfo(MessagesResults.EXITO_MODIFICAR);
+		} catch (BusinessException | DAOException e) {
+			mostrarMensajeError(this.getClass().getSimpleName(), "actualizarCaracteristicaHija", MessagesResults.ERROR_MODIFICAR, e);
+
 		}
 	}
 	
@@ -173,5 +211,8 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 	public void setoCaracteristicaHija(CaracteristicasHardware oCaracteristicaHija) {
 		this.oCaracteristicaHija = oCaracteristicaHija;
 	}
-	
+
+	public String getRegExpDescripcion() {
+		return regExpDescripcion;
+	}
 }

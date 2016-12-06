@@ -75,6 +75,11 @@
 								<f:validateRegex pattern="#{caracteristicasHardwareBackBean.regExpDescripcion}"/>
 								<f:validateLength minimum="1" maximum="50"/>
 							</p:inputText>
+							<h:outputLabel for="tipoActivo" value="Tipo de Activo:" />
+							<p:selectOneMenu id="tipoActivo" label="Tipo de Activo" value="#{caracteristicasHardwareBackBean.oCaracteristica.tipoActivoId}" style="width:90%">
+								<f:selectItem itemLabel="Seleccione" itemValue="#{null}" />
+								<f:selectItems value="#{caracteristicasHardwareBackBean.listaTipoActivos}" var="oTipoActivo" itemLabel="#{oTipoActivo.descripcion}" itemValue="#{oTipoActivo.id}"/>
+							</p:selectOneMenu>
 							<h:outputLabel for="pasivo" value="Pasivo:" rendered="#{caracteristicasHardwareBackBean.oCaracteristica.id != null}"/>
 							<p:selectBooleanCheckbox id="pasivo" value="#{caracteristicasHardwareBackBean.oCaracteristica.pasivo}" rendered="#{caracteristicasHardwareBackBean.oCaracteristica.id != null}"/>
 						</h:panelGrid>

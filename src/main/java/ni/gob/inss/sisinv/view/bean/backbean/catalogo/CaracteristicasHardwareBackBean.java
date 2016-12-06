@@ -15,10 +15,13 @@ import org.springframework.context.annotation.Scope;
 import ni.gob.inss.barista.businesslogic.service.BusinessException;
 import ni.gob.inss.barista.model.dao.DAOException;
 import ni.gob.inss.barista.model.dao.EntityNotFoundException;
+import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
 import ni.gob.inss.barista.view.bean.backbean.BaseBackBean;
 import ni.gob.inss.barista.view.utils.web.MessagesResults;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.CaracteristicasHardwareService;
+import ni.gob.inss.sisinv.bussineslogic.service.catalogos.CatalogoExtService;
 import ni.gob.inss.sisinv.model.entity.catalogo.CaracteristicasHardware;
+import ni.gob.inss.sisinv.util.CatalogoGeneral;
 import ni.gob.inss.sisinv.util.RegExpresionExtends;
 
 @Named
@@ -34,9 +37,13 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 	private List<CaracteristicasHardware> listaCaracteristicasHardwarePadre = new ArrayList<CaracteristicasHardware>();
 	private List<CaracteristicasHardware> listaGeneralCaracteristicas = new ArrayList<CaracteristicasHardware>();
 	private List<CaracteristicasHardware> listaCaracteristicasHijas = new ArrayList<CaracteristicasHardware>();
+	private List<Catalogo> listaTipoActivos = new ArrayList<Catalogo>();
+	
+	
 	private static final long serialVersionUID = 1L;
 
 	@Autowired CaracteristicasHardwareService oCaracteristicasHardwareService;
+	@Autowired CatalogoExtService oCatalogoService;
 	
 	@PostConstruct
 	public void init(){
@@ -130,7 +137,7 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 	public void cargarListas(){
 	 try {
 		this.listaCaracteristicasHardwarePadre = oCaracteristicasHardwareService.listaCaracteristicasHardwarePadre(null);
-		
+		this.listaTipoActivos = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.TIPO_ACTIVO.getCodigoCatalogo()); 
 		this.buscar();
 	} catch (EntityNotFoundException e) {
 		mostrarMensajeError(this.getClass().getSimpleName(), "cagarListas", MessagesResults.ERROR_OBTENER_LISTA, e);
@@ -215,4 +222,8 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 	public String getRegExpDescripcion() {
 		return regExpDescripcion;
 	}
+
+	public List<Catalogo> getListaTipoActivos() {
+		return listaTipoActivos;
+	}	
 }

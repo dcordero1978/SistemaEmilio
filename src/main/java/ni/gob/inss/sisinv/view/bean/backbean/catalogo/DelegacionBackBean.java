@@ -112,15 +112,15 @@ public class DelegacionBackBean extends BaseBackBean implements Serializable  {
 	}
 	
 	public void guardarOrActualizar(){
-		if(this.getHfId()==null){
-			this.guardar();
-		}else{
-			this.actualizar();
-		}		
-		this.cargarDatosDelegacion(this.getHfId());
-		this.setTxtBusquedaDelegacionByNombre("");
-		this.buscarDelegacionByName();
-	}
+        if(this.getHfId()==null){
+            this.guardar();
+        }else{
+            this.actualizar();
+        }
+        this.cargarDatosDelegacion(this.getHfId());
+        this.setTxtBusquedaDelegacionByNombre("");
+        this.buscarDelegacionByName();
+    }
 	
 	public void limpiar(){
 		this.setTxtBusquedaDelegacionByNombre("");

@@ -76,11 +76,19 @@
 								<p:inputText id="cargo" readonly="true" value="#{registroActivosBackBean.empleadoSeleccionado.cargo}" styleClass="Wid90"/>
 							</h:panelGrid>
 							<p:outputPanel styleClass="tableClass">
-								<p:dataTable style="width:100%" paginatorPosition="top" selectionMode="single" scrollable="true" scrollHeight="310"
-								var="oActivo" id="listaActivos" rowKey="#{oActivo.id}"
-								value="#{registroActivosBackBean.listaActivosAsociados}"
-								paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="10" pageLinks="3"
-								paginatorTemplate="#{configApplicationBean.paginatorTemplate}" currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
+								<p:dataTable style="width:100%"
+                                             paginatorPosition="top"
+                                             selectionMode="single"
+                                             scrollable="true"
+                                             scrollHeight="310"
+								             var="oActivo" id="listaActivos" rowKey="#{oActivo.id}"
+								             value="#{registroActivosBackBean.listaActivosAsociados}"
+								             paginator="true"
+                                             emptyMessage="#{labelName.tableEmptyMessage}"
+                                             rows="10"
+                                             pageLinks="3"
+								             paginatorTemplate="#{configApplicationBean.paginatorTemplate}"
+                                             currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
 									
 									<f:facet name="header">
 										Lista de activos asociados.																	

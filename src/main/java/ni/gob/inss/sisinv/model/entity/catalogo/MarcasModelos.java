@@ -32,6 +32,7 @@ public class MarcasModelos extends EntityBase implements java.io.Serializable {
 	private Integer padreId;
 	private List<Activos> listaMarcaActivo = new ArrayList<Activos>();
 	private List<Activos> listaModeloActivo = new ArrayList<Activos>();
+    private Boolean pasivo;
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="MarcasModelos_SEQ")
@@ -80,6 +81,12 @@ public class MarcasModelos extends EntityBase implements java.io.Serializable {
 		this.listaModeloActivo = listaModeloActivo;
 	}
 
-	
-	
+    @Column(name = "pasivo", nullable = false)
+    public Boolean getPasivo() {
+        return pasivo;
+    }
+
+    public void setPasivo(Boolean pasivo) {
+        this.pasivo = pasivo;
+    }
 }

@@ -1,0 +1,241 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                template="/web/template/innerLayout.xhtml"
+                xmlns:mc="http://java.sun.com/jsf/composite/comps">
+
+<ui:param name="paramBackBean" value="#{marcaModeloBackBean}"/>
+<ui:define name="headerContent">
+    Administración de Catalogo Marcas y Modelos
+</ui:define>
+
+<ui:define name="content">
+<div id="ContainerIndent">
+<div class="Container50 Responsive">
+    <h:form id="formListaMarca" style="width: 99%;">
+        <p:panel styleClass="fondoPaneles">
+            <f:facet name="header">
+                <p:outputPanel style="display:block;" styleClass="left">
+                    <p:inputText value="#{marcaModeloBackBean.txtBusquedaMarcaByNombre}" maxlength="50"
+                                 placeholder="#{labelName.placeholderBuscar}"/>
+                    <p:commandButton update="formListaMarca" ajax="true"
+                                     action="#{marcaModeloBackBean.buscarMarcaByName()}"
+                                     icon="ui-icon-search"/>
+                </p:outputPanel>
+                <p:outputPanel style="display: block;" styleClass="right">
+                    <p:commandButton icon="ui-icon-circle-plus" action="#{marcaModeloBackBean.limpiar}"
+                                     value="#{labelName.btnAgregar}"
+                                     resetValues="true" ajax="true"
+                                     update=":formDatosMarca"
+                                     rendered="#{marcaModeloBackBean.autorizadoParaEditar}"/>
+
+                    <!-- <p:commandButton icon="ui-icon-pencil" action="#{marcaModeloBackBean.editar}"
+                                      value="#{labelName.btnEditar}" resetValues="true"
+                                      update=":formDatosMarca"
+                                      rendered="#{marcaModeloBackBean.autorizadoParaEditar}"/>-->
+
+                </p:outputPanel>
+            </f:facet>
+            <p:outputPanel styleClass="tableClass">
+                <p:dataTable style="width:100%"
+                             paginatorPosition="top"
+                             selectionMode="single"
+                             scrollable="true"
+                             scrollHeight="410"
+                             var="oMarca"
+                             value="#{marcaModeloBackBean.listaMarcas}"
+                             selection="#{marcaModeloBackBean.marcaSeleccionada}"
+                             rowKey="#{oMarca.id}"
+                             paginator="true"
+                             emptyMessage="#{labelName.tableEmptyMessage}"
+                             rows="12"
+                             pageLinks="3"
+                             paginatorTemplate="#{configApplicationBean.paginatorTemplate}"
+                             currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
+
+                    <p:ajax event="rowSelect" listener="#{marcaModeloBackBean.editar}"
+                            update=":formDatosMarca"
+                            resetValues="true"/>
+
+                    <p:column headerText="Marca" sortBy="#{oMarca.descripcion}">
+                        <h:outputText value="#{oMarca.descripcion}"/>
+                    </p:column>
+                    <p:column headerText="Pasivo" style="text-align:center; width:10%" priority="2"
+                              sortBy="#{oMarca.pasivo}">
+                        <p:selectBooleanCheckbox value="#{oMarca.pasivo}" disabled="true"
+                                                 styleClass="ui-linus-enabled"/>
+                    </p:column>
+
+                </p:dataTable>
+            </p:outputPanel>
+        </p:panel>
+    </h:form>
+</div>
+
+<div class="Container50 Responsive">
+    <h:form id="formDatosMarca" style="width: 99%">
+        <p:inputText rendered="false" value="#{marcaModeloBackBean.hfId}"/>
+        <p:panel styleClass="fondoPaneles" style="height: 547px;">
+            <f:facet name="header">
+                <h:outputText value="ID: #{marcaModeloBackBean.hfId}"
+                              rendered="#{!marcaModeloBackBean.nuevoRegistro}"/>
+                <p:outputPanel style="display:block" styleClass="right">
+                    <p:commandButton widgetVar="btnGuardar"
+                                     actionListener="#{marcaModeloBackBean.guardarOrActualizar}"
+                                     icon="ui-icon-disk"
+                                     rendered="#{marcaModeloBackBean.autorizadoParaEditar}"
+                                     update="formDatosMarca :formListaMarca"
+                                     value="#{labelName.btnGuardar}" onstart="PF('btnGuardar').disable();"
+                                     oncomplete="PF('btnGuardar').enable();"/>
+                    <!--  <p:commandButton resetValues="true" ajax="true" update=":formDatosMarca"
+                                       action="#{marcaModeloBackBean.limpiar}"
+                                       value="#{labelName.btnCancelar}"
+                                       icon="ui-icon-cancel" process="@this"/>-->
+
+                    <p:commandButton immediate="true" widgetVar="btnEliminar" icon="ui-icon-trash"
+                                     value="#{labelName.btnEliminar}"
+                                     actionListener="#{marcaModeloBackBean.eliminar}"
+                                     update="formDatosMarca :formListaMarca"
+                                     resetValues="true"
+                                     rendered="#{marcaModeloBackBean.btnElminiarVisible}">
+
+                        <p:confirm header="#{dialogText.deleteConfirmationTextHeader}"
+                                   message="#{dialogText.deleteConfirmationTextContent}"
+                                   icon="ui-icon-alert"/>
+                    </p:commandButton>
+
+                    <p:commandButton icon="ui-icon-cancel" value="#{labelName.btnCancelar}"
+                                     actionListener="#{marcaModeloBackBean.limpiar}"
+                                     immediate="true"
+                                     resetValues="true"
+                                     update="formDatosMarca" process="@this"/>
+                    <!--
+                                                    <p:commandButton icon="ui-icon-clipboard" value="#{labelName.btnAuditoria}"
+                                                                     oncomplete="PF('tipoCatalogoAuditWV').show();" process="@this"
+                                                                     update="tipoCatalogoAudit"
+                                                                     rendered="#{marcaModeloBackBean.btnAuditoriaVisible}"
+                                                                     action="#{marcaModeloBackBean.cargarAuditoria}"/>-->
+
+
+                </p:outputPanel>
+
+            </f:facet>
+            <h:panelGrid columns="2" style="width:100" columnClasses="Wid20, Wid80">
+                <p:outputLabel for="nombreMarca" value="Nombre"/>
+                <p:inputText value="#{marcaModeloBackBean.descripcionMarca}" label="Nombre" maxlength="25"
+                             id="nombreMarca" required="true" styleClass="Wid80" autocomplete="off"
+                             disabled="#{!marcaModeloBackBean.autorizadoParaEditar}"/>
+                <p:outputLabel for="pasivo" value="Pasivo:"
+                               rendered="#{!marcaModeloBackBean.nuevoRegistro}"/>
+                <p:selectBooleanButton onLabel="Si" offLabel="No" id="pasivo"
+                                       value="#{marcaModeloBackBean.pasivo }"
+                                       rendered="#{!marcaModeloBackBean.nuevoRegistro}"
+                                       disabled="#{!marcaModeloBackBean.autorizadoParaEditar}"/>
+
+            </h:panelGrid>
+            <p:outputPanel styleClass="tableClass" id="modelo">
+                <p:dataTable style="width: 100%" var="r" id="listaModelo"
+                             value="#{marcaModeloBackBean.listaModelos}"
+                             paginatorPosition="top"
+                             scrollable="true"
+                             scrollHeight="310"
+                             pageLinks="3"
+                             paginator="true"
+                             selection="#{marcaModeloBackBean.modeloSeleccionada}"
+                             rowKey="#{r.id}"
+                             emptyMessage="#{labelName.tableEmptyMessage}"
+                             rows="10"
+                             selectionMode="single"
+                             paginatorTemplate="#{configApplicationBean.paginatorTemplate}"
+                             currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
+                    <f:facet name="header">
+                        Modelos
+                        <p:outputPanel style="display:block" styleClass="right">
+                            <p:commandButton icon="ui-icon-circle-plus"
+                                             value="#{labelName.btnAgregar}" ajax="true"
+                                             style="margin-top:-5px;"
+                                             action="#{marcaModeloBackBean.agregarModelo}"
+                                             onclick="PF('dlgmarca').show();"/>
+                            <p:commandButton icon="ui-icon-pencil"
+                                             value="#{labelName.btnEditar}" ajax="true"
+                                             style="margin-top:-5px;"
+                                             action="#{marcaModeloBackBean.cargarDatosModelo}"
+                                             update=":formDatosMarca:marcaload"
+                                             onclick="PF('dlgmarca').show();"/>
+                        </p:outputPanel>
+                    </f:facet>
+
+
+                    <p:column headerText="Nombre" style="width: 60%">
+                        <h:outputText value="#{r.descripcion}"/>
+                    </p:column>
+
+                    <p:column headerText="Pasivo" style="text-align: center; width: 10%">
+                        <p:selectBooleanCheckbox value="#{r.pasivo}" disabled="true"
+                                                 styleClass="ui-linus-enabled"/>
+                    </p:column>
+                </p:dataTable>
+            </p:outputPanel>
+
+            <p:dialog header="Datos de los Modelos"
+                      widgetVar="dlgmarca"
+                      id="dlgmarca"
+                      showEffect="explode"
+                      hideEffect="bounce"
+                      modal="true"
+                      height="150"
+
+                      closable="false"
+                      resizable="false"
+                      resetValues="true"
+                      width="300"
+                    >
+                <h:form id="marcaload">
+                    <p:outputPanel style="display: block; margin: 2px" styleClass="right">
+                        <p:commandButton icon="ui-icon-circle-plus" ajax="true"
+                                         value="#{labelName.btnGuardar}"
+                                         process="@all"
+                                         update=":formDatosMarca"
+                                         action="#{marcaModeloBackBean.guardarOrActualizarModelo}">
+                        </p:commandButton>
+                        <p:commandButton icon="ui-icon-cancel"
+                                         value="#{labelName.btnCancelar}"
+                                         oncomplete="PF('dlgmarca').hide();"
+                                         update="@form">
+                        </p:commandButton>
+
+
+                    </p:outputPanel>
+                    <p:panel header="Marca" id="pnlMarcas">
+                        <h:panelGrid columns="2" style="width:100" columnClasses="Wid20, Wid80">
+                            <p:outputLabel for="nombreModelo" value="Nombre"/>
+                            <p:inputText value="#{marcaModeloBackBean.descripcionModelo}" label="Nombre" maxlength="25"
+                                         id="nombreModelo" styleClass="Wid80" autocomplete="off"
+                                         disabled="#{!marcaModeloBackBean.autorizadoParaEditar}"/>
+                            <p:outputLabel for="pasivoModelo" value="Pasivo:"
+                                           rendered="#{!marcaModeloBackBean.nuevoRegistroModelo}"/>
+                            <p:selectBooleanButton onLabel="Si" offLabel="No" id="pasivoModelo"
+                                                   value="#{marcaModeloBackBean.pasivoModelo }"
+                                                   rendered="#{!marcaModeloBackBean.nuevoRegistroModelo}"
+                                                   disabled="#{!marcaModeloBackBean.autorizadoParaEditar}"/>
+
+                        </h:panelGrid>
+                    </p:panel>
+
+                </h:form>
+            </p:dialog>
+
+        </p:panel>
+
+    </h:form>
+</div>
+
+</div>
+
+</ui:define>
+
+
+</ui:composition>

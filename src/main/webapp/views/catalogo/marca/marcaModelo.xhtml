@@ -23,19 +23,17 @@
                                  placeholder="#{labelName.placeholderBuscar}"/>
                     <p:commandButton update="formListaMarca" ajax="true"
                                      action="#{marcaModeloBackBean.buscarMarcaByName()}"
-                                     icon="ui-icon-search"/>
+                                     style="color:white"
+                                     icon="fa fa-search"/>
                 </p:outputPanel>
                 <p:outputPanel style="display: block;" styleClass="right">
-                    <p:commandButton icon="ui-icon-circle-plus" action="#{marcaModeloBackBean.limpiar}"
+                				
+                    <p:commandButton icon="fa fa-plus-circle" action="#{marcaModeloBackBean.limpiar}"
                                      value="#{labelName.btnAgregar}"
+                                     style="color:white"
                                      resetValues="true" ajax="true"
                                      update=":formDatosMarca"
                                      rendered="#{marcaModeloBackBean.autorizadoParaEditar}"/>
-
-                    <!-- <p:commandButton icon="ui-icon-pencil" action="#{marcaModeloBackBean.editar}"
-                                      value="#{labelName.btnEditar}" resetValues="true"
-                                      update=":formDatosMarca"
-                                      rendered="#{marcaModeloBackBean.autorizadoParaEditar}"/>-->
 
                 </p:outputPanel>
             </f:facet>
@@ -85,41 +83,18 @@
                 <p:outputPanel style="display:block" styleClass="right">
                     <p:commandButton widgetVar="btnGuardar"
                                      actionListener="#{marcaModeloBackBean.guardarOrActualizar}"
-                                     icon="ui-icon-disk"
+                                     icon="fa fa-floppy-o"
+                                     style="color:white"
                                      rendered="#{marcaModeloBackBean.autorizadoParaEditar}"
                                      update="formDatosMarca :formListaMarca"
                                      value="#{labelName.btnGuardar}" onstart="PF('btnGuardar').disable();"
                                      oncomplete="PF('btnGuardar').enable();"/>
-                    <!--  <p:commandButton resetValues="true" ajax="true" update=":formDatosMarca"
-                                       action="#{marcaModeloBackBean.limpiar}"
-                                       value="#{labelName.btnCancelar}"
-                                       icon="ui-icon-cancel" process="@this"/>-->
-
-                    <p:commandButton immediate="true" widgetVar="btnEliminar" icon="ui-icon-trash"
-                                     value="#{labelName.btnEliminar}"
-                                     actionListener="#{marcaModeloBackBean.eliminar}"
-                                     update="formDatosMarca :formListaMarca"
-                                     resetValues="true"
-                                     rendered="#{marcaModeloBackBean.btnElminiarVisible}">
-
-                        <p:confirm header="#{dialogText.deleteConfirmationTextHeader}"
-                                   message="#{dialogText.deleteConfirmationTextContent}"
-                                   icon="ui-icon-alert"/>
-                    </p:commandButton>
-
-                    <p:commandButton icon="ui-icon-cancel" value="#{labelName.btnCancelar}"
+                    <p:commandButton icon="fa fa-times-circle" value="#{labelName.btnCancelar}"
                                      actionListener="#{marcaModeloBackBean.limpiar}"
                                      immediate="true"
+                                     style="color:white"
                                      resetValues="true"
                                      update="formDatosMarca" process="@this"/>
-                    <!--
-                                                    <p:commandButton icon="ui-icon-clipboard" value="#{labelName.btnAuditoria}"
-                                                                     oncomplete="PF('tipoCatalogoAuditWV').show();" process="@this"
-                                                                     update="tipoCatalogoAudit"
-                                                                     rendered="#{marcaModeloBackBean.btnAuditoriaVisible}"
-                                                                     action="#{marcaModeloBackBean.cargarAuditoria}"/>-->
-
-
                 </p:outputPanel>
 
             </f:facet>
@@ -154,14 +129,14 @@
                     <f:facet name="header">
                         Modelos
                         <p:outputPanel style="display:block" styleClass="right">
-                            <p:commandButton icon="ui-icon-circle-plus"
+                            <p:commandButton icon="fa fa-plus-circle"
                                              value="#{labelName.btnAgregar}" ajax="true"
-                                             style="margin-top:-5px;"
+                                             style="margin-top:-5px; color:white"
                                              action="#{marcaModeloBackBean.agregarModelo}"
                                              onclick="PF('dlgmarca').show();"/>
-                            <p:commandButton icon="ui-icon-pencil"
+                            <p:commandButton icon="fa fa-pencil"
                                              value="#{labelName.btnEditar}" ajax="true"
-                                             style="margin-top:-5px;"
+                                             style="margin-top:-5px; color:white"
                                              action="#{marcaModeloBackBean.cargarDatosModelo}"
                                              update=":formDatosMarca:marcaload"
                                              onclick="PF('dlgmarca').show();"/>
@@ -195,13 +170,15 @@
                     >
                 <h:form id="marcaload">
                     <p:outputPanel style="display: block; margin: 2px" styleClass="right">
-                        <p:commandButton icon="ui-icon-circle-plus" ajax="true"
+                        <p:commandButton icon="fa fa-floppy-o" ajax="true"
+                        				style="color:white"
                                          value="#{labelName.btnGuardar}"
                                          process="@all"
                                          update=":formDatosMarca"
                                          action="#{marcaModeloBackBean.guardarOrActualizarModelo}">
                         </p:commandButton>
-                        <p:commandButton icon="ui-icon-cancel"
+                        <p:commandButton icon="fa fa-times-circle"
+                        					style="color:white"
                                          value="#{labelName.btnCancelar}"
                                          oncomplete="PF('dlgmarca').hide();"
                                          update="@form">

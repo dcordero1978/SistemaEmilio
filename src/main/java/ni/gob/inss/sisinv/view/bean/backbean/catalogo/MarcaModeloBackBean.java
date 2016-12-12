@@ -52,7 +52,6 @@ public class MarcaModeloBackBean extends BaseBackBean implements Serializable {
     private String descripcionModelo;
     private MarcasModelos modeloSeleccionada;
 
-    private List listaAuditoria;
     private String tituloDialog;
 
 
@@ -182,16 +181,6 @@ public class MarcaModeloBackBean extends BaseBackBean implements Serializable {
             mostrarMensajeInfo(MessagesResults.EXITO_ELIMINAR);
         } catch (Exception e) {
             mostrarMensajeError(this.getClass().getSimpleName(), "eliminar()", MessagesResults.ERROR_ELIMINAR, e);
-        }
-
-    }
-
-    public void cargarAuditoria() {
-        try {
-            listaAuditoria = new ArrayList<>();
-            listaAuditoria.add(oDialogAuditoriaService.obtenerAuditoria(MarcasModelos.class, hfId));
-        } catch (Exception e) {
-            mostrarMensajeError(this.getClass().getSimpleName(), "cargarAuditoria()", MessagesResults.ERROR_OBTENER_AUDITORIA, e);
         }
 
     }
@@ -431,14 +420,6 @@ public class MarcaModeloBackBean extends BaseBackBean implements Serializable {
 
     public void setModeloSeleccionada(MarcasModelos modeloSeleccionada) {
         this.modeloSeleccionada = modeloSeleccionada;
-    }
-
-    public List getListaAuditoria() {
-        return listaAuditoria;
-    }
-
-    public void setListaAuditoria(List listaAuditoria) {
-        this.listaAuditoria = listaAuditoria;
     }
 
     public String getTituloDialog() {

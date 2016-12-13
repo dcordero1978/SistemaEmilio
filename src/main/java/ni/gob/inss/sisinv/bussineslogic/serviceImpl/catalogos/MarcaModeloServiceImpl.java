@@ -45,7 +45,13 @@ public class MarcaModeloServiceImpl   implements MarcaModeloService {
     @Transactional
     @Override
     public void actualizar(MarcasModelos oMarcaModelo) throws DAOException, BusinessException {
-        if(NumberUtils.INTEGER_ZERO.equals(oMarcaModelo.getPadreId()) && oMarcaModelo.isPasivo()){
+        this.inactivarModelosDeMarcaPasiva(oMarcaModelo);
+        this.validaModelo(oMarcaModelo);
+    	oMarcaModeloDAO.updateUpper(oMarcaModelo);
+    }
+    
+    private void inactivarModelosDeMarcaPasiva(MarcasModelos oMarcaModelo){
+    	if(NumberUtils.INTEGER_ZERO.equals(oMarcaModelo.getPadreId()) && oMarcaModelo.isPasivo()){
         	List<MarcasModelos> listaModelos =  this.buscarMarcasOModelos(StringUtils.defaultString(null), oMarcaModelo.getId(), null);
         	if(!listaModelos.isEmpty()){
         		listaModelos.forEach(oModelo->{
@@ -58,9 +64,24 @@ public class MarcaModeloServiceImpl   implements MarcaModeloService {
         		});
         	}
         }
-    	oMarcaModeloDAO.updateUpper(oMarcaModelo);
     }
-
+    
+    private void validaModelo(MarcasModelos oModelo) throws BusinessException{
+    	try {
+    		if(!oModelo.isPasivo()){
+    			if(!NumberUtils.INTEGER_ZERO.equals(oModelo.getPadreId())){
+    				MarcasModelos oMarca;
+    				oMarca = oMarcaModeloDAO.find(oModelo.getPadreId());
+    				if(oMarca.isPasivo()){
+    					throw new BusinessException("NO ES POSIBLE ACTIVAR EL MODELO YA QUE SE ENCUENTRA ASOCIADO A UNA MARCA QUE SE ENCUENTRA EN ESTADO PASIVO.");
+    				}
+    			}
+    		}
+    	} catch (EntityNotFoundException e) {
+    		e.printStackTrace();
+    	}
+    }
+    
     @Transactional
     @Override
     public List<MarcasModelos> buscarMarcasOModelos(String txtCriterio,Integer marcaId, Boolean obtenerPasivos) {

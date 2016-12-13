@@ -12,6 +12,7 @@ import com.googlecode.genericdao.search.Filter;
 import ni.gob.inss.barista.model.dao.EntityNotFoundException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,7 +45,20 @@ public class MarcaModeloServiceImpl   implements MarcaModeloService {
     @Transactional
     @Override
     public void actualizar(MarcasModelos oMarcaModelo) throws DAOException, BusinessException {
-        oMarcaModeloDAO.updateUpper(oMarcaModelo);
+        if(NumberUtils.INTEGER_ZERO.equals(oMarcaModelo.getPadreId()) && oMarcaModelo.isPasivo()){
+        	List<MarcasModelos> listaModelos =  this.buscarMarcasOModelos(StringUtils.defaultString(null), oMarcaModelo.getId(), null);
+        	if(!listaModelos.isEmpty()){
+        		listaModelos.forEach(oModelo->{
+        			oModelo.setPasivo(true);
+        			try {
+						this.actualizar(oModelo);
+					} catch (DAOException | BusinessException e) {
+						e.printStackTrace();
+					}
+        		});
+        	}
+        }
+    	oMarcaModeloDAO.updateUpper(oMarcaModelo);
     }
 
     @Transactional

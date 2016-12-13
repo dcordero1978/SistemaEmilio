@@ -126,7 +126,7 @@ public class MarcaModeloBackBean extends BaseBackBean implements Serializable {
 
     public void actualizar() {
         try {
-            oMarca.setModificadoEl(this.getTimeNow());
+        	oMarca.setModificadoEl(this.getTimeNow());
             oMarca.setModificadoPor(this.getUsuarioActual().getId());
             oMarca.setModificadoEnIp(this.getRemoteIp());
             oMarcaModeloService.actualizar(oMarca);

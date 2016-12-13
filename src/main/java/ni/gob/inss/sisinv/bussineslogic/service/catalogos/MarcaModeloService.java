@@ -24,9 +24,7 @@ public interface MarcaModeloService {
 
     public void actualizar(MarcasModelos oMarcaModelo) throws DAOException, BusinessException;
 
-    public List<MarcasModelos> buscar(String txtCriterio,String tipo,Integer idMarca);
-
-    public List<MarcasModelos> buscarPorEstado(String txtCriterio, Boolean estado,String tipo,Integer idMarca);
+    public List<MarcasModelos> buscarMarcasOModelos(String txtCriterio,Integer marcaId, Boolean obtenerPasivos);
 
     public MarcasModelos obtener(int id) throws EntityNotFoundException;
 

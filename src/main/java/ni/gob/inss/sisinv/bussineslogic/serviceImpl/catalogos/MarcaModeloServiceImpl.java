@@ -1,6 +1,8 @@
 package ni.gob.inss.sisinv.bussineslogic.serviceImpl.catalogos;
 
 import com.googlecode.genericdao.search.Search;
+import com.googlecode.genericdao.search.Sort;
+
 import ni.gob.inss.barista.businesslogic.service.BusinessException;
 import ni.gob.inss.barista.model.dao.DAOException;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.MarcaModeloService;
@@ -8,6 +10,8 @@ import ni.gob.inss.sisinv.model.dao.catalogos.MarcaModeloDAO;
 import ni.gob.inss.sisinv.model.entity.catalogo.MarcasModelos;
 import com.googlecode.genericdao.search.Filter;
 import ni.gob.inss.barista.model.dao.EntityNotFoundException;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,10 +39,8 @@ public class MarcaModeloServiceImpl   implements MarcaModeloService {
     @Override
     public void agregar(MarcasModelos oMarcaModelo) throws DAOException, BusinessException {
         oMarcaModeloDAO.saveUpper(oMarcaModelo);
-
     }
-
-
+    
     @Transactional
     @Override
     public void actualizar(MarcasModelos oMarcaModelo) throws DAOException, BusinessException {
@@ -47,44 +49,13 @@ public class MarcaModeloServiceImpl   implements MarcaModeloService {
 
     @Transactional
     @Override
-    public List<MarcasModelos> buscar(String txtCriterio,String tipo,Integer idMarca) {
-        return this.buscarPorEstado(txtCriterio,  (Boolean) null,tipo,idMarca);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Transactional
-    @Override
-    public List<MarcasModelos> buscarPorEstado(String txtCriterio, Boolean estado,String tipo,Integer idMarca) {
-        List<MarcasModelos> listaMarcas = null;
-
+    public List<MarcasModelos> buscarMarcasOModelos(String txtCriterio,Integer marcaId, Boolean obtenerPasivos) {
         Search oSearch = new Search();
-        oSearch.addFilterILike("descripcion", "%"+txtCriterio+"%");
-
-        if(estado != null)
-        {
-            oSearch.addFilter(Filter.equal("pasivo",estado));
-        }
-
-        if (tipo=="MARCA"){
-            oSearch.addFilter(Filter.equal("padreId",0));
-        } else {
-            oSearch.addFilter(Filter.equal("padreId",idMarca));
-        }
-
-
-        oSearch.addSortAsc("descripcion");
-
-        listaMarcas = oMarcaModeloDAO.search(oSearch);
-
-
-    /*    if((txtCriterio==null || "".equalsIgnoreCase(txtCriterio)) && estado ==null ){
-            listaMarcas = oMarcaModeloDAO.findAll();
-        }else {
-            listaMarcas = oMarcaModeloDAO.search(oSearch);
-        }*/
-
-        return listaMarcas;
-
+        oSearch.addFilterILike("descripcion",StringUtils.join("%",txtCriterio,"%"));
+        oSearch.addFilter(Filter.equal("padreId", marcaId));
+        oSearch.addFilter(Filter.equal("pasivo", obtenerPasivos));
+        oSearch.addSort(Sort.asc("descripcion"));
+    	return oMarcaModeloDAO.search(oSearch);
     }
 
     @Transactional

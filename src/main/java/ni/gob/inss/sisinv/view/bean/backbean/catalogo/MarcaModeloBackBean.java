@@ -1,19 +1,22 @@
 package ni.gob.inss.sisinv.view.bean.backbean.catalogo;
 
+import java.io.Serializable;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Named;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+
 import ni.gob.inss.barista.businesslogic.service.core.auditoria.AuditoriaService;
 import ni.gob.inss.barista.view.bean.backbean.BaseBackBean;
 import ni.gob.inss.barista.view.utils.web.MessagesResults;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.MarcaModeloService;
 import ni.gob.inss.sisinv.bussineslogic.service.seguridad.UsuarioExtService;
 import ni.gob.inss.sisinv.model.entity.catalogo.MarcasModelos;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Named;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * <b>SISINV</b></br>
@@ -34,18 +37,15 @@ public class MarcaModeloBackBean extends BaseBackBean implements Serializable {
 
     private String txtBusquedaMarcaByNombre;
     private boolean nuevoRegistro;
-    private Integer hfId;
     private boolean pasivo;
-    private String descripcionMarca;
+    
     private MarcasModelos marcaSeleccionada;
 
     private List<MarcasModelos> listaMarcas;
     private List<MarcasModelos> listaModelos;
     private boolean autorizadoParaEditar;
 
-    private boolean btnElminiarVisible;
-    private boolean btnAuditoriaVisible;
-
+    
     private boolean nuevoRegistroModelo;
     private Integer hfIdModelo;
     private boolean pasivoModelo;
@@ -53,6 +53,8 @@ public class MarcaModeloBackBean extends BaseBackBean implements Serializable {
     private MarcasModelos modeloSeleccionada;
 
     private String tituloDialog;
+    private MarcasModelos oMarca;
+    private MarcasModelos oModelo;
 
 
     @Autowired
@@ -69,77 +71,53 @@ public class MarcaModeloBackBean extends BaseBackBean implements Serializable {
     @PostConstruct
     public void init() {
         this.limpiar();
+        this.oMarca = new MarcasModelos();
         this.buscarMarcaByName();
         this.autorizadoParaEditar = oUsuarioService.usuarioTieneAutorizacion(this.getUsuarioActual(), this.getEntidadActual(), "EDEL");
     }
 
     public void limpiar() {
+    	this.setoMarca(new MarcasModelos());
+    	this.setoModelo(new MarcasModelos());
         this.setTxtBusquedaMarcaByNombre("");
         this.setNuevoRegistro(true);
-        this.setHfId(null);
-        this.setDescripcionMarca("");
-        this.setPasivo(false);
         this.setMarcaSeleccionada(null);
-        this.setBtnElminiarVisible(false);
-        this.setBtnAuditoriaVisible(false);
         this.setDescripcionModelo("");
-
     }
 
     public void buscarMarcaByName() {
         try {
-            this.listaMarcas = oMarcaModeloService.buscar(this.txtBusquedaMarcaByNombre, "MARCA", 0);
+        	//TODO:REFACTORIZAR, EL 0 EN ESTE METODO SE REFIERE A QUE BUSCAMOS A LAS MARCAS
+            this.listaMarcas = oMarcaModeloService.buscarMarcasOModelos(this.getTxtBusquedaMarcaByNombre(), NumberUtils.INTEGER_ZERO, null);
             if (this.listaMarcas.isEmpty()) {
                 mostrarMensajeInfo("No se han encontrado resultados con el criterio de Búsqueda ingresada.");
             }
         } catch (Exception e) {
             mostrarMensajeError(this.getClass().getSimpleName(), "buscarMarcaByName", MessagesResults.ERROR_OBTENER_LISTA, e);
         }
-
     }
 
     public void editar() {
         if (this.getMarcaSeleccionada() != null) {
-            this.cargarDatosMarca(this.getMarcaSeleccionada().getId());
+        	this.setoMarca(this.getMarcaSeleccionada());
             this.buscarModeloPorMarca(this.getMarcaSeleccionada().getId());
-            this.setBtnElminiarVisible(true);
-            this.setBtnAuditoriaVisible(true);
         } else {
             mostrarMensajeError(MessagesResults.SELECCIONE_UN_REGISTRO);
         }
-
     }
 
     public void guardarOrActualizar() {
-        if (this.getHfId() == null) {
+        if (this.getoMarca().getId() == null) {
             this.guardar();
         } else {
             this.actualizar();
         }
-        this.cargarDatosMarca(this.getHfId());
         this.setTxtBusquedaMarcaByNombre("");
         this.buscarMarcaByName();
     }
 
-    public void cargarDatosMarca(Integer marcaId) {
+     public void guardar() {
         try {
-            MarcasModelos oMarcas = oMarcaModeloService.obtener(marcaId);
-            this.setDescripcionMarca(oMarcas.getDescripcion());
-            this.setHfId(oMarcas.getId());
-            this.setPasivo(oMarcas.isPasivo());
-            this.setNuevoRegistro(false);
-
-
-        } catch (Exception e) {
-            mostrarMensajeError(this.getClass().getSimpleName(), "cargarDatosMarca", MessagesResults.ERROR_OBTENER, e);
-        }
-    }
-
-    public void guardar() {
-        try {
-            MarcasModelos oMarca = new MarcasModelos();
-            //Por ser nueva Marca por defecto es activo.
-            oMarca.setDescripcion(this.getDescripcionMarca());
             oMarca.setCreadoPor(this.getUsuarioActual().getId());
             oMarca.setCreadoEl(this.getTimeNow());
             oMarca.setCreadoEnIp(this.getRemoteIp());
@@ -147,7 +125,6 @@ public class MarcaModeloBackBean extends BaseBackBean implements Serializable {
             oMarca.setPadreId(0);
             oMarcaModeloService.agregar(oMarca);
             mostrarMensajeInfo(MessagesResults.EXITO_GUARDAR);
-            this.setHfId(oMarca.getId());
         } catch (Exception e) {
             mostrarMensajeError(this.getClass().getSimpleName(), "guardarNuevaMarca", MessagesResults.ERROR_GUARDAR, e);
 
@@ -156,45 +133,22 @@ public class MarcaModeloBackBean extends BaseBackBean implements Serializable {
 
     public void actualizar() {
         try {
-            MarcasModelos oMarca = new MarcasModelos();
-
-            oMarca = oMarcaModeloService.obtener(this.getHfId());
-            oMarca.setDescripcion(this.getDescripcionMarca());
-            oMarca.setPasivo(this.isPasivo());
             oMarca.setModificadoEl(this.getTimeNow());
             oMarca.setModificadoPor(this.getUsuarioActual().getId());
             oMarca.setModificadoEnIp(this.getRemoteIp());
             oMarcaModeloService.actualizar(oMarca);
             mostrarMensajeInfo(MessagesResults.EXITO_MODIFICAR);
-
         } catch (Exception e) {
             mostrarMensajeError(this.getClass().getSimpleName(), "actualizar", MessagesResults.ERROR_MODIFICAR, e);
         }
     }
 
-    public void eliminar() {
-        try {
-            MarcasModelos oMarca = oMarcaModeloService.obtener(hfId);
-            oMarcaModeloService.eliminar(oMarca);
-            limpiar();
-            buscarMarcaByName();
-            mostrarMensajeInfo(MessagesResults.EXITO_ELIMINAR);
-        } catch (Exception e) {
-            mostrarMensajeError(this.getClass().getSimpleName(), "eliminar()", MessagesResults.ERROR_ELIMINAR, e);
-        }
-
-    }
-
     public void buscarModeloPorMarca(Integer idMarca) {
         try {
-            this.listaModelos = oMarcaModeloService.buscar(this.txtBusquedaMarcaByNombre, "MODELO", idMarca);
-            if (this.listaModelos.isEmpty()) {
-                mostrarMensajeInfo("No se han encontrado resultados con el criterio de Búsqueda ingresada.");
-            }
+            this.listaModelos = oMarcaModeloService.buscarMarcasOModelos(StringUtils.defaultString(""),this.getoMarca().getId(), null);
         } catch (Exception e) {
             mostrarMensajeError(this.getClass().getSimpleName(), "buscarModeloPorMarca", MessagesResults.ERROR_OBTENER_LISTA, e);
         }
-
     }
 
     public void guardarModelos() {
@@ -206,7 +160,7 @@ public class MarcaModeloBackBean extends BaseBackBean implements Serializable {
             oModelo.setCreadoEl(this.getTimeNow());
             oModelo.setCreadoEnIp(this.getRemoteIp());
             oModelo.setPasivo(false);
-            oModelo.setPadreId(hfId);
+            oModelo.setPadreId(oMarca.getId());
             oMarcaModeloService.agregar(oModelo);
             mostrarMensajeInfo(MessagesResults.EXITO_GUARDAR);
             this.setHfIdModelo(oModelo.getId());
@@ -272,7 +226,7 @@ public class MarcaModeloBackBean extends BaseBackBean implements Serializable {
         } else {
             this.actualizarModelo();
         }
-        this.buscarModeloPorMarca(this.getHfId());
+        this.buscarModeloPorMarca(this.getoMarca().getId());
     }
 
     public void actualizarModelo() {
@@ -295,7 +249,7 @@ public class MarcaModeloBackBean extends BaseBackBean implements Serializable {
 
 
     public String getTxtBusquedaMarcaByNombre() {
-        return txtBusquedaMarcaByNombre;
+        return StringUtils.defaultString(txtBusquedaMarcaByNombre);
     }
 
     public void setTxtBusquedaMarcaByNombre(String txtBusquedaMarcaByNombre) {
@@ -310,13 +264,6 @@ public class MarcaModeloBackBean extends BaseBackBean implements Serializable {
         this.nuevoRegistro = nuevoRegistro;
     }
 
-    public Integer getHfId() {
-        return hfId;
-    }
-
-    public void setHfId(Integer hfId) {
-        this.hfId = hfId;
-    }
 
     public boolean isPasivo() {
         return pasivo;
@@ -324,14 +271,6 @@ public class MarcaModeloBackBean extends BaseBackBean implements Serializable {
 
     public void setPasivo(boolean pasivo) {
         this.pasivo = pasivo;
-    }
-
-    public String getDescripcionMarca() {
-        return descripcionMarca;
-    }
-
-    public void setDescripcionMarca(String descripcionMarca) {
-        this.descripcionMarca = descripcionMarca;
     }
 
     public MarcasModelos getMarcaSeleccionada() {
@@ -364,22 +303,6 @@ public class MarcaModeloBackBean extends BaseBackBean implements Serializable {
 
     public void setListaModelos(List<MarcasModelos> listaModelos) {
         this.listaModelos = listaModelos;
-    }
-
-    public boolean isBtnElminiarVisible() {
-        return btnElminiarVisible;
-    }
-
-    public void setBtnElminiarVisible(boolean btnElminiarVisible) {
-        this.btnElminiarVisible = btnElminiarVisible;
-    }
-
-    public boolean isBtnAuditoriaVisible() {
-        return btnAuditoriaVisible;
-    }
-
-    public void setBtnAuditoriaVisible(boolean btnAuditoriaVisible) {
-        this.btnAuditoriaVisible = btnAuditoriaVisible;
     }
 
     public boolean isNuevoRegistroModelo() {
@@ -429,4 +352,21 @@ public class MarcaModeloBackBean extends BaseBackBean implements Serializable {
     public void setTituloDialog(String tituloDialog) {
         this.tituloDialog = tituloDialog;
     }
+
+	public MarcasModelos getoMarca() {
+		return oMarca;
+	}
+
+	public void setoMarca(MarcasModelos oMarca) {
+		this.oMarca = oMarca;
+	}
+
+	public MarcasModelos getoModelo() {
+		return oModelo;
+	}
+
+	public void setoModelo(MarcasModelos oModelo) {
+		this.oModelo = oModelo;
+	}
+	
 }

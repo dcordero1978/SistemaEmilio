@@ -47,8 +47,6 @@ public class MarcaModeloBackBean extends BaseBackBean implements Serializable {
     private boolean autorizadoParaEditar;
 
     private MarcasModelos modeloSeleccionada;
-
-    private String tituloDialog;
     private MarcasModelos oMarca;
     private MarcasModelos oModelo;
 
@@ -165,7 +163,6 @@ public class MarcaModeloBackBean extends BaseBackBean implements Serializable {
     public void limpiarModelo() {
     	this.setoModelo(new MarcasModelos());
         this.setModeloSeleccionada(null);
-        this.setTituloDialog("Agregar Marca");
     }
     
     public void agregarModelo() {
@@ -188,7 +185,6 @@ public class MarcaModeloBackBean extends BaseBackBean implements Serializable {
     public void cargarDatosModelo() {
         if (this.getModeloSeleccionada() != null) {
         	this.setoModelo(this.getModeloSeleccionada());
-            this.setTituloDialog("Editar Modelo");
         } else {
             mostrarMensajeError(MessagesResults.SELECCIONE_UN_REGISTRO);
         }
@@ -281,14 +277,6 @@ public class MarcaModeloBackBean extends BaseBackBean implements Serializable {
 
     public void setModeloSeleccionada(MarcasModelos modeloSeleccionada) {
         this.modeloSeleccionada = modeloSeleccionada;
-    }
-
-    public String getTituloDialog() {
-        return tituloDialog;
-    }
-
-    public void setTituloDialog(String tituloDialog) {
-        this.tituloDialog = tituloDialog;
     }
 
 	public MarcasModelos getoMarca() {

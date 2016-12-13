@@ -87,13 +87,13 @@
                                      rendered="#{marcaModeloBackBean.autorizadoParaEditar}"
                                      update="formDatosMarca :formListaMarca"
                                      value="#{labelName.btnGuardar}" onstart="PF('btnGuardar').disable();"
-                                     oncomplete="PF('btnGuardar').enable();"/>
+                                     oncomplete="PF('btnGuardar').enable();" />
                     <p:commandButton icon="fa fa-times-circle" value="#{labelName.btnCancelar}"
                                      actionListener="#{marcaModeloBackBean.limpiar}"
                                      immediate="true"
                                      style="color:white"
                                      resetValues="true"
-                                     update="formDatosMarca" process="@this"/>
+                                     update="formDatosMarca" />
                 </p:outputPanel>
 
             </f:facet>
@@ -117,37 +117,30 @@
                    </p:outputPanel>
                    <p:outputPanel style="display:block" styleClass="right">
                            <p:commandButton icon="fa fa-plus-circle"
-                                            value="#{labelName.btnAgregar}" ajax="true"
+                                            value="#{labelName.btnAgregar}" 
                                             style="margin-top:-5px; color:white"
                                             action="#{marcaModeloBackBean.agregarModelo}"
-                                            onclick="PF('dlgmarca').show();"/>
+                                            resetValues="true" update=":marcaload"
+                                            oncomplete="PF('dlgmarca').show();" />
                            <p:commandButton icon="fa fa-pencil"
-                                            value="#{labelName.btnEditar}" ajax="true"
+                                            value="#{labelName.btnEditar}" 
                                             style="margin-top:-5px; color:white"
                                             action="#{marcaModeloBackBean.cargarDatosModelo}"
-                                            update=":formDatosMarca:marcaload"
-                                            onclick="PF('dlgmarca').show();"/>
+                                            update=":marcaload"
+                                            oncomplete="PF('dlgmarca').show();" />
                    </p:outputPanel>
                  </f:facet>
            		<p:outputPanel styleClass="tableClass" id="modelo" >
-	                <p:dataTable style="width: 100%" var="r" id="listaModelo"
-	                             value="#{marcaModeloBackBean.listaModelos}"
-	                             paginatorPosition="top"
-	                             scrollable="true"
-	                             scrollHeight="310"
-	                             pageLinks="3"
-	                             paginator="true"
-	                             selection="#{marcaModeloBackBean.modeloSeleccionada}"
-	                             rowKey="#{r.id}"
-	                             emptyMessage="#{labelName.tableEmptyMessage}"
-	                             rows="10"
-	                             selectionMode="single"
-	                             paginatorTemplate="#{configApplicationBean.paginatorTemplate}"
-	                             currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
+	                <p:dataTable style="width: 100%" var="r" id="listaModelo" 
+	                             value="#{marcaModeloBackBean.listaModelos}" paginatorPosition="top"
+	                             scrollable="true" scrollHeight="310" pageLinks="3"
+	                             paginator="true" selection="#{marcaModeloBackBean.modeloSeleccionada}"
+	                             rowKey="#{r.id}" emptyMessage="#{labelName.tableEmptyMessage}" rows="10"
+	                             selectionMode="single" paginatorTemplate="#{configApplicationBean.paginatorTemplate}"
+	                             currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}"> 
 	                    <p:column headerText="Nombre" style="width: 60%">
 	                        <h:outputText value="#{r.descripcion}"/>
 	                    </p:column>
-	
 	                    <p:column headerText="Pasivo" style="text-align: center; width: 10%">
 	                        <p:selectBooleanCheckbox value="#{r.pasivo}" disabled="true"
 	                                                 styleClass="ui-linus-enabled"/>
@@ -155,60 +148,38 @@
 	                </p:dataTable>
 	            </p:outputPanel>
 			</p:panel>
-            <p:dialog header="Datos de los Modelos"
-                      widgetVar="dlgmarca"
-                      id="dlgmarca"
-                      showEffect="blind"
-                      hideEffect="blind"
-                      modal="true"
-                      height="150"
-                      closable="false"
-                      resizable="false"
-                      resetValues="true"
-                      width="300"
-                    >
-                <h:form id="marcaload">
-                    <p:outputPanel style="display: block; margin: 2px" styleClass="right">
-                        <p:commandButton icon="fa fa-floppy-o" ajax="true"
-                        				style="color:white"
-                                         value="#{labelName.btnGuardar}"
-                                         update=":formDatosMarca"
-                                         action="#{marcaModeloBackBean.guardarOrActualizarModelo}">
-                        </p:commandButton>
-                        <p:commandButton icon="fa fa-times-circle"
-                        					style="color:white"
-                                         value="#{labelName.btnCancelar}"
-                                         oncomplete="PF('dlgmarca').hide();"
-                                         update="@form">
-                        </p:commandButton>
-                    </p:outputPanel>
-                    <p:panel header="Marca" id="pnlMarcas">
-                        <h:panelGrid columns="2" style="width:100" columnClasses="Wid20, Wid80">
-                            <p:outputLabel for="nombreModelo" value="Nombre"/>
-                            <p:inputText value="#{marcaModeloBackBean.descripcionModelo}" label="Nombre" maxlength="25"
-                                         id="nombreModelo" styleClass="Wid80" autocomplete="off"
-                                         disabled="#{!marcaModeloBackBean.autorizadoParaEditar}"/>
-                            <p:outputLabel for="pasivoModelo" value="Pasivo:"
-                                           rendered="#{!marcaModeloBackBean.nuevoRegistroModelo}"/>
-                            <p:selectBooleanButton onLabel="Si" offLabel="No" id="pasivoModelo"
-                                                   value="#{marcaModeloBackBean.pasivoModelo }"
-                                                   rendered="#{!marcaModeloBackBean.nuevoRegistroModelo}"
-                                                   disabled="#{!marcaModeloBackBean.autorizadoParaEditar}"/>
+        </p:panel>
+    </h:form>
+</div>
 
+</div>
+	<p:dialog widgetVar="dlgmarca"  id="dlgmarca" showEffect="blind"
+              hideEffect="blind"  showHeader="false" modal="true"
+              height="150"  closable="false" resizable="false"
+              resetValues="true" width="500"> 
+                <h:form id="marcaload">
+                    <p:panel id="pnlMarcas">
+	                    <f:facet name="header">
+	                    	<p:outputPanel style="display:block;" styleClass="left">
+	                    		<h:outputLabel value="ID: #{marcaModeloBackBean.oModelo.id}" rendered="#{marcaModeloBackBean.oModelo.id != null}"/>
+	                    	</p:outputPanel>
+	                    	<p:outputPanel style="display: block; margin: 2px" styleClass="right">
+		                        <p:commandButton icon="fa fa-floppy-o" ajax="true"  style="color:white" value="#{labelName.btnGuardar}"  update=":formDatosMarca" action="#{marcaModeloBackBean.guardarOrActualizarModelo}" />
+		                        <p:commandButton icon="fa fa-times-circle" style="color:white" value="#{labelName.btnCancelar}" onclick="PF('dlgmarca').hide()" immediate="true" />
+	                    	</p:outputPanel>
+	                    </f:facet>
+                        <h:panelGrid columns="2" style="width:100%" columnClasses="Wid20, Wid80">
+                            <p:outputLabel for="nombreModelo" value="Nombre"/>
+                            <p:inputText value="#{marcaModeloBackBean.oModelo.descripcion}" label="Nombre modelo" maxlength="25" required="true"
+                                         id="nombreModelo" styleClass="Wid90" autocomplete="off" 
+                                         disabled="#{!marcaModeloBackBean.autorizadoParaEditar}"/>
+                            <p:outputLabel for="pasivoModelo" value="Pasivo:" rendered="#{marcaModeloBackBean.oModelo.id != null}"/>
+                            <p:selectBooleanButton onLabel="Si" offLabel="No" id="pasivoModelo"  value="#{marcaModeloBackBean.oModelo.pasivo}" rendered="#{marcaModeloBackBean.oModelo.id != null}"/>
                         </h:panelGrid>
                     </p:panel>
 
                 </h:form>
             </p:dialog>
-
-        </p:panel>
-
-    </h:form>
-</div>
-
-</div>
-
 </ui:define>
-
 
 </ui:composition>

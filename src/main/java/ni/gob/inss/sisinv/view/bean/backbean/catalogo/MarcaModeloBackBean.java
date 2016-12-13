@@ -8,6 +8,7 @@ import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.primefaces.context.RequestContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
@@ -45,11 +46,6 @@ public class MarcaModeloBackBean extends BaseBackBean implements Serializable {
     private List<MarcasModelos> listaModelos;
     private boolean autorizadoParaEditar;
 
-    
-    private boolean nuevoRegistroModelo;
-    private Integer hfIdModelo;
-    private boolean pasivoModelo;
-    private String descripcionModelo;
     private MarcasModelos modeloSeleccionada;
 
     private String tituloDialog;
@@ -82,7 +78,6 @@ public class MarcaModeloBackBean extends BaseBackBean implements Serializable {
         this.setTxtBusquedaMarcaByNombre("");
         this.setNuevoRegistro(true);
         this.setMarcaSeleccionada(null);
-        this.setDescripcionModelo("");
     }
 
     public void buscarMarcaByName() {
@@ -153,17 +148,14 @@ public class MarcaModeloBackBean extends BaseBackBean implements Serializable {
 
     public void guardarModelos() {
         try {
-            MarcasModelos oModelo = new MarcasModelos();
             //Por ser nueva Marca por defecto es activo.
-            oModelo.setDescripcion(this.getDescripcionModelo());
-            oModelo.setCreadoPor(this.getUsuarioActual().getId());
-            oModelo.setCreadoEl(this.getTimeNow());
-            oModelo.setCreadoEnIp(this.getRemoteIp());
-            oModelo.setPasivo(false);
-            oModelo.setPadreId(oMarca.getId());
+            this.oModelo.setCreadoPor(this.getUsuarioActual().getId());
+            this.oModelo.setCreadoEl(this.getTimeNow());
+            this.oModelo.setCreadoEnIp(this.getRemoteIp());
+            this.oModelo.setPasivo(false);
+            this.oModelo.setPadreId(oMarca.getId());
             oMarcaModeloService.agregar(oModelo);
             mostrarMensajeInfo(MessagesResults.EXITO_GUARDAR);
-            this.setHfIdModelo(oModelo.getId());
         } catch (Exception e) {
             mostrarMensajeError(this.getClass().getSimpleName(), "guardarNuevaModelos", MessagesResults.ERROR_GUARDAR, e);
 
@@ -171,14 +163,11 @@ public class MarcaModeloBackBean extends BaseBackBean implements Serializable {
     }
 
     public void limpiarModelo() {
-        this.setNuevoRegistroModelo(true);
-        this.setHfIdModelo(null);
-        this.setDescripcionModelo("");
-        this.setPasivoModelo(false);
+    	this.setoModelo(new MarcasModelos());
         this.setModeloSeleccionada(null);
         this.setTituloDialog("Agregar Marca");
     }
-
+    
     public void agregarModelo() {
         try {
             limpiarModelo();
@@ -198,46 +187,27 @@ public class MarcaModeloBackBean extends BaseBackBean implements Serializable {
 
     public void cargarDatosModelo() {
         if (this.getModeloSeleccionada() != null) {
-            this.cargarModelo(this.getModeloSeleccionada().getId());
+        	this.setoModelo(this.getModeloSeleccionada());
             this.setTituloDialog("Editar Modelo");
         } else {
             mostrarMensajeError(MessagesResults.SELECCIONE_UN_REGISTRO);
         }
     }
 
-
-    public void cargarModelo(Integer modeloId){
-         try {
-            MarcasModelos oModelo = oMarcaModeloService.obtener(modeloId);
-            this.setDescripcionModelo(oModelo.getDescripcion());
-            this.setHfIdModelo(oModelo.getId());
-            this.setPasivoModelo(oModelo.isPasivo());
-            this.setNuevoRegistroModelo(false);
-
-
-        } catch (Exception e) {
-            mostrarMensajeError(this.getClass().getSimpleName(), "cargarDatosModelo", MessagesResults.ERROR_OBTENER, e);
-        }
-    }
-
     public void guardarOrActualizarModelo() {
-        if (this.getHfIdModelo() == null) {
+        if (this.getoModelo().getId() == null) {
             this.guardarModelo();
         } else {
             this.actualizarModelo();
         }
+        RequestContext.getCurrentInstance().execute("PF('dlgmarca').hide()");
         this.buscarModeloPorMarca(this.getoMarca().getId());
     }
 
     public void actualizarModelo() {
         try {
-            MarcasModelos oModelo = new MarcasModelos();
-
-            oModelo = oMarcaModeloService.obtener(this.getHfIdModelo());
-            oModelo.setDescripcion(this.getDescripcionModelo());
-            oModelo.setPasivo(this.isPasivo());
-            oModelo.setModificadoEl(this.getTimeNow());
-            oModelo.setModificadoPor(this.getUsuarioActual().getId());
+            this.oModelo.setModificadoEl(this.getTimeNow());
+            this.oModelo.setModificadoPor(this.getUsuarioActual().getId());
             oModelo.setModificadoEnIp(this.getRemoteIp());
             oMarcaModeloService.actualizar(oModelo);
             mostrarMensajeInfo(MessagesResults.EXITO_MODIFICAR);
@@ -303,38 +273,6 @@ public class MarcaModeloBackBean extends BaseBackBean implements Serializable {
 
     public void setListaModelos(List<MarcasModelos> listaModelos) {
         this.listaModelos = listaModelos;
-    }
-
-    public boolean isNuevoRegistroModelo() {
-        return nuevoRegistroModelo;
-    }
-
-    public void setNuevoRegistroModelo(boolean nuevoRegistroModelo) {
-        this.nuevoRegistroModelo = nuevoRegistroModelo;
-    }
-
-    public Integer getHfIdModelo() {
-        return hfIdModelo;
-    }
-
-    public void setHfIdModelo(Integer hfIdModelo) {
-        this.hfIdModelo = hfIdModelo;
-    }
-
-    public boolean isPasivoModelo() {
-        return pasivoModelo;
-    }
-
-    public void setPasivoModelo(boolean pasivoModelo) {
-        this.pasivoModelo = pasivoModelo;
-    }
-
-    public String getDescripcionModelo() {
-        return descripcionModelo;
-    }
-
-    public void setDescripcionModelo(String descripcionModelo) {
-        this.descripcionModelo = descripcionModelo;
     }
 
     public MarcasModelos getModeloSeleccionada() {

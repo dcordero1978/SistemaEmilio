@@ -29,7 +29,7 @@ import ni.gob.inss.sisinv.model.entity.inventario.Activos;
  */
 @Entity
 @Table(name = "secaf", schema = "catalogo", uniqueConstraints = {@UniqueConstraint(columnNames={"cuenta","subcuenta","digito_auxiliar","objeto"})})
-@SequenceGenerator(name="Secaf_SEQ", sequenceName="catalogo.secaf_id_seq")
+@SequenceGenerator(name="Secaf_SEQ", sequenceName="catalogo.secaf_id_seq", allocationSize=1)
 @NamedNativeQueries(
 		@NamedNativeQuery(name="selectSecafPorDescripcion", query="SELECT * FROM catalogo.secaf where descripcion_cbs ilike '%'||:descripcion||'%' and pasivo is false order by descripcion_cbs asc", resultClass=Secaf.class)
 )

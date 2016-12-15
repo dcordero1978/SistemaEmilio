@@ -81,35 +81,35 @@
 							</p:outputPanel>
 						</f:facet>						
 						<h:panelGrid columns="2" style="width:100%" columnClasses="Wid20, Wid80">
-							<h:outputLabel for="noCuenta" value="Cuenta No:" />
+							<p:outputLabel for="noCuenta" value="Cuenta No:" />
 							<p:inputText id="noCuenta" required="true" label="Cuenta No:" maxlength="10" styleClass="Wid20" value="#{secafBackBean.noCuenta}" disabled="#{!secafBackBean.autorizadoParaEditar}">
 								<pe:keyFilter regEx="/#{secafBackBean.regExpNumeros}/"/>
 							</p:inputText>
-							<h:outputLabel for="noSubcuenta" value="Subcuenta No:" />
+							<p:outputLabel for="noSubcuenta" value="Subcuenta No:" />
 							<p:inputText id="noSubcuenta" required="true" maxlength="10" styleClass="Wid20" label="Subcuenta No:" value="#{secafBackBean.noSubcuenta}" disabled="#{!secafBackBean.autorizadoParaEditar}">
 								<pe:keyFilter regEx="/#{secafBackBean.regExpNumeros}/"/>
 							</p:inputText>			
-							<h:outputLabel for="digitoAuxiliar"  value="Digito Auxiliar:"/>
-							<p:inputText id="digitoAuxiliar" label="Digito Auxiliar:" maxlength="1"  styleClass="Wid20" value="#{secafBackBean.digitoAuxiliar}" disabled="#{!secafBackBean.autorizadoParaEditar}">
+							<p:outputLabel for="digitoAuxiliar"  value="Digito Auxiliar:"/>
+							<p:inputText id="digitoAuxiliar" required="true" label="Digito Auxiliar:" maxlength="1"  styleClass="Wid20" value="#{secafBackBean.digitoAuxiliar}" disabled="#{!secafBackBean.autorizadoParaEditar}">
 								<pe:keyFilter regEx="/#{secafBackBean.regExpLetras}/"/>
 							</p:inputText>
-							<h:outputLabel for="codigoObjeto" value="Código Objeto:" />
-							<p:inputText id="codigoObjeto" label="Codigo Objeto" styleClass="Wid20" maxlength="10" value="#{secafBackBean.codigoObjeto}" disabled="#{!secafBackBean.autorizadoParaEditar}">
+							<p:outputLabel for="codigoObjeto" value="Código Objeto:" />
+							<p:inputText id="codigoObjeto" required="true" label="Codigo Objeto" styleClass="Wid20" maxlength="10" value="#{secafBackBean.codigoObjeto}" disabled="#{!secafBackBean.autorizadoParaEditar}">
 								<pe:keyFilter regEx="/#{secafBackBean.regExpNumeros}/"/>
 							</p:inputText>
-							<h:outputLabel for="gasto" value="Gasto"/>
-							<p:inputText id="gasto" label="Gasto" styleClass="Wid20" value="#{secafBackBean.gasto}" disabled="#{!secafBackBean.autorizadoParaEditar}">
+							<p:outputLabel for="gasto" value="Gasto"/>
+							<p:inputText required="true" id="gasto" label="Gasto" styleClass="Wid20" value="#{secafBackBean.gasto}" disabled="#{!secafBackBean.autorizadoParaEditar}">
 								<pe:keyFilter regEx="/#{secafBackBean.regExpNumeros}/"/>
 							</p:inputText>
-							<h:outputLabel for="tipoBien" value="Tipo de Bien"/>
+							<p:outputLabel for="tipoBien" value="Tipo de Bien"/>
 							<p:selectOneMenu id="tipoBien" label="Descripción Bien" value="#{secafBackBean.tipoBien}" required="true" style="width:90%" filter="true" filterMatchMode="contains" disabled="#{!secafBackBean.autorizadoParaEditar}">
 								<f:selectItem itemLabel="Seleccione Tipo Bien" itemValue="#{null}" />
 								<f:selectItems var="oTipoBien" value="#{secafBackBean.listaTipoBienes}" itemLabel="#{oTipoBien.nombre}" itemValue="#{oTipoBien.id}" />
 							</p:selectOneMenu>
 							<!--   <p:inputText id="descripcion" label="Decripción" styleClass="Wid90" maxlength="250" required="true" value="#{secafBackBean.descripcionBien}" />-->
-							<h:outputLabel for="cbs" value="Codigo CBS" />
-							<p:inputText id="cbs" label="CBS" maxlength="20" required="true" value="#{secafBackBean.codigoCbs}" disabled="#{!secafBackBean.autorizadoParaEditar}"/>
-							<h:outputLabel for="descripcionCbs" value="Descripción CBS"/>
+							<p:outputLabel for="cbs" value="Codigo CBS" />
+							<p:inputText id="cbs" label="CBS" maxlength="20" required="true" value="#{secafBackBean.codigoCbs}" disabled="#{!secafBackBean.autorizadoParaEditar}" />
+							<p:outputLabel for="descripcionCbs" value="Descripción CBS"/>
 							<p:inputText  id="descripcionCbs" maxlength="250" required="true" label="Descripción CBS" styleClass="Wid90" value="#{secafBackBean.descripcionCbs}" disabled="#{!secafBackBean.autorizadoParaEditar}"/>
 							<p:outputLabel for="tipoMantenimiento" value="Tip de Mantenimiento"/>
 							<p:selectOneMenu id="tipoMantenimiento" value="#{secafBackBean.tipoMantenimientoId}" style="width:90%">
@@ -122,7 +122,7 @@
 								<f:selectItems value="#{secafBackBean.listaTipoActivo}" var="oTipoActivo" itemLabel="#{oTipoActivo.descripcion}" itemValue="#{oTipoActivo.id}"/>
 							</p:selectOneMenu>
 							
-							<h:outputLabel for="pasivo" value="Pasivo"  rendered="#{!secafBackBean.nuevoRegistro}"/>
+							<p:outputLabel for="pasivo" value="Pasivo"  rendered="#{!secafBackBean.nuevoRegistro}"/>
 							<p:selectBooleanButton offLabel="No" onLabel="Si" id="pasivo" value="#{secafBackBean.pasivo}" rendered="#{!secafBackBean.nuevoRegistro}" disabled="#{!secafBackBean.autorizadoParaEditar}"/>
 						</h:panelGrid>
 					</p:panel>

@@ -47,9 +47,7 @@ public class ConsultaActivosBackBean extends BaseBackBean implements Serializabl
 	
 	@PostConstruct
 	public void init(){
-		this.limpiar();
 		this.cargarListaDelegaciones();
-		//this.buscarActivo();
 		this.cargarListas();
 	} 
 	

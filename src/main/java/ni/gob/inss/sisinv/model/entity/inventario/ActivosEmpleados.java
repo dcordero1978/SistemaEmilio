@@ -39,7 +39,7 @@ public class ActivosEmpleados  extends EntityBase implements java.io.Serializabl
 		this.id = id;
 	}
    
-    @Column(name="activo_id", nullable=false, updatable=false)
+    @Column(name="activo_id", nullable=false, insertable=true, updatable=true)
     public Integer getActivo_id() {
 		return activo_id;
 	}
@@ -47,7 +47,7 @@ public class ActivosEmpleados  extends EntityBase implements java.io.Serializabl
 		this.activo_id = activo_id;
 	}
 	
-	@Column(name="empleado_id", nullable=false, updatable=false)
+	@Column(name="empleado_id", nullable=false, insertable=true, updatable=true)
 	public Integer getEmpleado_id() {
 		return empleado_id;
 	}

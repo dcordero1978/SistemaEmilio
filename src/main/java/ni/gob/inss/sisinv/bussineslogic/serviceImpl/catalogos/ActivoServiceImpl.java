@@ -1,5 +1,6 @@
 package ni.gob.inss.sisinv.bussineslogic.serviceImpl.catalogos;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,9 @@ import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
 import ni.gob.inss.barista.model.entity.seguridad.Parametro;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.ActivoService;
 import ni.gob.inss.sisinv.model.dao.catalogos.ActivoDAO;
+import ni.gob.inss.sisinv.model.dao.catalogos.ActivoEmpleadoDAO;
 import ni.gob.inss.sisinv.model.entity.inventario.Activos;
+import ni.gob.inss.sisinv.model.entity.inventario.ActivosEmpleados;
 
 @Service
 public class ActivoServiceImpl implements ActivoService {
@@ -33,6 +36,8 @@ public class ActivoServiceImpl implements ActivoService {
 	@Autowired
 	CatalogoDAO oCatalogoDAO;
 	
+	@Autowired
+	ActivoEmpleadoDAO oActivoEmpleadoDAO;
 
 	@Transactional
 	@Override
@@ -49,6 +54,17 @@ public class ActivoServiceImpl implements ActivoService {
 		String codigoInventario  = this.generarCodigoInventario(oActivo);
 		oActivo.setCodigoInventario(codigoInventario);
 		oActivoDAO.saveUpper(oActivo);
+		
+		ActivosEmpleados oActivoEmpleado = new ActivosEmpleados();
+		oActivoEmpleado.setEmpleado_id(oActivo.getEmpleado().getId());
+		oActivoEmpleado.setCreadoEl(oActivo.getCreadoEl());
+		oActivoEmpleado.setCreadoEnIp(oActivo.getCreadoEnIp());
+		oActivoEmpleado.setCreadoPor(oActivo.getCreadoPor());
+		oActivoEmpleado.setPasivo(Boolean.FALSE);
+		oActivoEmpleado.setFechaAsignacion(new Date());
+		oActivoEmpleado.setActivo_id(oActivo.getId());
+		
+		oActivoEmpleadoDAO.saveUpper(oActivoEmpleado);
 	}
 
 	//TODO: GENERAR PARAMETRO/CODIGO_DEPTO/CUENTA/SUBCUENTA/CONSECUTIVO

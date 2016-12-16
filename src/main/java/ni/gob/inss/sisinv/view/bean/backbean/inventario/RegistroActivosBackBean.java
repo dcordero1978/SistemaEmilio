@@ -107,12 +107,12 @@ public class RegistroActivosBackBean extends BaseBackBean implements Serializabl
 	@PostConstruct
 	public void init(){
 		this.oActivo = new Activos();
-		this.cargarListas();
+		//this.cargarListas();
 		inicializarCaracteristicas();
 		this.regExpNumero = RegExpresionExtends.regExpSoloNumeros;
 	}
 	
-	private void cargarListas(){
+	public void cargarListas(){
 		try {
 			this.listaMarcas = oCatalogoService.obtenerListaMarcas();
 			List<Catalogo> listaCatalogos = 

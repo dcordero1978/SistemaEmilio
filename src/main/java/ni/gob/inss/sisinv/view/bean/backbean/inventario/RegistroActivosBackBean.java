@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
+import org.primefaces.context.RequestContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
@@ -34,6 +36,7 @@ import ni.gob.inss.sisinv.model.entity.catalogo.Secaf;
 import ni.gob.inss.sisinv.model.entity.inventario.Activos;
 import ni.gob.inss.sisinv.model.entity.inventario.ActivosCaracteristicas;
 import ni.gob.inss.sisinv.util.CatalogoGeneral;
+import ni.gob.inss.sisinv.util.RegExpresionExtends;
 
 @Scope("view")
 @Named
@@ -55,6 +58,7 @@ public class RegistroActivosBackBean extends BaseBackBean implements Serializabl
 	private List<Delegacion> listaUbicaciones = new ArrayList<Delegacion>(); 
 	private List<Activos> listaActivosUsuario = new ArrayList<Activos>();
 	private List<TiposCatalogo> listaTipoActivoEspecial = new ArrayList<TiposCatalogo>();
+	private List<Catalogo> listaTipoCombustible = new ArrayList<>();
 	private Map<String, ActivosCaracteristicas> caracteristicas = new HashMap<String, ActivosCaracteristicas>();
 	
 	private Secaf catalogoSecafSeleccionado;
@@ -76,6 +80,8 @@ public class RegistroActivosBackBean extends BaseBackBean implements Serializabl
 	private ActivosCaracteristicas caracteristicaNumeroPasajeros = new ActivosCaracteristicas();
 	private ActivosCaracteristicas caracteristicaCapacidadCarga = new ActivosCaracteristicas();
 	private ActivosCaracteristicas caracteristicaTipoComBustible = new ActivosCaracteristicas();
+	
+	private String regExpNumero;
 	
 	@SuppressWarnings("unused") //Usado en la vista
 	private boolean seleccionCaracteristicaArmaDeFuego;
@@ -103,16 +109,35 @@ public class RegistroActivosBackBean extends BaseBackBean implements Serializabl
 		this.oActivo = new Activos();
 		this.cargarListas();
 		inicializarCaracteristicas();
-	}	
+		this.regExpNumero = RegExpresionExtends.regExpSoloNumeros;
+	}
 	
 	private void cargarListas(){
 		try {
 			this.listaMarcas = oCatalogoService.obtenerListaMarcas();
-			this.listaEstadoFisico = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.ESTADO_FISICO.getCodigoCatalogo());
-			this.listaTipoResguardo = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.TIPO_RESGUARDO.getCodigoCatalogo());
-			this.listaColores = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.COLORES.getCodigoCatalogo());
-			this.listaTipoMoneda = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.MONEDA.getCodigoCatalogo());
-			this.listaProyectos = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.PROYECTOS.getCodigoCatalogo());
+			List<Catalogo> listaCatalogos = 
+			oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.ESTADO_FISICO.getCodigoCatalogo(), CatalogoGeneral.TIPO_RESGUARDO.getCodigoCatalogo(),
+																	CatalogoGeneral.COLORES.getCodigoCatalogo(),CatalogoGeneral.MONEDA.getCodigoCatalogo(),
+																	CatalogoGeneral.PROYECTOS.getCodigoCatalogo(), CatalogoGeneral.TIPO_COMBUSTIBLE.getCodigoCatalogo());
+			
+			this.listaEstadoFisico =  listaCatalogos.parallelStream()
+										.filter(estadoFisico -> StringUtils.equals(CatalogoGeneral.ESTADO_FISICO.getCodigoCatalogo(), estadoFisico.getRefTipoCatalogo()))
+										.collect(Collectors.toList());
+			this.listaTipoResguardo = listaCatalogos.parallelStream()
+										.filter(tipoResguardo -> StringUtils.equals(CatalogoGeneral.TIPO_RESGUARDO.getCodigoCatalogo(), tipoResguardo.getRefTipoCatalogo()))
+										.collect(Collectors.toList());
+			this.listaColores = listaCatalogos.parallelStream()
+										.filter(colores -> StringUtils.equals(CatalogoGeneral.COLORES.getCodigoCatalogo(), colores.getRefTipoCatalogo()))
+										.collect(Collectors.toList());
+			this.listaTipoMoneda = listaCatalogos.parallelStream()
+										.filter(tipoMoneda -> StringUtils.equals(CatalogoGeneral.MONEDA.getCodigoCatalogo(), tipoMoneda.getRefTipoCatalogo()))
+										.collect(Collectors.toList());
+			this.listaProyectos = listaCatalogos.parallelStream()
+										.filter(tipoProyecto -> StringUtils.equals(CatalogoGeneral.PROYECTOS.getCodigoCatalogo(), tipoProyecto.getRefTipoCatalogo()))
+										.collect(Collectors.toList());
+			this.listaTipoCombustible = listaCatalogos.parallelStream()
+										.filter(tipoCombustible -> StringUtils.equals(CatalogoGeneral.TIPO_COMBUSTIBLE.getCodigoCatalogo(), tipoCombustible.getRefTipoCatalogo()))
+										.collect(Collectors.toList());
 			this.cargarListaTipoActivosEspeciales();
 		} catch (EntityNotFoundException e) {
 			mostrarMensajeError(MessagesResults.ERROR_OBTENER_LISTA);
@@ -129,6 +154,10 @@ public class RegistroActivosBackBean extends BaseBackBean implements Serializabl
 	
 	public void cargarListaUbicacionesPorEmpleado(){
 		this.listaUbicaciones =oDelegacionService.listaUbicacionesEmpleado(filtroEmpleadoSeleccionado);
+	}
+	
+	public void agregarCaracteristicasEsepeciales(){
+		RequestContext.getCurrentInstance().execute("PF('modalCaracteristicasEspeciales').hide();");
 	}
 	
 	//CARGA LOS DATOS DEL MODAL DE EMPLEADO.
@@ -281,7 +310,7 @@ public class RegistroActivosBackBean extends BaseBackBean implements Serializabl
 			oActivo.setListaCaracteristicas(obtieneListaCaracteristicas(oActivo));
 			oActivoService.guardar(oActivo);
 			
-			mostrarMensajeInfo(MessagesResults.EXITO_GUARDAR);
+			mostrarMensajeInfo("EL ACTIVO SE HA GUARDADO CON EL CODIGO: "+oActivo.getCodigoInventario());
 		} catch (BusinessException | DAOException e) {
 			mostrarMensajeError(MessagesResults.ERROR_GUARDAR);
 		}
@@ -511,4 +540,13 @@ public class RegistroActivosBackBean extends BaseBackBean implements Serializabl
 	public boolean isSeleccionCaracteristicaObraArte() {
 		return StringUtils.equals(this.getCodigoTipoActivoEspecial(), CatalogoGeneral.CARACTERISTICA_OBRA_ARTE.getCodigoCatalogo());
 	}
+
+	public String getRegExpNumero() {
+		return regExpNumero;
+	}
+
+	public List<Catalogo> getListaTipoCombustible() {
+		return listaTipoCombustible;
+	}
+	
 }

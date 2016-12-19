@@ -7,7 +7,6 @@
                 template="/web/template/innerLayout.xhtml"
                 xmlns:mc="http://java.sun.com/jsf/composite/comps">
     <ui:param name="paramBackBean" value="#{caracteristicasHardwareBackBean}"/>
-    <h:outputStylesheet library="default/1_0/css" name="origami.css" />
     <ui:define name="headerContent">
         Caracteristicas de Hardware.
     </ui:define>
@@ -54,7 +53,7 @@
 									<h:outputText value="#{oCaracteristica.oTipoActivo.descripcion}"/>
 								</p:column>
 								<p:column headerText="Pasivo" style="text-align:center;">
-									<p:inputSwitch value="#{oCaracteristica.pasivo}" offLabel="No" onLabel="Si" disabled="true"/>
+									<p:inputSwitch value="#{oCaracteristica.pasivo}" offLabel="No" onLabel="Si" disabled="true" style="background: white; color:black;"/>
 								</p:column>
 							</p:dataTable>
 						</p:outputPanel>
@@ -85,7 +84,7 @@
 								<f:selectItems value="#{caracteristicasHardwareBackBean.listaTipoActivos}" var="oTipoActivo" itemLabel="#{oTipoActivo.descripcion}" itemValue="#{oTipoActivo.id}"/>
 							</p:selectOneMenu>
 							<h:outputLabel for="pasivo" value="Pasivo:" rendered="#{caracteristicasHardwareBackBean.oCaracteristica.id != null}"/>
-							<p:inputSwitch id="pasivo"  value="#{caracteristicasHardwareBackBean.oCaracteristica.pasivo}" rendered="#{caracteristicasHardwareBackBean.oCaracteristica.id != null}" offLabel="No" onLabel="Si"/>
+							<p:inputSwitch id="pasivo"  value="#{caracteristicasHardwareBackBean.oCaracteristica.pasivo}" rendered="#{caracteristicasHardwareBackBean.oCaracteristica.id != null}" offLabel="No" onLabel="Si" style="background: white; color:black;"/>
 							
 						</h:panelGrid>
 						<p:panel id="listaCaracteristicasHijas" rendered="#{caracteristicasHardwareBackBean.oCaracteristica.id != null}">
@@ -119,7 +118,7 @@
 										<h:outputText value="#{oCaracteristicaHija.descripcion}"/>
 									</p:column>
 									<p:column headerText="Pasivo" style="text-align:center;">
-										<p:inputSwitch value="#{oCaracteristicaHija.pasivo}" disabled="true" offLabel="No" onLabel="Si" />
+										<p:inputSwitch value="#{oCaracteristicaHija.pasivo}" disabled="true" offLabel="No" onLabel="Si" style="background: white; color:black;"/>
 									</p:column>
 								</p:dataTable>
 						</p:panel>
@@ -147,7 +146,7 @@
 								</p:inputText>
 								
 								<p:outputLabel for="pasivo" value="Pasivo" rendered="#{caracteristicasHardwareBackBean.oCaracteristicaHija.id != null}"/>
-								<p:inputSwitch value="#{caracteristicasHardwareBackBean.oCaracteristicaHija.pasivo}" id="pasivo" rendered="#{caracteristicasHardwareBackBean.oCaracteristicaHija.id != null}" offLabel="No" onLabel="Si"/>
+								<p:inputSwitch value="#{caracteristicasHardwareBackBean.oCaracteristicaHija.pasivo}" id="pasivo" rendered="#{caracteristicasHardwareBackBean.oCaracteristicaHija.id != null}" offLabel="No" onLabel="Si" style="background: white; color:black;"/>
 							</h:panelGrid>
 						</p:panel>
 				</p:dialog>

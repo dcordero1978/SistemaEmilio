@@ -7,6 +7,7 @@
                 template="/web/template/innerLayout.xhtml"
                 xmlns:mc="http://java.sun.com/jsf/composite/comps">
     <ui:param name="paramBackBean" value="#{caracteristicasHardwareBackBean}"/>
+    <h:outputStylesheet library="default/1_0/css" name="origami.css" />
     <ui:define name="headerContent">
         Caracteristicas de Hardware.
     </ui:define>
@@ -53,7 +54,7 @@
 									<h:outputText value="#{oCaracteristica.oTipoActivo.descripcion}"/>
 								</p:column>
 								<p:column headerText="Pasivo" style="text-align:center;">
-									<p:selectBooleanCheckbox value="#{oCaracteristica.pasivo}" disabled="true" styleClass="ui-linus-enabled"/>
+									<p:inputSwitch value="#{oCaracteristica.pasivo}" offLabel="No" onLabel="Si" disabled="true"/>
 								</p:column>
 							</p:dataTable>
 						</p:outputPanel>
@@ -73,18 +74,19 @@
 							</p:outputPanel>
 						</f:facet>
 						<h:panelGrid style="width:100%" columns="2"  columnClasses="Wid20, Wid80">
-							<h:outputLabel for="descripcionCaracteristica" value="Descripción:" />
+							<p:outputLabel for="descripcionCaracteristica" value="Descripción:" />
 							<p:inputText id="descripcionCaracteristica" style="width:90%" required="true" value="#{caracteristicasHardwareBackBean.oCaracteristica.descripcion}" label="Descripción">
 								<f:validateRegex pattern="#{caracteristicasHardwareBackBean.regExpDescripcion}"/>
 								<f:validateLength minimum="1" maximum="50"/>
 							</p:inputText>
-							<h:outputLabel for="tipoActivo" value="Tipo de Activo:" />
+							<p:outputLabel for="tipoActivo" value="Tipo de Activo:" />
 							<p:selectOneMenu id="tipoActivo" label="Tipo de Activo" value="#{caracteristicasHardwareBackBean.oCaracteristica.tipoActivoId}" style="width:90%">
 								<f:selectItem itemLabel="Seleccione" itemValue="#{null}" />
 								<f:selectItems value="#{caracteristicasHardwareBackBean.listaTipoActivos}" var="oTipoActivo" itemLabel="#{oTipoActivo.descripcion}" itemValue="#{oTipoActivo.id}"/>
 							</p:selectOneMenu>
 							<h:outputLabel for="pasivo" value="Pasivo:" rendered="#{caracteristicasHardwareBackBean.oCaracteristica.id != null}"/>
-							<p:selectBooleanCheckbox id="pasivo" value="#{caracteristicasHardwareBackBean.oCaracteristica.pasivo}" rendered="#{caracteristicasHardwareBackBean.oCaracteristica.id != null}"/>
+							<p:inputSwitch id="pasivo"  value="#{caracteristicasHardwareBackBean.oCaracteristica.pasivo}" rendered="#{caracteristicasHardwareBackBean.oCaracteristica.id != null}" offLabel="No" onLabel="Si"/>
+							
 						</h:panelGrid>
 						<p:panel id="listaCaracteristicasHijas" rendered="#{caracteristicasHardwareBackBean.oCaracteristica.id != null}">
 							<f:facet name="header">
@@ -117,7 +119,7 @@
 										<h:outputText value="#{oCaracteristicaHija.descripcion}"/>
 									</p:column>
 									<p:column headerText="Pasivo" style="text-align:center;">
-										<p:selectBooleanCheckbox value="#{oCaracteristicaHija.pasivo}" disabled="true" styleClass="ui-linus-enabled"/>
+										<p:inputSwitch value="#{oCaracteristicaHija.pasivo}" disabled="true" offLabel="No" onLabel="Si" />
 									</p:column>
 								</p:dataTable>
 						</p:panel>
@@ -138,14 +140,14 @@
 								</p:outputPanel>
 							</f:facet>
 							<h:panelGrid columns="2" columnClasses="Wid20, Wid80" style="width:100%">
-								<h:outputLabel for="descripcion" value="Descripcion" />
+								<p:outputLabel for="descripcion" value="Descripcion" />
 								<p:inputText label="Descripción" required="true" id="descripcion" style="width:90%" value="#{caracteristicasHardwareBackBean.oCaracteristicaHija.descripcion}">
 									<f:validateRegex pattern="#{caracteristicasHardwareBackBean.regExpDescripcion}"/>
 									<f:validateLength minimum="1" maximum="50"/>
 								</p:inputText>
 								
-								<h:outputLabel for="pasivo" value="Pasivo" rendered="#{caracteristicasHardwareBackBean.oCaracteristicaHija.id != null}"/>
-								<p:selectBooleanCheckbox value="#{caracteristicasHardwareBackBean.oCaracteristicaHija.pasivo}" id="pasivo" rendered="#{caracteristicasHardwareBackBean.oCaracteristicaHija.id != null}"/>
+								<p:outputLabel for="pasivo" value="Pasivo" rendered="#{caracteristicasHardwareBackBean.oCaracteristicaHija.id != null}"/>
+								<p:inputSwitch value="#{caracteristicasHardwareBackBean.oCaracteristicaHija.pasivo}" id="pasivo" rendered="#{caracteristicasHardwareBackBean.oCaracteristicaHija.id != null}" offLabel="No" onLabel="Si"/>
 							</h:panelGrid>
 						</p:panel>
 				</p:dialog>

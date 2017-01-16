@@ -28,8 +28,10 @@ public class ConsultaActivosBackBean extends BaseBackBean implements Serializabl
 	private static final long serialVersionUID = 1L;
 	private List<Delegacion> listaDelegaciones;
 	private List<Catalogo> listaEstadoFisico;
+	private List<Catalogo> listaProyectos;
 	private Integer delegacionId;
 	private Integer estadoFisicoId;
+	private Integer proyectoId;
 	private String txtBusquedaActivoByCodigo;
 	private String txtBusquedaActivoByDescripcion;
 	private List<Activos> listaActivos;
@@ -55,6 +57,7 @@ public class ConsultaActivosBackBean extends BaseBackBean implements Serializabl
 	public void cargarListas(){
 		try {
 			this.listaEstadoFisico = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.ESTADO_FISICO.getCodigoCatalogo());	
+			this.listaProyectos = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.PROYECTOS.getCodigoCatalogo());
 		} catch (EntityNotFoundException  e) {
 			mostrarMensajeError(this.getClass().getSimpleName(), "cargarListas", MessagesResults.ERROR_OBTENER_LISTA, e);
 		}
@@ -78,7 +81,7 @@ public class ConsultaActivosBackBean extends BaseBackBean implements Serializabl
 	
 	public void buscarActivo(){
 		try{
-			this.listaActivos = oActivoService.buscar( this.getDelegacionId(), this.txtBusquedaActivoByCodigo, this.txtBusquedaActivoByDescripcion,this.estadoFisicoId);
+			this.listaActivos = oActivoService.buscar( this.getDelegacionId(), this.txtBusquedaActivoByCodigo, this.txtBusquedaActivoByDescripcion,this.estadoFisicoId, this.proyectoId);
 			if(this.listaActivos.isEmpty()){
 				mostrarMensajeInfo("No se han encontrado resultados con el criterio de Búsqueda ingresada.");
 			}
@@ -144,6 +147,26 @@ public class ConsultaActivosBackBean extends BaseBackBean implements Serializabl
 
 	public void setListaEstadoFisico(List<Catalogo> listaEstadoFisico) {
 		this.listaEstadoFisico = listaEstadoFisico;
+	}
+
+
+	public List<Catalogo> getListaProyectos() {
+		return listaProyectos;
+	}
+
+
+	public void setListaProyectos(List<Catalogo> listaProyectos) {
+		this.listaProyectos = listaProyectos;
+	}
+
+
+	public Integer getProyectoId() {
+		return proyectoId;
+	}
+
+
+	public void setProyectoId(Integer proyectoId) {
+		this.proyectoId = proyectoId;
 	}
 
 }

@@ -67,11 +67,11 @@ public class ActivoServiceImpl implements ActivoService {
 	//PARA REALIZAR LAS DIFERENTES BUSQUEDAS DE CONSULTA GENERAL
 	@Transactional
 	@Override
-	public List<Activos> buscar(Integer delegacionId, String codActivo, String descripcion, Integer estadoFisicoId) {
+	public List<Activos> buscar(Integer delegacionId, String codActivo, String descripcion, Integer estadoFisicoId, Integer proyectoId) {
 		
 			List<Activos> listaActivos = null;
 			
-			listaActivos = oActivoDAO.ListadoActivosFiltro( delegacionId,  codActivo,  descripcion, estadoFisicoId);
+			listaActivos = oActivoDAO.ListadoActivosFiltro( delegacionId,  codActivo,  descripcion, estadoFisicoId,proyectoId); 
 			
 			return listaActivos;		
 		

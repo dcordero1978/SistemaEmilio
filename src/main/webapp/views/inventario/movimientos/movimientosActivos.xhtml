@@ -18,7 +18,6 @@
 			
 				<p:panel  styleClass="fondoPaneles" style="height: 590px;">
 					<f:facet name="header">
-						<h:outputText value="ID:" />
 						<p:outputPanel style="display:block" styleClass="right">
 							<p:commandButton widgetVar="btnGuardar"  icon="ui-icon-disk" value="#{labelName.btnGuardar}" onstart="PF('btnGuardar').disable();" oncomplete="PF('btnGuardar').enable();" action="#{movimientosActivosBackBean.guardar}"  update="panelhistorico"/>
 							<p:commandButton resetValues="true" ajax="true" value="#{labelName.btnCancelar}" icon="ui-icon-cancel" action="#{movimientosActivosBackBean.cancelar}" update="formMovimientoActivos"/>	
@@ -77,7 +76,7 @@
             					<p:outputLabel for="txtubicacionEmpleadoDest" value="Ubicación"/>
             					<p:inputText id="txtubicacionEmpleadoDest" maxlength="50" readonly="true" styleClass="Wid90" value="#{movimientosActivosBackBean.txtubicacionEmpleadoDest}"/>
             					<p:outputLabel for="observacionEmpleadoDest" value="Observaciones"/>
-            					<p:inputTextarea id="observacionEmpleadoDest"  rows="4"  styleClass="Wid90"/>
+            					<p:inputTextarea id="observacionEmpleadoDest"  rows="4"  styleClass="Wid90" value="#{movimientosActivosBackBean.txtobservaciones}"/>
             					</h:panelGrid>
             				</h:panelGrid>
             			</h:panelGrid>

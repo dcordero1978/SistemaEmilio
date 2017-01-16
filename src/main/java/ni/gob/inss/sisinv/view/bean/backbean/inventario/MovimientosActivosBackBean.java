@@ -52,6 +52,7 @@ public class MovimientosActivosBackBean extends BaseBackBean implements Serializ
 	private String txtEmpleadoOrig;
 	private String cargoEmpleadoOrig;
 	private String ubicacionEmpleadoOrig;
+	private String txtobservaciones;
 	
 	private String filtroCodSecaf;
 	private String filtroCodSecundario;
@@ -177,7 +178,7 @@ public class MovimientosActivosBackBean extends BaseBackBean implements Serializ
 					oMovimientos.setEmpleadoIdDestino(oEmpleadoService.obtener(this.getHFEmpDestId())); 
 					oMovimientos.setActivoId( oActivoService.obtener(this.getHFActivoId()));
 					oMovimientos.setFechaMovimiento(this.getFechaMovimiento());
-					oMovimientos.setObservaciones(this.getObservaciones());
+					oMovimientos.setObservaciones(this.getTxtobservaciones());
 					oMovimientos.setPasivo(false);
 					oMovimientos.setCreadoEl(this.getTimeNow());
 					oMovimientos.setCreadoEnIp(this.getRemoteIp());
@@ -489,6 +490,14 @@ public class MovimientosActivosBackBean extends BaseBackBean implements Serializ
 
 	public void setListaMovimientos(List<Movimientos> listaMovimientos) {
 		this.listaMovimientos = listaMovimientos;
+	}
+
+	public String getTxtobservaciones() {
+		return txtobservaciones;
+	}
+
+	public void setTxtobservaciones(String txtobservaciones) {
+		this.txtobservaciones = txtobservaciones;
 	}
 
 	

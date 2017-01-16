@@ -68,7 +68,8 @@ public class ConsultaActivosBackBean extends BaseBackBean implements Serializabl
 		this.setTxtBusquedaActivoByDescripcion(null);
 		this.setDelegacionId(null);
 		this.setEstadoFisicoId(null);
-		this.buscarActivo();
+		this.setProyectoId(null);
+		this.setListaActivos(null);
 	}
 	
 	public void cargarListaDelegaciones(){
@@ -80,7 +81,7 @@ public class ConsultaActivosBackBean extends BaseBackBean implements Serializabl
 	}
 	
 	public void buscarActivo(){
-		try{
+		try{ 
 			this.listaActivos = oActivoService.buscar( this.getDelegacionId(), this.txtBusquedaActivoByCodigo, this.txtBusquedaActivoByDescripcion,this.estadoFisicoId, this.proyectoId);
 			if(this.listaActivos.isEmpty()){
 				mostrarMensajeInfo("No se han encontrado resultados con el criterio de Búsqueda ingresada.");

@@ -34,7 +34,7 @@ public class ActivoDAOImpl extends BaseGenericDAOImpl<Activos, Integer> implemen
 	}
 	
 	@Override
-	public List<Activos> ListadoActivosFiltro(Integer delegacionId, String codActivo, String descripcion, Integer estadoFisicoId){ 
+	public List<Activos> ListadoActivosFiltro(Integer delegacionId, String codActivo, String descripcion, Integer estadoFisicoId, Integer proyectoId){ 
 		Session session = sessionFactory.getCurrentSession();
 		
 		Criteria criteriaCount = session.createCriteria(Activos.class);
@@ -49,6 +49,7 @@ public class ActivoDAOImpl extends BaseGenericDAOImpl<Activos, Integer> implemen
 		if(codActivo!=null){criteria.add(Restrictions.ilike("codigoInventario", "%"+codActivo+"%"));}
 		if(descripcion!=null){criteria.add(Restrictions.ilike("descripcion", "%"+descripcion+"%"));}
 		if(estadoFisicoId!=null){criteria.add(Restrictions.eq("estadoFisicoId",estadoFisicoId));}
+		if(proyectoId!=null){criteria.add(Restrictions.eq("proyectoId",proyectoId));}
 		
 		List<Activos> lista = criteria.list();
 		

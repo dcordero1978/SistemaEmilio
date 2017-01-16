@@ -23,13 +23,17 @@ import org.primefaces.model.ScheduleModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
+import ni.gob.inss.barista.businesslogic.service.BusinessException;
 import ni.gob.inss.barista.model.dao.DAOException;
 import ni.gob.inss.barista.view.bean.backbean.BaseBackBean;
 import ni.gob.inss.barista.view.utils.web.MessagesResults;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.CatalogoExtService;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.DelegacionService;
+import ni.gob.inss.sisinv.bussineslogic.service.catalogos.EmpleadoService;
 import ni.gob.inss.sisinv.bussineslogic.service.soporte.MantenimientosService;
 import ni.gob.inss.sisinv.model.entity.catalogo.Delegacion;
+import ni.gob.inss.sisinv.model.entity.catalogo.Empleado;
+import ni.gob.inss.sisinv.model.entity.soporte.ActivosUsuario;
 import ni.gob.inss.sisinv.model.entity.soporte.Mantenimientos;
 import ni.gob.inss.sisinv.model.entity.soporte.ProgramacionMantenimiento;
 
@@ -44,17 +48,38 @@ public class ProgramacionMantenimientoBackBean extends BaseBackBean implements S
 	private List<Delegacion> listaDelegaciones;
 	private List<ProgramacionMantenimiento> listaMtoProgramado;
 	private List<Mantenimientos> listaMantenimientos;
+	private List<ActivosUsuario> listaActivosUsuario;
+	private ActivosUsuario equipoSeleccionado;
+	private Empleado filtroEmpleadoSeleccionado; 
     private Date fechaInicio;
     private Date fechaFin;
     private String asunto;
     private Integer mantenimientoprogId;
     
+    
     private Date fechaIniciotxt;
     private Date fechaFintxt;
     private String asuntotxt;
     private Integer estadoId=1000;
-   
     
+    private String txtEmpleado;
+    private String txtcargoEmpleado;
+    private String txtubicacionEmpleado;
+    private String txtobservacion;
+    private Integer HfEmpId;
+    
+    private Boolean ckLimpieza;
+    private Boolean ckReemplazo;
+    private Boolean ckDepuracion;
+    private Boolean ckInstPrograma;
+    private Boolean ckInstAntivirus;
+    private Boolean ckActAntivirus;
+    private Boolean ckEscAntivirus;
+    private Boolean ckInstSOperativo;
+    private Boolean ckBueno;
+    private Boolean ckDanado;
+
+
 	
 	
 	@Autowired
@@ -65,6 +90,9 @@ public class ProgramacionMantenimientoBackBean extends BaseBackBean implements S
 	
 	@Autowired
 	MantenimientosService oMantenimientosService;
+	
+	@Autowired
+	EmpleadoService oEmpleadoService;
 	
 	@PostConstruct
 	public void init(){
@@ -110,6 +138,23 @@ public class ProgramacionMantenimientoBackBean extends BaseBackBean implements S
 		this.setFechaInicio(null);
 		this.setFechaFin(null);
 	}
+	
+	public void cargarDatosFiltro() throws EntityNotFoundException, ni.gob.inss.barista.model.dao.EntityNotFoundException{
+		try {
+			if(filtroEmpleadoSeleccionado==null) throw new BusinessException(MessagesResults.SELECCIONE_UN_REGISTRO);
+				this.setTxtEmpleado(filtroEmpleadoSeleccionado.getNumeroEmpleado()+" - "+ filtroEmpleadoSeleccionado.getPrimerNombre()+ " "+filtroEmpleadoSeleccionado.getSegundoNombre()+ " "+filtroEmpleadoSeleccionado.getPrimerApellido()+" "+filtroEmpleadoSeleccionado.getSegundoApellido());
+				this.setTxtcargoEmpleado(filtroEmpleadoSeleccionado.getCargo());
+				this.setTxtubicacionEmpleado(filtroEmpleadoSeleccionado.getArea());
+				Empleado oEmpleado = oEmpleadoService.obtener(filtroEmpleadoSeleccionado.getId());
+				this.setHfEmpId(oEmpleado.getId()); 
+				this.listaActivosUsuario = oMantenimientosService.obtenerListaActivosUsuarios(this.getHfEmpId());
+		} catch (EntityNotFoundException e) {
+			mostrarMensajeError(this.getClass().getSimpleName(), "cargarDatos", MessagesResults.ERROR_OBTENER, e);
+		}catch(BusinessException e){
+			mostrarMensajeError(e.getMessage());
+		}
+    }
+	
 	
 	public void guardar(){
 		try{
@@ -294,7 +339,151 @@ public class ProgramacionMantenimientoBackBean extends BaseBackBean implements S
 	public void setMantenimientoprogId(Integer mantenimientoprogId) {
 		this.mantenimientoprogId = mantenimientoprogId;
 	}
-	
+
+	public Empleado getFiltroEmpleadoSeleccionado() {
+		return filtroEmpleadoSeleccionado;
+	}
+
+	public void setFiltroEmpleadoSeleccionado(Empleado filtroEmpleadoSeleccionado) {
+		this.filtroEmpleadoSeleccionado = filtroEmpleadoSeleccionado;
+	}
+
+	public String getTxtEmpleado() {
+		return txtEmpleado;
+	}
+
+	public void setTxtEmpleado(String txtEmpleado) {
+		this.txtEmpleado = txtEmpleado;
+	}
+
+	public String getTxtcargoEmpleado() {
+		return txtcargoEmpleado;
+	}
+
+	public void setTxtcargoEmpleado(String txtcargoEmpleado) {
+		this.txtcargoEmpleado = txtcargoEmpleado;
+	}
+
+	public String getTxtubicacionEmpleado() {
+		return txtubicacionEmpleado;
+	}
+
+	public void setTxtubicacionEmpleado(String txtubicacionEmpleado) {
+		this.txtubicacionEmpleado = txtubicacionEmpleado;
+	}
+
+	public Integer getHfEmpId() {
+		return HfEmpId;
+	}
+
+	public void setHfEmpId(Integer hfEmpId) {
+		HfEmpId = hfEmpId;
+	}
+
+	public List<ActivosUsuario> getListaActivosUsuario() {
+		return listaActivosUsuario;
+	}
+
+	public void setListaActivosUsuario(List<ActivosUsuario> listaActivosUsuario) {
+		this.listaActivosUsuario = listaActivosUsuario;
+	}
+
+	public ActivosUsuario getEquipoSeleccionado() {
+		return equipoSeleccionado;
+	}
+
+	public void setEquipoSeleccionado(ActivosUsuario equipoSeleccionado) {
+		this.equipoSeleccionado = equipoSeleccionado;
+	}
+
+	public Boolean getCkLimpieza() {
+		return ckLimpieza;
+	}
+
+	public void setCkLimpieza(Boolean ckLimpieza) {
+		this.ckLimpieza = ckLimpieza;
+	}
+
+	public Boolean getCkReemplazo() {
+		return ckReemplazo;
+	}
+
+	public void setCkReemplazo(Boolean ckReemplazo) {
+		this.ckReemplazo = ckReemplazo;
+	}
+
+	public Boolean getCkDepuracion() {
+		return ckDepuracion;
+	}
+
+	public void setCkDepuracion(Boolean ckDepuracion) {
+		this.ckDepuracion = ckDepuracion;
+	}
+
+	public Boolean getCkInstPrograma() {
+		return ckInstPrograma;
+	}
+
+	public void setCkInstPrograma(Boolean ckInstPrograma) {
+		this.ckInstPrograma = ckInstPrograma;
+	}
+
+	public Boolean getCkInstAntivirus() {
+		return ckInstAntivirus;
+	}
+
+	public void setCkInstAntivirus(Boolean ckInstAntivirus) {
+		this.ckInstAntivirus = ckInstAntivirus;
+	}
+
+	public Boolean getCkActAntivirus() {
+		return ckActAntivirus;
+	}
+
+	public void setCkActAntivirus(Boolean ckActAntivirus) {
+		this.ckActAntivirus = ckActAntivirus;
+	}
+
+	public Boolean getCkEscAntivirus() {
+		return ckEscAntivirus;
+	}
+
+	public void setCkEscAntivirus(Boolean ckEscAntivirus) {
+		this.ckEscAntivirus = ckEscAntivirus;
+	}
+
+	public Boolean getCkInstSOperativo() {
+		return ckInstSOperativo;
+	}
+
+	public void setCkInstSOperativo(Boolean ckInstSOperativo) {
+		this.ckInstSOperativo = ckInstSOperativo;
+	}
+
+	public Boolean getCkBueno() {
+		return ckBueno;
+	}
+
+	public void setCkBueno(Boolean ckBueno) {
+		this.ckBueno = ckBueno;
+	}
+
+	public Boolean getCkDanado() {
+		return ckDanado;
+	}
+
+	public void setCkDanado(Boolean ckDanado) {
+		this.ckDanado = ckDanado;
+	}
+
+	public String getTxtobservacion() {
+		return txtobservacion;
+	}
+
+	public void setTxtobservacion(String txtobservacion) {
+		this.txtobservacion = txtobservacion;
+	}
+
 	
 
 }

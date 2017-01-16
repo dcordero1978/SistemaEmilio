@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ni.gob.inss.barista.model.dao.DAOException;
 import ni.gob.inss.sisinv.bussineslogic.service.soporte.MantenimientosService;
 import ni.gob.inss.sisinv.model.dao.soporte.MantenimientosDAO;
+import ni.gob.inss.sisinv.model.entity.soporte.ActivosUsuario;
 import ni.gob.inss.sisinv.model.entity.soporte.Mantenimientos;
 import ni.gob.inss.sisinv.model.entity.soporte.ProgramacionMantenimiento;
 
@@ -43,6 +44,11 @@ public class MantenimientosServiceImpl implements MantenimientosService  {
 		return oMantenimientosDAO.find(mantenimientoId);
 	}
 	
+	@Transactional
+	@Override
+	public List<ActivosUsuario> obtenerListaActivosUsuarios(Integer empleadoId){
+		return oMantenimientosDAO.listaActivosUsuario(empleadoId);
+	}
 
 
 }

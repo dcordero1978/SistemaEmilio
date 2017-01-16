@@ -18,7 +18,7 @@
 					<p:panel styleClass="fondoPaneles">
 					<f:facet name="header"> 
 						<p:outputPanel style="display:block;" styleClass="left">
-							<h:panelGrid columns="4" cellpadding="5">
+							<h:panelGrid columns="5" cellpadding="5">
 								<p:selectOneMenu id="delegacion" label="Delegación"  value="#{consultaActivosBackBean.delegacionId}" effect="fold" style="width:250px" >
 									<f:selectItem itemValue="#{null}" itemLabel="Seleccione una Delegación"/>
 									<f:selectItems  var="oDelegacion" value="#{consultaActivosBackBean.listaDelegaciones}" itemLabel="#{oDelegacion.descripcion}" itemValue="#{oDelegacion.id}"/>									
@@ -27,6 +27,10 @@
 								<f:selectItem itemValue="#{null}" itemLabel="Seleccione Estado Fisico"/>
 								<f:selectItems var="oEstadoFisico" value="#{consultaActivosBackBean.listaEstadoFisico}" itemLabel="#{oEstadoFisico.descripcion}" itemValue="#{oEstadoFisico.id}" />
 								</p:selectOneMenu>
+								<p:selectOneMenu id="fondoProyecto" value="#{consultaActivosBackBean.proyectoId}" label="Proyectos" style="width:250px">
+								<f:selectItem itemValue="#{null}" itemLabel="Seleccione Proyecto"/>
+								<f:selectItems var="oFondoProyecto" value="#{consultaActivosBackBean.listaProyectos}" itemLabel="#{oFondoProyecto.descripcion}" itemValue="#{oFondoProyecto.id}" />
+								</p:selectOneMenu>
 								<p:inputText value="#{consultaActivosBackBean.txtBusquedaActivoByCodigo}" maxlength="50" action="#{consultaActivosBackBean.buscarActivo}" placeholder="Buscar por Código" style="width:200px"/>
 								<p:inputText value="#{consultaActivosBackBean.txtBusquedaActivoByDescripcion}" maxlength="50" action="#{consultaActivosBackBean.buscarActivo}" placeholder="Buscar por Descripción" style="width:200px"/>
 							</h:panelGrid>
@@ -34,7 +38,7 @@
 						
 							<p:outputPanel style="display:block;" styleClass="right">
 							<h:panelGrid columns="2" cellpadding="5">
-								<p:commandButton value="Buscar" id="btsearch" action="#{consultaActivosBackBean.buscarActivo}" ajax="true" update="tablaActivo" icon="ui-icon-disk" />
+								<p:commandButton value="Buscar" id="btsearch" action="#{consultaActivosBackBean.buscarActivo}" ajax="true" update="tablaActivo" icon="ui-icon-search" />
 								<p:commandButton value="Cancelar" id="btclean" action="#{consultaActivosBackBean.limpiar}" ajax="true" update="formConsultaActivos"  resetValues="true" icon="ui-icon-cancel" />
 							</h:panelGrid>
 							</p:outputPanel>

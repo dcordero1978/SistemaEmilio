@@ -1,5 +1,6 @@
 package ni.gob.inss.sisinv.bussineslogic.serviceImpl.catalogos;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -85,9 +86,9 @@ public class ActivoServiceImpl implements ActivoService {
 	//PARA REALIZAR LAS DIFERENTES BUSQUEDAS DE CONSULTA GENERAL
 	@Transactional
 	@Override
-	public List<Activos> buscar(Integer delegacionId, String codActivo, String descripcion, Integer estadoFisicoId) {		
-			List<Activos> listaActivos = null;			
-			listaActivos = oActivoDAO.ListadoActivosFiltro( delegacionId,  codActivo,  descripcion, estadoFisicoId);			
+	public List<Activos> buscar(Integer delegacionId, String codActivo, String descripcion, Integer estadoFisicoId, Integer proyectoId) {
+			List<Activos> listaActivos = new ArrayList<Activos>();
+			listaActivos = oActivoDAO.ListadoActivosFiltro( delegacionId,  codActivo,  descripcion, estadoFisicoId,proyectoId); 
 			return listaActivos;		
 	}
 	

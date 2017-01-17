@@ -20,6 +20,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
 
 import ni.gob.inss.barista.model.entity.EntityBase;
 import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
@@ -42,6 +43,7 @@ public class Activos extends EntityBase implements java.io.Serializable {
 	private Secaf catalogoSecaf; 
 	private String codigoInventario;
 	private String codigoSecundario;
+	@NotNull(message="Por favor digite la descripción del activo.")
 	private String descripcion;
 	private Integer marcaId;
 	private Integer modeloId;

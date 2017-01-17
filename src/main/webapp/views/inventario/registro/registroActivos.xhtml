@@ -166,7 +166,7 @@
 			</div>
 		</div>
 		<h:form id="afterLoad">
-			<p:remoteCommand name="cargarLista" delay="1"  autoRun="true" action="#{registroActivosBackBean.cargarListas}" update=":datosActivo:activoData" />
+			<p:remoteCommand name="cargarLista" delay="1"  autoRun="true" action="#{registroActivosBackBean.cargarListas}" update=":datosActivo:activoData,:formCaracteristicasEspeciales " />
 		</h:form>
 		<p:dialog widgetVar="modalBusquedaBienes" showEffect="blind" hideEffect="blind" showHeader="false" width="880" height="500" modal="true" dynamic="true">
 			<h:form id="busquedaBienes" >

@@ -25,10 +25,8 @@ public class MovimientosServiceImpl implements MovimientosService {
 	
 	@Transactional
 	@Override
-	public List<Movimientos> buscar(Integer activoId) throws EntityNotFoundException {
-		Search oSearch = new Search();
-		oSearch.addFilter(Filter.equal("activosId", activoId));
-		return oMovimientosDAO.search(oSearch);
+	public List<Movimientos> buscar(Integer activoId) throws EntityNotFoundException, ni.gob.inss.barista.model.dao.EntityNotFoundException {
+		return oMovimientosDAO.buscar(activoId);
 	}
 
 	@Transactional
@@ -39,3 +37,5 @@ public class MovimientosServiceImpl implements MovimientosService {
 	}
 
 }
+
+

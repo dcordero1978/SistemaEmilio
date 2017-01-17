@@ -219,6 +219,7 @@ public class MovimientosActivosBackBean extends BaseBackBean implements Serializ
 		this.setFechaMovimiento(null);
 		this.setTipoMovimientoId(null);
 		this.setTxtcodigoInventario("");
+		this.setTxtcodigoSecundario("");
 		this.setFiltroCodSecundario("");
 		this.setTxtdescripcionBien("");
 		this.setTxtEmpleadoOrig("");

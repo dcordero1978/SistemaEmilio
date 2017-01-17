@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -17,6 +18,7 @@ public class MovimientosDAOImpl extends BaseGenericDAOImpl<Movimientos, Integer>
 
 
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Movimientos> buscar(Integer activoId) {
 		Session session = sessionFactory.getCurrentSession();
@@ -28,9 +30,9 @@ public class MovimientosDAOImpl extends BaseGenericDAOImpl<Movimientos, Integer>
 		Criteria criteria =session.createCriteria(Movimientos.class);
 		
 		criteria.add(Restrictions.eq("activosId", activoId));
-		
 		criteria.setFirstResult(0);
 		criteria.setMaxResults(count.intValue());
+		criteria.addOrder(Order.desc("id"));
 		return criteria.list();
 		
 	}

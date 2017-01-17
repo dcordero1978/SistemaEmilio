@@ -19,7 +19,7 @@
 				<p:panel  styleClass="fondoPaneles" style="height: 590px;">
 					<f:facet name="header">
 						<p:outputPanel style="display:block" styleClass="right">
-							<p:commandButton widgetVar="btnGuardar"  icon="ui-icon-disk" value="#{labelName.btnGuardar}" onstart="PF('btnGuardar').disable();" oncomplete="PF('btnGuardar').enable();" action="#{movimientosActivosBackBean.guardar}"  update="panelhistorico"/>
+							<p:commandButton widgetVar="btnGuardar"  icon="ui-icon-disk" value="#{labelName.btnGuardar}" onstart="PF('btnGuardar').disable();"  action="#{movimientosActivosBackBean.guardar}"  update="panelhistorico"/>
 							<p:commandButton resetValues="true" ajax="true" value="#{labelName.btnCancelar}" icon="ui-icon-cancel" action="#{movimientosActivosBackBean.cancelar}" update="formMovimientoActivos"/>	
 						</p:outputPanel>
 					</f:facet>
@@ -94,7 +94,7 @@
 							<f:facet name="header">
         						Histórico de Movimientos de Bienes
     						</f:facet>
-							<p:column headerText="Tipo Movimiento" >
+							<p:column headerText="Tipo Movimiento" style="width:200px">
 								<h:outputText value="#{oListaMov.tipoMovimiento.descripcion}" />
 							</p:column>
 								

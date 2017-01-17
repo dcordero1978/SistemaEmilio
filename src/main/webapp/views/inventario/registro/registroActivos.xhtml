@@ -64,7 +64,15 @@
 								<p:commandButton value="#{labelName.btnCancelar}" id="btnCancelar" action="#{registroActivosBackBean.limpiar}" update="datosActivo" resetValues="true" icon="ui-icon-cancel" immediate="true"/>
 							</p:outputPanel>
 						</f:facet>
-						
+						<h:panelGrid id="opcionRegistroActivosPorLote" style="width:100%" columns="4" columnClasses="Wid30,Wid20,Wid10, Wid40">
+							<h:outputLabel for="esActivoPorLote" value="¿Guardar activos por Lote ?" />
+							<p:inputSwitch id="esActivoPorLote" offLabel="No" onLabel="Si" style="background: white; color: black;" value="#{registroActivosBackBean.activoPorLote}"  />
+							<h:outputLabel for="cantidadActivos" value="Cantidad"/>
+							<p:inputText  maxlength="3" label="Cantidad de Activos" id="cantidadActivos" style="width:90%" value="#{registroActivosBackBean.cantidadActivos}">
+								<pe:keyFilter regEx="/#{registroActivosBackBean.regExpNumero}/" />
+								<f:validateBean for="cantidadActivos"  disabled="false"/>
+							</p:inputText> 
+						</h:panelGrid>
 						<p:outputPanel style="width:100%" >
 								<p:panel style="width:99%" toggleable="true"> 
 									<f:facet name="header">

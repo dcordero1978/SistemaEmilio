@@ -6,11 +6,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.primefaces.context.RequestContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -60,6 +64,10 @@ public class RegistroActivosBackBean extends BaseBackBean implements Serializabl
 	private List<TiposCatalogo> listaTipoActivoEspecial = new ArrayList<TiposCatalogo>();
 	private List<Catalogo> listaTipoCombustible = new ArrayList<>();
 	private Map<String, ActivosCaracteristicas> caracteristicas = new HashMap<String, ActivosCaracteristicas>();
+	private boolean activoPorLote;
+	
+	@Min(value=2, message="La cantidad de activos debe ser mayor o igual a 2")
+	private Integer cantidadActivos;
 	
 	private Secaf catalogoSecafSeleccionado;
 	private Activos oActivo;
@@ -304,15 +312,32 @@ public class RegistroActivosBackBean extends BaseBackBean implements Serializabl
 	
 	public void guardar(){
 		try {
-			oActivo.setCreadoEl(this.getTimeNow());
-			oActivo.setCreadoEnIp(this.getRemoteIp());
-			oActivo.setCreadoPor(this.getUsuarioActual().getId());
-			oActivo.setListaCaracteristicas(obtieneListaCaracteristicas(oActivo));
-			oActivoService.guardar(oActivo);
-			
-			mostrarMensajeInfo("EL ACTIVO SE HA GUARDADO CON EL CODIGO: "+oActivo.getCodigoInventario());
-		} catch (BusinessException | DAOException e) {
+			if(Boolean.TRUE.equals(this.isActivoPorLote())){
+				if(this.getCantidadActivos() == null){
+					throw new BusinessException("POR FAVOR DIGITE LA CANTIDAD DE ACTIVOS A REGISTRAR.");
+				}
+				for(int i = 0; i<this.getCantidadActivos();i++){
+				   	oActivo.setCreadoEl(this.getTimeNow());
+					oActivo.setCreadoEnIp(this.getRemoteIp());
+					oActivo.setCreadoPor(this.getUsuarioActual().getId());
+					oActivo.setListaCaracteristicas(obtieneListaCaracteristicas(oActivo));
+					oActivoService.guardar(oActivo);
+			   	}
+			   mostrarMensajeInfo(String.format("SE HAN GUARDADO %s ACTIVOS SATISFACTORIAMENTE", this.getCantidadActivos()));
+			}else{
+				oActivo.setCreadoEl(this.getTimeNow());
+				oActivo.setCreadoEnIp(this.getRemoteIp());
+				oActivo.setCreadoPor(this.getUsuarioActual().getId());
+				oActivo.setListaCaracteristicas(obtieneListaCaracteristicas(oActivo));
+				oActivoService.guardar(oActivo);
+				mostrarMensajeInfo("EL ACTIVO SE HA GUARDADO CON EL CODIGO: "+oActivo.getCodigoInventario());
+			}
+			this.setActivoPorLote(Boolean.FALSE);
+			this.setCantidadActivos(null);
+		} catch ( DAOException e) {
 			mostrarMensajeError(MessagesResults.ERROR_GUARDAR);
+		}catch(BusinessException e){
+			mostrarMensajeError(e.getMessage());
 		}
 	}
 	
@@ -547,6 +572,22 @@ public class RegistroActivosBackBean extends BaseBackBean implements Serializabl
 
 	public List<Catalogo> getListaTipoCombustible() {
 		return listaTipoCombustible;
+	}
+
+	public boolean isActivoPorLote() {
+		return activoPorLote;
+	}
+
+	public void setActivoPorLote(boolean activoPorLote) {
+		this.activoPorLote = activoPorLote;
+	}
+
+	public Integer getCantidadActivos() {
+		return cantidadActivos;
+	}
+
+	public void setCantidadActivos(Integer cantidadActivos) {
+		this.cantidadActivos = cantidadActivos;
 	}
 	
 }

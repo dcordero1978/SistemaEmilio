@@ -16,6 +16,9 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import ni.gob.inss.barista.model.entity.EntityBase;
 import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
 import ni.gob.inss.sisinv.model.entity.catalogo.Empleado;
@@ -153,7 +156,53 @@ public class Movimientos extends EntityBase implements Serializable {
 	public void setIdEmpleadoDestino(Empleado idEmpleadoDestino) {
 		this.idEmpleadoDestino = idEmpleadoDestino;
 	}
-
 	
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(17,37)
+				.append(activoId)
+				.append(activosId)
+				.append(empleadoIdDestino)
+				.append(empleadoIdOrigen)
+				.append(entidadId)
+				.append(fechaMovimiento)
+				.append(id)
+				.append(idEmpleadoDestino)
+				.append(idEmpleadoOrigen)
+				.append(observaciones)
+				.append(pasivo)
+				.append(tipoMovimiento)
+				.append(tipoMovimientoId)
+				.toHashCode();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof Movimientos)) {
+			return false;
+		}
+		Movimientos oMovimiento = (Movimientos) obj;
+		
+		return new EqualsBuilder()
+					.append(activoId, oMovimiento.activoId)
+					.append(activosId, oMovimiento.activosId)
+					.append(empleadoIdDestino, oMovimiento.empleadoIdDestino)
+					.append(empleadoIdOrigen, oMovimiento.empleadoIdOrigen)
+					.append(entidadId, oMovimiento.entidadId)
+					.append(fechaMovimiento, oMovimiento.fechaMovimiento)
+					.append(id,oMovimiento.id)
+					.append(idEmpleadoDestino, oMovimiento.idEmpleadoDestino)
+					.append(idEmpleadoOrigen,oMovimiento.idEmpleadoOrigen )
+					.append(observaciones, oMovimiento.observaciones)
+					.append(pasivo, oMovimiento.pasivo)
+					.append(tipoMovimiento, oMovimiento.tipoMovimiento)
+					.append(tipoMovimientoId, oMovimiento.tipoMovimientoId).isEquals();				
+	}
 	
 }

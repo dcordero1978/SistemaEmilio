@@ -18,7 +18,7 @@
 					<p:panel styleClass="fondoPaneles">
 					<f:facet name="header"> 
 						<p:outputPanel style="display:block;" styleClass="left">
-							<h:panelGrid columns="5" cellpadding="5">
+							<h:panelGrid columns="6" cellpadding="5">
 								<p:selectOneMenu id="delegacion" label="Delegación"  value="#{consultaActivosBackBean.delegacionId}" effect="fold" style="width:250px" >
 									<f:selectItem itemValue="#{null}" itemLabel="Seleccione una Delegación"/>
 									<f:selectItems  var="oDelegacion" value="#{consultaActivosBackBean.listaDelegaciones}" itemLabel="#{oDelegacion.descripcion}" itemValue="#{oDelegacion.id}"/>									
@@ -33,7 +33,9 @@
 								</p:selectOneMenu>
 								<p:inputText value="#{consultaActivosBackBean.txtBusquedaActivoByCodigo}" maxlength="50" action="#{consultaActivosBackBean.buscarActivo}" placeholder="Buscar por Código" style="width:200px"/>
 								<p:inputText value="#{consultaActivosBackBean.txtBusquedaActivoByDescripcion}" maxlength="50" action="#{consultaActivosBackBean.buscarActivo}" placeholder="Buscar por Descripción" style="width:200px"/>
+								<p:commandButton value="Generar Reporte" ajax="false" action="#{consultaActivosBackBean.imprimeReporteListadoActivos}" icon="fa fa-file-pdf-o" style="margin-top:-5px; color:white;" />
 							</h:panelGrid>
+							
 							</p:outputPanel>
 						
 							<p:outputPanel style="display:block;" styleClass="right">

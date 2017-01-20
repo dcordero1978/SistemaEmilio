@@ -36,7 +36,7 @@
 						    <p:outputLabel for="hasta" value="Fecha Fin:" />
 						    <p:calendar id="hasta" effect="fold"  pattern="dd/MM/yyyy" mask="true" required="true" value="#{programacionMantenimientoBackBean.fechaFin}"/>
 	       				</h:panelGrid>
-       				</p:panel>
+       				</p:panel> 
 					
 					<div class="Container50 Responsive">
 					    <p:dataTable id="tablaempleados" var="oUsuario" value="#{programacionMantenimientoBackBean.listaMantenimientos}" style="height:570px">
@@ -61,8 +61,8 @@
 					
 					</div> 
 					
-					<p:dialog widgetVar="winProgMto" header="Equipos Informáticos asociados al Usuario" resizable="false" width="980" height="600"  modal="true">
-					  <p:panel id="panelusuario" styleClass="fondoPaneles" >
+					<p:dialog widgetVar="winProgMto" header="Equipos Informáticos asociados al Usuario" resizable="false" width="980" height="410"  modal="true">
+					  <p:panel id="panelusuario" styleClass="fondoPaneles"  style="height: 400px;">
         				<h:panelGrid columns="2" cellpadding="5" columnClasses="Wid10,Wid90" >
         				  <p:graphicImage library="default" name="img/icons/comunes/user.png" width="100px"/>
         				   <h:panelGrid columns="1" style="width:100%" columnClasses="Wid100">
@@ -80,11 +80,11 @@
             				</h:panelGrid>
             			</h:panelGrid>
 						<p:dataTable id="tablaactivosinf" var="oActivosInf" value="#{programacionMantenimientoBackBean.listaActivosUsuario}" height="350"
-						paginatorPosition="top" selectionMode="single"  scrollable="true" scrollHeight="350 px" rowKey="#{oActivosInf.activoId}"  loadingmessage="Cargando registros..."
+						paginatorPosition="top" selectionMode="single"  scrollable="true" rowKey="#{oActivosInf.activoId}"  loadingmessage="Cargando registros..."
 							paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="5" pageLinks="3" lazy="true"  
 							paginatorTemplate="#{configApplicationBean.paginatorTemplate}" currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
 					        <f:facet name="header">
-					           Activos Informáticos asociados al Usuario
+					           Lista de Equipos Informáticos
 					        </f:facet>
 					        <p:column style="width:170px" headerText="Código Inventario">
 					            <h:outputText value="#{oActivosInf.codigoInventario}" />
@@ -156,7 +156,7 @@
         						<p:selectBooleanCheckbox value="#{programacionMantenimientoBackBean.ckActAntivirus}" />
         						<h:outputText value="Escaneo " />
         						<p:selectBooleanCheckbox value="#{programacionMantenimientoBackBean.ckEscAntivirus}" /> 
-        						
+        						 
         						<h:outputText value="Hardware  "/>
         						<h:outputText value="Limpieza " />
         						<p:selectBooleanCheckbox value="#{programacionMantenimientoBackBean.ckLimpieza}" />

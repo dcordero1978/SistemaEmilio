@@ -1,16 +1,21 @@
 package ni.gob.inss.sisinv.model.daoImpl.catalogos;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.EntityManager;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import ni.gob.inss.barista.businesslogic.service.BusinessException;
+import ni.gob.inss.barista.model.dao.EntityNotFoundException;
 import ni.gob.inss.barista.model.daoImpl.BaseGenericDAOImpl;
 import ni.gob.inss.sisinv.model.dao.catalogos.ActivoDAO;
 import ni.gob.inss.sisinv.model.entity.catalogo.Empleado;
@@ -95,6 +100,23 @@ public class ActivoDAOImpl extends BaseGenericDAOImpl<Activos, Integer> implemen
 		return oCriteria.list();
 		 
 	}
-	
-	
+
+	@Override
+	public List<Activos> obtenerListaDeActivosClasificadosComoEquiposInformaticos(Integer empleadoId, boolean pasivo) {
+		String hQuery = 	"select tactivo from Activos as tactivo "
+						+ "inner join tactivo.secaf as tsecaf "
+						+ "inner join tsecaf.oTipoActivo as tcat "
+						+ "on tcat.refTipoCatalogo='TAC' "
+						+ "where tactivo.empleadoId = :pEmpleadoId "
+						+ "and tactivo.pasivo = :isPasivo";
+		
+		Session oSession = sessionFactory.getCurrentSession(); 
+		@SuppressWarnings("unchecked")
+		List<Activos> listaDeActivosClasificadosComoEquiposInformaticos = (ArrayList<Activos>)  oSession.createQuery(hQuery)
+																			.setParameter("pEmpleadoId", empleadoId)
+																			.setParameter("isPasivo", pasivo)
+																			.list();
+		return listaDeActivosClasificadosComoEquiposInformaticos;
+	}
+
 }

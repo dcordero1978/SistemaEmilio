@@ -13,4 +13,6 @@ public interface ActivoDAO extends BaseGenericDAO<Activos, Integer>  {
 
 	public List<Activos> buscar(String codigoSecaf, String codigoSecundario, String descripcionBien, String Serie,
 			Integer ubicacionId, Integer estadoFisicoId, Integer tipoResguardoId);
+	
+	public List<Activos> obtenerListaDeActivosClasificadosComoEquiposInformaticos(Integer empleadoId, boolean pasivo);
 }

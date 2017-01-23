@@ -1,0 +1,79 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+ 				xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                template="/web/template/innerLayout.xhtml"
+                xmlns:mc="http://java.sun.com/jsf/composite/reusables">
+<ui:param name="paramBackBean" value="#{componenteActivosBackBean}"/>
+<ui:define name="headerContent">
+		Componentes de Equipos informaticos.
+</ui:define>
+<ui:define name="content">
+		<div id="ContainerIndent">
+			<div class="Container50 Responsive">
+				<h:form id="datosActivoEmpleado" style="width:99%">
+					<p:panel style="height:500px" styleClass="fondoPaneles">
+						<p:panel>
+							<f:facet name="header">
+								<p:outputPanel style="display:block;" styleClass="left">
+									<p:commandButton id="btnBuscarEmpleado" icon="ui-icon-search" value="#{labelName.btnBuscar} Empleado" immediate="true" onclick="PF('busquedaEmpleado').show()"/>
+								</p:outputPanel>
+							</f:facet>
+							<h:panelGrid style="width:100%" columns="4" columnClasses="Wid10, Wid40, Wid10, Wid40">
+								<h:outputLabel for="nombreCompleto" value="Nombre:"/>
+								<p:inputText id="nombreCompleto"  readonly="true" style="width:90%" value="#{componenteActivosBackBean.filtroEmpleadoSeleccionado.primerNombre} #{componenteActivosBackBean.filtroEmpleadoSeleccionado.segundoNombre} #{componenteActivosBackBean.filtroEmpleadoSeleccionado.primerApellido} #{componenteActivosBackBean.filtroEmpleadoSeleccionado.segundoApellido}"/>
+								<h:outputLabel for="cedula" value="Cédula"/>
+								<p:inputText id="cedula" readonly="true" style="width:90%" value="#{componenteActivosBackBean.filtroEmpleadoSeleccionado.nroIdentificacion}"/>
+								<h:outputLabel for="cargo" value="Cargo" />
+								<p:inputText readonly="true" id="cargo" style="width:90%" value="#{componenteActivosBackBean.filtroEmpleadoSeleccionado.cargo}"/>
+								<h:outputLabel for="numeroEmpleado" value="Número:"/>
+								<p:inputText id="numeroEmpleado" style="width:90%" readonly="true" value="#{componenteActivosBackBean.filtroEmpleadoSeleccionado.numeroEmpleado}"/>
+							</h:panelGrid>
+						</p:panel>
+						
+						<p:outputPanel styleClass="tableClass">
+							<p:panel>
+								<f:facet name="header">
+									<p:outputPanel style="display:block;" styleClass="left">
+										<h:outputText value="Lista de Equipos"/>
+									</p:outputPanel>
+
+								</f:facet>
+								<p:dataTable style="width:100%" paginatorPosition="top" selectionMode="single" 
+							scrollable="true" scrollHeight="300"
+							var="oComponenteEquipo" id="listaEquiposInformaticos" rowKey="#{oComponenteEquipo.id}"
+							value="#{componenteActivosBackBean.listaActivosTipoEquipo}" selection="#{componenteActivosBackBean.filtroEmpleadoSeleccionado}"
+							paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="10" pageLinks="3"
+							paginatorTemplate="#{configApplicationBean.paginatorTemplate}" currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
+							<!-- p:ajax update=":componentesActualizar" event="rowDblselect" listener="#{registroActivosBackBean.accionEditar}"/ -->
+								<p:column resizable="true" headerText="Descripción" style="text-align:left" width="30%" priority="1">
+									<h:outputText value="#{oComponenteEquipo.descripcion}" />
+								</p:column>
+							</p:dataTable>
+							</p:panel>
+							|
+					</p:outputPanel>
+					</p:panel>
+					
+				
+				</h:form>
+			</div>
+			<div class="Container50 Responsive">
+					<p:panel style="height:500px" styleClass="fondoPaneles">
+						<h:form id="idForm" style="width:99%">
+							<p:panel>
+								<f:facet name="header">
+									<p:outputPanel style="display:block;" styleClass="left">
+										Componentes
+									</p:outputPanel>
+								</f:facet>
+							</p:panel>
+						</h:form>
+					</p:panel>
+			</div>
+		</div>
+		<mc:buscaEmpleado nombreModal="busquedaEmpleado" componentesActualizar=":datosActivoEmpleado" backBeanBase="#{componenteActivosBackBean}" />
+</ui:define>
+</ui:composition>

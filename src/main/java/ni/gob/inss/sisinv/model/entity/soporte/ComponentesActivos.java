@@ -6,6 +6,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -14,6 +15,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import ni.gob.inss.barista.model.entity.EntityBase;
+import ni.gob.inss.sisinv.model.entity.catalogo.CaracteristicasHardware;
 import ni.gob.inss.sisinv.model.entity.inventario.Activos;
 
 @Entity
@@ -21,14 +23,12 @@ import ni.gob.inss.sisinv.model.entity.inventario.Activos;
 @SequenceGenerator(allocationSize=1,name="ComponentesActivosSequence",sequenceName="soportetecnico.componentes_activos_id_seq")
 public class ComponentesActivos extends EntityBase implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private Integer activoId;
 	private Activos oActivo;
 	private Integer componenteId;
+	private CaracteristicasHardware oComponente;
 	private Boolean pasivo;
 
 
@@ -54,12 +54,24 @@ public class ComponentesActivos extends EntityBase implements java.io.Serializab
 	
 	
 	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="activo_id", insertable=false, updatable=false)
+	
 	public Activos getoActivo() {
 		return oActivo;
 	}
 
 	public void setoActivo(Activos oActivo) {
 		this.oActivo = oActivo;
+	}
+	
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="componente_id", insertable=false, updatable=false)
+	public CaracteristicasHardware getoComponente() {
+		return oComponente;
+	}
+
+	public void setoComponente(CaracteristicasHardware oComponente) {
+		this.oComponente = oComponente;
 	}
 
 	@Column(name = "componente_id", nullable = false)
@@ -101,7 +113,4 @@ public class ComponentesActivos extends EntityBase implements java.io.Serializab
 				.append(pasivo, oComponenteActivo.pasivo)
 				.isEquals();
 	}
-	
-	
-
 }

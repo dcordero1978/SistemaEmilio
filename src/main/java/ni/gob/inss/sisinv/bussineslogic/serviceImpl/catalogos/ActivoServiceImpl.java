@@ -110,4 +110,10 @@ public class ActivoServiceImpl implements ActivoService {
 		oActivoDAO.updateUpper(oActivo);
 	}
 
+	@Transactional
+	@Override
+	public List<Activos> obtenerListaDeActivosClasificadosComoEquiposInformaticos(Integer empleadoId, boolean pasivo) {
+		return oActivoDAO.obtenerListaDeActivosClasificadosComoEquiposInformaticos(empleadoId, pasivo);
+	}
+
 }

@@ -1,7 +1,9 @@
 package ni.gob.inss.sisinv.view.bean.backbean.inventario;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
@@ -9,6 +11,7 @@ import javax.inject.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
+import ni.gob.inss.barista.businesslogic.service.core.jasperclient.JasperRestService;
 import ni.gob.inss.barista.model.dao.EntityNotFoundException;
 import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
 import ni.gob.inss.barista.view.bean.backbean.BaseBackBean;
@@ -47,6 +50,9 @@ public class ConsultaActivosBackBean extends BaseBackBean implements Serializabl
 	@Autowired
 	CatalogoExtService oCatalogoService;
 	
+	@Autowired
+	JasperRestService oJasperReportService;
+	
 	@PostConstruct
 	public void init(){
 		this.cargarListaDelegaciones();
@@ -63,6 +69,23 @@ public class ConsultaActivosBackBean extends BaseBackBean implements Serializabl
 		}
 	}
 
+	public void imprimeReporteListadoActivos(){
+		Map<String, String> parametros = new HashMap<String, String>();
+		parametros.put("psEntidad",this.getEntidadActual().getId().toString());
+		parametros.put("psDelegacionId",this.delegacionId.toString());
+		parametros.put("psEstadoFisicoId",this.estadoFisicoId.toString());
+		parametros.put("psCodigo",this.txtBusquedaActivoByCodigo.toString());
+		parametros.put("psDescripcion", this.txtBusquedaActivoByDescripcion.toString());
+		
+		//TODO: ESTE ES EL ID DEL REPORTE DEL CUAL SE OBTIENE EL ENCABEZADO. PENDIENTE MEJORAR
+		parametros.put("IdReporte","3");
+		try {
+			oJasperReportService.getReport("/reports/reports/Inventario/listado_consulta_bienes", "pdf", parametros, "ListadoConsultaBienes");
+		} catch (Exception e) {
+			mostrarMensajeError(this.getClass().getSimpleName(), "imprimeReporteActivoPorUsuario", "OCURRIO UN ERROR AL GENERAR EL REPORTE", e);
+		}
+	}
+	
 	public void limpiar(){
 		this.setTxtBusquedaActivoByCodigo(null);
 		this.setTxtBusquedaActivoByDescripcion(null);

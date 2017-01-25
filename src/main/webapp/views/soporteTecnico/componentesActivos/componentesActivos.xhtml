@@ -32,29 +32,39 @@
 								<p:inputText id="numeroEmpleado" style="width:90%" readonly="true" value="#{componenteActivosBackBean.filtroEmpleadoSeleccionado.numeroEmpleado}"/>
 							</h:panelGrid>
 						</p:panel>
-						<p:outputPanel styleClass="tableClass">
+						
 							<p:panel>
 								<f:facet name="header">
 									<p:outputPanel style="display:block;" styleClass="left">
 										<h:outputText value="Lista de Equipos"/>
 									</p:outputPanel>
 								</f:facet>
-							<p:dataTable style="width:100%" paginatorPosition="top" selectionMode="single" 
-								scrollable="true" scrollHeight="300"
-								var="oEquipo" id="listaEquiposInformaticos" rowKey="#{oEquipo.id}" 
-								value="#{componenteActivosBackBean.listaActivosTipoEquipo}" selection="#{componenteActivosBackBean.equipoSeleccionado}" 
-								paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="10" pageLinks="3"
-								paginatorTemplate="#{configApplicationBean.paginatorTemplate}" currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
-								<p:ajax update=":detalleComponentes, :formComponentesDisponibles" event="rowDblselect" listener="#{componenteActivosBackBean.cargarDatosComponentesEquipo}" />
-								<p:column resizable="true" headerText="Descripción" style="text-align:left" width="60%" priority="1">
-									<h:outputText value="#{oEquipo.descripcion}" />
-								</p:column>
-								<p:column headerText="Código" style="text-align:center;">
-									<h:outputText value="#{oEquipo.codigoInventario}"/>
-								</p:column>
-							</p:dataTable>
+								<p:outputPanel styleClass="tableClass">
+									<p:dataTable style="width:100%" paginatorPosition="top" selectionMode="single" 
+										scrollable="true" scrollHeight="300"
+										var="oEquipo" id="listaEquiposInformaticos" rowKey="#{oEquipo.id}" 
+										value="#{componenteActivosBackBean.listaActivosTipoEquipo}" selection="#{componenteActivosBackBean.equipoSeleccionado}" 
+										paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="10" pageLinks="3"
+										paginatorTemplate="#{configApplicationBean.paginatorTemplate}" currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
+										<p:ajax update=":detalleComponentes, :formComponentesDisponibles" event="rowDblselect" listener="#{componenteActivosBackBean.cargarDatosComponentesEquipo}" />
+										<p:column resizable="true" headerText="Descripción" style="text-align:left" width="50%" priority="1">
+											<h:outputText value="#{oEquipo.descripcion}" />
+										</p:column>
+										<p:column headerText="Código" style="text-align:center;" width="25%" resizable="true" priority="2">
+											<h:outputText value="#{oEquipo.codigoInventario}"/>
+										</p:column>
+										<p:column headerText="Marca" style="text-align:center" width="18%" resizable="true" priority="3">
+											<h:outputText value="#{oEquipo.marca.descripcion}"/>
+										</p:column>
+										<p:column style="text-align:center" width="5%" priority="3">
+											<p:commandButton icon="fa fa-search" style="color:white;" oncomplete="PF('modalDescripcionActivo').show()" title="Ver" update=":formDescripcionActivo">
+												<f:setPropertyActionListener value="#{oEquipo}" target="#{componenteActivosBackBean.equipoSeleccionado}" />
+											</p:commandButton>
+										</p:column>
+									</p:dataTable>
+							</p:outputPanel>
+							
 							</p:panel>
-					</p:outputPanel>
 					</p:panel>
 				</h:form>
 			</div>
@@ -119,6 +129,27 @@
 								<h:outputText value="#{oComponenteDisponible.descripcion}" />
 							</p:column>
 						</p:dataTable>
+					</p:outputPanel>
+				</p:panel>
+			</h:form>
+		</p:dialog>
+		
+		<p:dialog modal="true" id="descripcionActivo" header="Información de Equipo" widgetVar="modalDescripcionActivo" width="350" height="100%" hideEffect="blind" showEffect="blind" resizable="false">
+			<h:form id="formDescripcionActivo">
+				<p:panel styleClass="fondoPaneles">
+					<p:outputPanel> 
+						<h:panelGrid columns="2" columnClasses="Wid20,Wid80">
+							<h:outputText value="Codigo:" />
+							<h:outputText value="#{componenteActivosBackBean.equipoSeleccionado.codigoInventario}"/>
+							<h:outputText value="Descripción:" />
+							<h:outputText value="#{componenteActivosBackBean.equipoSeleccionado.descripcion}"/>
+							<h:outputText value="Marca:" />
+							<h:outputText value="#{componenteActivosBackBean.equipoSeleccionado.marca.descripcion}"/>
+							<h:outputText value="Modelo:" />
+							<h:outputText value="#{componenteActivosBackBean.equipoSeleccionado.modelo.descripcion}"/>
+							<h:outputText value="No. Serie:" />
+							<h:outputText value="#{componenteActivosBackBean.equipoSeleccionado.serie}"/>
+						</h:panelGrid>
 					</p:outputPanel>
 				</p:panel>
 			</h:form>

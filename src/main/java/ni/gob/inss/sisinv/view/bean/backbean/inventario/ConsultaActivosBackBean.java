@@ -8,6 +8,8 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.primefaces.context.RequestContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -76,18 +78,12 @@ public class ConsultaActivosBackBean extends BaseBackBean implements Serializabl
 		Map<String, String> parametros = new HashMap<String, String>();
 		parametros.put("psEntidad",this.getEntidadActual().getId().toString());
 		parametros.put("psUsuario",this.getUsuarioActual().getUsername().toString());
+		parametros.put("psDelegacionId",StringUtils.defaultIfBlank(this.getDelegacionId() == null ? null : this.getDelegacionId().toString(), "0"));
+		parametros.put("psEstadoFisicoId",StringUtils.defaultIfBlank(this.getEstadoFisicoId() == null ? null : this.getEstadoFisicoId().toString() , "0"));
+		parametros.put("psProyectoId",StringUtils.defaultIfBlank(this.getProyectoId() == null ? null : this.getProyectoId().toString(), "0"));
+		parametros.put("psCodigo",StringUtils.defaultIfBlank(this.getTxtBusquedaActivoByCodigo(), ""));
+		parametros.put("psDescripcion",StringUtils.defaultIfBlank(this.getTxtBusquedaActivoByDescripcion(), ""));
 		
-		if(this.getDelegacionId()!=null){parametros.put("psDelegacionId",this.getDelegacionId().toString());}
-		else{parametros.put("psDelegacionId","0");}
-		if(this.getEstadoFisicoId()!=null){parametros.put("psEstadoFisicoId",this.getEstadoFisicoId().toString());}
-		else{parametros.put("psEstadoFisicoId","0");}
-		if(this.getProyectoId()!=null){parametros.put("psProyectoId",this.getProyectoId().toString());}
-		else{parametros.put("psProyectoId","0");}
-		if(this.getTxtBusquedaActivoByCodigo()==null){parametros.put("psCodigo","");}
-		else{parametros.put("psCodigo",this.getTxtBusquedaActivoByCodigo().toString());}
-		if(this.getTxtBusquedaActivoByDescripcion()==null){parametros.put("psDescripcion","");}
-		else{parametros.put("psDescripcion", this.getTxtBusquedaActivoByDescripcion().toString());}
-			
 		//TODO: ESTE ES EL ID DEL REPORTE DEL CUAL SE OBTIENE EL ENCABEZADO. PENDIENTE MEJORAR
 		parametros.put("IdReporte","4");
 		

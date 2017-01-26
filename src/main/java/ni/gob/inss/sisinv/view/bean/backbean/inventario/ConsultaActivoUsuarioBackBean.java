@@ -136,7 +136,7 @@ public class ConsultaActivoUsuarioBackBean extends BaseBackBean  implements Seri
 			mostrarMensajeError(this.getClass().getSimpleName(), "imprimeReporteActivoPorUsuario", "OCURRIO UN ERROR AL GENERAR EL REPORTE", e);
 		}
 	}
-	
+		
 	public void limpiar(){
 		this.setFiltroEmpleadoSeleccionado(null);
 		this.setHfId(null);

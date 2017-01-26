@@ -3,15 +3,19 @@ package ni.gob.inss.sisinv.view.bean.backbean.inventario;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
 
+import org.primefaces.context.RequestContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
 import ni.gob.inss.barista.businesslogic.service.BusinessException;
+import ni.gob.inss.barista.businesslogic.service.core.jasperclient.JasperRestService;
 import ni.gob.inss.barista.model.dao.DAOException; 
 import ni.gob.inss.barista.model.dao.EntityNotFoundException;
 import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
@@ -90,12 +94,15 @@ public class MovimientosActivosBackBean extends BaseBackBean implements Serializ
 	@Autowired
 	MovimientosService oMovimientosService;
 	
+	@Autowired
+	JasperRestService oJasperReportService;
 	 
 	@PostConstruct
 	public void init(){
 		this.cargarListas();
 		this.cargarListaDelegaciones();
 		this.valoresfechas();
+		RequestContext.getCurrentInstance().execute("PF('btnReporte').disable()");
 	} 
 
 	public void limpiarBusquedaActivo(){
@@ -103,6 +110,15 @@ public class MovimientosActivosBackBean extends BaseBackBean implements Serializ
 		this.setFiltroCodSecaf(null);
 		this.setFiltroCodSecundario(null);
 		this.setFiltroDescripcionBien(null);
+		
+	}
+	
+	public void CancelarCG(){
+		this.setTxtcodigoInventario("");
+		this.setTxtcodigoSecundario("");
+		this.setTxtdescripcionBien("");
+		RequestContext.getCurrentInstance().execute("PF('btnReporte').disable()");
+		this.setListaMovimientos(null);
 		
 	}
 	
@@ -163,6 +179,7 @@ public class MovimientosActivosBackBean extends BaseBackBean implements Serializ
 	
 	public void busquedaAvanzadaActivos() throws EntityNotFoundException{
 		this.setFiltroListaActivos(oActivoService.buscar(this.getFiltroCodSecaf(), this.getFiltroCodSecundario(), this.getFiltroDescripcionBien(),this.getFiltroSerie(),this.getUbicacionId(),this.getEstadoFisicoId(),this.getTipoResguardoId()));
+		RequestContext.getCurrentInstance().execute("PF('btnReporte').enable()");
 	}
 
 	
@@ -231,6 +248,21 @@ public class MovimientosActivosBackBean extends BaseBackBean implements Serializ
 		this.setTxtEmpleadoDest("");
 	}
 
+	public void imprimeReporteListadoMovimientos(){
+		Map<String, String> parametros = new HashMap<String, String>();
+		parametros.put("psEntidad",this.getEntidadActual().getId().toString());
+		parametros.put("psActivoId",this.getHFActivoId().toString());
+		parametros.put("psUsuario",this.getUsuarioActual().getUsername().toString());
+		
+		
+		//TODO: ESTE ES EL ID DEL REPORTE DEL CUAL SE OBTIENE EL ENCABEZADO. PENDIENTE MEJORAR
+		parametros.put("IdReporte","5");
+		try {
+			oJasperReportService.getReport("/reports/reports/Inventario/rpt_movimientos_activos", "pdf", parametros, "HistoralMovimientosActivos");
+		} catch (Exception e) {
+			mostrarMensajeError(this.getClass().getSimpleName(), "imprimeReporteListadoMovimientos", "OCURRIO UN ERROR AL GENERAR EL REPORTE", e);
+		}
+	}
 	
 	private void valoresfechas() {
 		fechamax = new Date();

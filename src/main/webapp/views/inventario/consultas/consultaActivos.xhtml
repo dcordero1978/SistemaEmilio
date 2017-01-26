@@ -19,21 +19,21 @@
 					<f:facet name="header"> 
 						<p:outputPanel style="display:block;" styleClass="left">
 							<h:panelGrid columns="6" cellpadding="5">
-								<p:selectOneMenu id="delegacion" label="Delegación"  value="#{consultaActivosBackBean.delegacionId}" effect="fold" style="width:250px" >
+								<p:selectOneMenu id="delegacion" label="Delegación"  value="#{consultaActivosBackBean.delegacionId}" effect="fold" style="width:200px" >
 									<f:selectItem itemValue="#{null}" itemLabel="Seleccione una Delegación"/>
 									<f:selectItems  var="oDelegacion" value="#{consultaActivosBackBean.listaDelegaciones}" itemLabel="#{oDelegacion.descripcion}" itemValue="#{oDelegacion.id}"/>									
 								</p:selectOneMenu>
-								<p:selectOneMenu  id="estadoFisico" value="#{consultaActivosBackBean.estadoFisicoId}" label="Estado Fisico:" style="width:250px">
+								<p:selectOneMenu  id="estadoFisico" value="#{consultaActivosBackBean.estadoFisicoId}" label="Estado Fisico:" style="width:200px">
 								<f:selectItem itemValue="#{null}" itemLabel="Seleccione Estado Fisico"/>
 								<f:selectItems var="oEstadoFisico" value="#{consultaActivosBackBean.listaEstadoFisico}" itemLabel="#{oEstadoFisico.descripcion}" itemValue="#{oEstadoFisico.id}" />
 								</p:selectOneMenu>
-								<p:selectOneMenu id="fondoProyecto" value="#{consultaActivosBackBean.proyectoId}" label="Proyectos" style="width:250px">
+								<p:selectOneMenu id="fondoProyecto" value="#{consultaActivosBackBean.proyectoId}" label="Proyectos" style="width:200px">
 								<f:selectItem itemValue="#{null}" itemLabel="Seleccione Proyecto"/>
 								<f:selectItems var="oFondoProyecto" value="#{consultaActivosBackBean.listaProyectos}" itemLabel="#{oFondoProyecto.descripcion}" itemValue="#{oFondoProyecto.id}" />
 								</p:selectOneMenu>
 								<p:inputText value="#{consultaActivosBackBean.txtBusquedaActivoByCodigo}" maxlength="50" action="#{consultaActivosBackBean.buscarActivo}" placeholder="Buscar por Código" style="width:200px"/>
 								<p:inputText value="#{consultaActivosBackBean.txtBusquedaActivoByDescripcion}" maxlength="50" action="#{consultaActivosBackBean.buscarActivo}" placeholder="Buscar por Descripción" style="width:200px"/>
-								<p:commandButton value="Generar Reporte" ajax="false" action="#{consultaActivosBackBean.imprimeReporteListadoActivos}" icon="fa fa-file-pdf-o" style="margin-top:-5px; color:white;" />
+								<p:commandButton widgetVar="btnReporte"  value="Generar Reporte" ajax="false" action="#{consultaActivosBackBean.imprimeReporteListadoActivos}" icon="fa fa-file-pdf-o" style="margin-top:-5px; color:white;" /> 
 							</h:panelGrid>
 							
 							</p:outputPanel>

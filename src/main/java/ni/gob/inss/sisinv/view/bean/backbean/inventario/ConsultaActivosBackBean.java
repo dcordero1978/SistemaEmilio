@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
 
+import org.primefaces.context.RequestContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 
@@ -55,6 +56,7 @@ public class ConsultaActivosBackBean extends BaseBackBean implements Serializabl
 	
 	@PostConstruct
 	public void init(){
+		RequestContext.getCurrentInstance().execute("PF('btnReporte').disable()");
 		this.cargarListaDelegaciones();
 		this.cargarListas();
 	} 
@@ -70,19 +72,29 @@ public class ConsultaActivosBackBean extends BaseBackBean implements Serializabl
 	}
 
 	public void imprimeReporteListadoActivos(){
+		
 		Map<String, String> parametros = new HashMap<String, String>();
 		parametros.put("psEntidad",this.getEntidadActual().getId().toString());
-		parametros.put("psDelegacionId",this.delegacionId.toString());
-		parametros.put("psEstadoFisicoId",this.estadoFisicoId.toString());
-		parametros.put("psCodigo",this.txtBusquedaActivoByCodigo.toString());
-		parametros.put("psDescripcion", this.txtBusquedaActivoByDescripcion.toString());
+		parametros.put("psUsuario",this.getUsuarioActual().getUsername().toString());
 		
+		if(this.getDelegacionId()!=null){parametros.put("psDelegacionId",this.getDelegacionId().toString());}
+		else{parametros.put("psDelegacionId","0");}
+		if(this.getEstadoFisicoId()!=null){parametros.put("psEstadoFisicoId",this.getEstadoFisicoId().toString());}
+		else{parametros.put("psEstadoFisicoId","0");}
+		if(this.getProyectoId()!=null){parametros.put("psProyectoId",this.getProyectoId().toString());}
+		else{parametros.put("psProyectoId","0");}
+		if(this.getTxtBusquedaActivoByCodigo()==null){parametros.put("psCodigo","");}
+		else{parametros.put("psCodigo",this.getTxtBusquedaActivoByCodigo().toString());}
+		if(this.getTxtBusquedaActivoByDescripcion()==null){parametros.put("psDescripcion","");}
+		else{parametros.put("psDescripcion", this.getTxtBusquedaActivoByDescripcion().toString());}
+			
 		//TODO: ESTE ES EL ID DEL REPORTE DEL CUAL SE OBTIENE EL ENCABEZADO. PENDIENTE MEJORAR
-		parametros.put("IdReporte","3");
+		parametros.put("IdReporte","4");
+		
 		try {
 			oJasperReportService.getReport("/reports/reports/Inventario/listado_consulta_bienes", "pdf", parametros, "ListadoConsultaBienes");
 		} catch (Exception e) {
-			mostrarMensajeError(this.getClass().getSimpleName(), "imprimeReporteActivoPorUsuario", "OCURRIO UN ERROR AL GENERAR EL REPORTE", e);
+			mostrarMensajeError(this.getClass().getSimpleName(), "imprimeReporteListadoActivos", "OCURRIO UN ERROR AL GENERAR EL REPORTE", e);
 		}
 	}
 	
@@ -93,6 +105,7 @@ public class ConsultaActivosBackBean extends BaseBackBean implements Serializabl
 		this.setEstadoFisicoId(null);
 		this.setProyectoId(null);
 		this.setListaActivos(null);
+		RequestContext.getCurrentInstance().execute("PF('btnReporte').disable()");
 	}
 	
 	public void cargarListaDelegaciones(){
@@ -106,6 +119,7 @@ public class ConsultaActivosBackBean extends BaseBackBean implements Serializabl
 	public void buscarActivo(){
 		try{ 
 			this.listaActivos = oActivoService.buscar( this.getDelegacionId(), this.txtBusquedaActivoByCodigo, this.txtBusquedaActivoByDescripcion,this.estadoFisicoId, this.proyectoId);
+			RequestContext.getCurrentInstance().execute("PF('btnReporte').enable()");
 			if(this.listaActivos.isEmpty()){
 				mostrarMensajeInfo("No se han encontrado resultados con el criterio de Búsqueda ingresada.");
 			}

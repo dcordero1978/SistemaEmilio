@@ -7,7 +7,7 @@
                 template="/web/template/innerLayout.xhtml"
                 xmlns:mc="http://java.sun.com/jsf/composite/reusables">
 
-	<ui:param name="paramBackBean" value="#{historialActivosBackBean}"/>
+	<ui:param name="paramBackBean" value="#{movimientosActivosBackBean}"/>
 	<ui:define name="headerContent">
 		Historial de Movimientos de Activos
 	</ui:define>
@@ -21,9 +21,9 @@
 							 
 							</p:outputPanel>
 							<p:outputPanel style="display:block;" styleClass="right">
-							<h:panelGrid columns="2" cellpadding="5">
-								<p:commandButton value="Buscar" id="btsearch" action="#{historialActivosBackBean.buscarHistorial}" ajax="true"  icon="ui-icon-search" />
-								<p:commandButton value="Cancelar" id="btclean" action="#{historialActivosBackBean.limpiar}" ajax="true"   resetValues="true" icon="ui-icon-cancel" />
+							<h:panelGrid columns="3" cellpadding="5">
+								<p:commandButton widgetVar="btnReporte" value="Generar Reporte" ajax="false" action="#{movimientosActivosBackBean.imprimeReporteListadoMovimientos}" icon="fa fa-file-pdf-o" style="margin-top:-5px; color:white;"/>
+								<p:commandButton value="Cancelar" id="btnCancelar" action="#{movimientosActivosBackBean.CancelarCG}" ajax="true" resetValues="true" icon="ui-icon-cancel" update="formHistorialActivos" />
 							</h:panelGrid>
 							</p:outputPanel>
 						</f:facet>

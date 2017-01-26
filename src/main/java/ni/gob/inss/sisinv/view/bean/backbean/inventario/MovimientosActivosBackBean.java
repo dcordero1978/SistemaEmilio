@@ -113,7 +113,8 @@ public class MovimientosActivosBackBean extends BaseBackBean implements Serializ
 		
 	}
 	
-	public void CancelarCG(){
+	//
+	public void cancelarHistorial(){
 		this.setTxtcodigoInventario("");
 		this.setTxtcodigoSecundario("");
 		this.setTxtdescripcionBien("");

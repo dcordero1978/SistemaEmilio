@@ -23,7 +23,7 @@
 							<p:outputPanel style="display:block;" styleClass="right">
 							<h:panelGrid columns="3" cellpadding="5">
 								<p:commandButton widgetVar="btnReporte" value="Generar Reporte" ajax="false" action="#{movimientosActivosBackBean.imprimeReporteListadoMovimientos}" icon="fa fa-file-pdf-o" style="margin-top:-5px; color:white;"/>
-								<p:commandButton value="Cancelar" id="btnCancelar" action="#{movimientosActivosBackBean.CancelarCG}" ajax="true" resetValues="true" icon="ui-icon-cancel" update="formHistorialActivos" />
+								<p:commandButton value="Cancelar" id="btnCancelar" action="#{movimientosActivosBackBean.cancelarHistorial}" ajax="true" resetValues="true" icon="ui-icon-cancel" update="formHistorialActivos" />
 							</h:panelGrid>
 							</p:outputPanel>
 						</f:facet>

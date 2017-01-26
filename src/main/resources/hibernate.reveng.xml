@@ -16,6 +16,9 @@
 	<table-filter match-name="caracteristicas_hardware" exclude="true"
 		match-schema="catalogo">
 	</table-filter>
-	<table-filter match-name="tipo_activo_caracteristicas_hardware" exclude="true"
-		match-schema="catalogo"/>
+	<table-filter match-name="tipo_activo_caracteristicas_hardware"
+		exclude="true" match-schema="catalogo" />
+	<table-filter match-name="componentes_activos"
+		match-schema="soportetecnico" exclude="true">
+	</table-filter>
 </hibernate-reverse-engineering>

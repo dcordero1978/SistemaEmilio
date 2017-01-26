@@ -1,0 +1,159 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+ 				xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                template="/web/template/innerLayout.xhtml"
+                xmlns:mc="http://java.sun.com/jsf/composite/reusables">
+<ui:param name="paramBackBean" value="#{componenteActivosBackBean}"/>
+<ui:define name="headerContent">
+		Componentes de Equipos informaticos.
+</ui:define>
+<ui:define name="content">
+		<div id="ContainerIndent">
+			<div class="Container50 Responsive">
+				<h:form id="datosActivoEmpleado" style="width:99%">
+					<p:panel style="height:500px" styleClass="fondoPaneles">
+						<p:panel>
+							<f:facet name="header">
+								<p:outputPanel style="display:block;" styleClass="left">
+									<p:commandButton id="btnBuscarEmpleado" icon="ui-icon-search" value="#{labelName.btnBuscar} Empleado" immediate="true" onclick="PF('busquedaEmpleado').show()"/>
+								</p:outputPanel>
+							</f:facet>
+							<h:panelGrid style="width:100%" columns="4" columnClasses="Wid10, Wid40, Wid10, Wid40">
+								<h:outputLabel for="nombreCompleto" value="Nombre:"/>
+								<p:inputText id="nombreCompleto"  readonly="true" style="width:90%" value="#{componenteActivosBackBean.filtroEmpleadoSeleccionado.primerNombre} #{componenteActivosBackBean.filtroEmpleadoSeleccionado.segundoNombre} #{componenteActivosBackBean.filtroEmpleadoSeleccionado.primerApellido} #{componenteActivosBackBean.filtroEmpleadoSeleccionado.segundoApellido}"/>
+								<h:outputLabel for="cedula" value="Cédula"/>
+								<p:inputText id="cedula" readonly="true" style="width:90%" value="#{componenteActivosBackBean.filtroEmpleadoSeleccionado.nroIdentificacion}"/>
+								<h:outputLabel for="cargo" value="Cargo" />
+								<p:inputText readonly="true" id="cargo" style="width:90%" value="#{componenteActivosBackBean.filtroEmpleadoSeleccionado.cargo}"/>
+								<h:outputLabel for="numeroEmpleado" value="Número:"/>
+								<p:inputText id="numeroEmpleado" style="width:90%" readonly="true" value="#{componenteActivosBackBean.filtroEmpleadoSeleccionado.numeroEmpleado}"/>
+							</h:panelGrid>
+						</p:panel>
+						
+							<p:panel>
+								<f:facet name="header">
+									<p:outputPanel style="display:block;" styleClass="left">
+										<h:outputText value="Lista de Equipos"/>
+									</p:outputPanel>
+								</f:facet>
+								<p:outputPanel styleClass="tableClass">
+									<p:dataTable style="width:100%" paginatorPosition="top" selectionMode="single" 
+										scrollable="true" scrollHeight="300"
+										var="oEquipo" id="listaEquiposInformaticos" rowKey="#{oEquipo.id}" 
+										value="#{componenteActivosBackBean.listaActivosTipoEquipo}" selection="#{componenteActivosBackBean.equipoSeleccionado}" 
+										paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="10" pageLinks="3"
+										paginatorTemplate="#{configApplicationBean.paginatorTemplate}" currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
+										<p:ajax update=":detalleComponentes, :formComponentesDisponibles" event="rowDblselect" listener="#{componenteActivosBackBean.cargarDatosComponentesEquipo}" />
+										<p:column resizable="true" headerText="Descripción" style="text-align:left" width="50%" priority="1">
+											<h:outputText value="#{oEquipo.descripcion}" />
+										</p:column>
+										<p:column headerText="Código" style="text-align:center;" width="25%" resizable="true" priority="2">
+											<h:outputText value="#{oEquipo.codigoInventario}"/>
+										</p:column>
+										<p:column headerText="Marca" style="text-align:center" width="18%" resizable="true" priority="3">
+											<h:outputText value="#{oEquipo.marca.descripcion}"/>
+										</p:column>
+										<p:column style="text-align:center" width="5%" priority="3">
+											<p:commandButton icon="fa fa-search" style="color:white;" oncomplete="PF('modalDescripcionActivo').show()" title="Ver" update=":formDescripcionActivo">
+												<f:setPropertyActionListener value="#{oEquipo}" target="#{componenteActivosBackBean.equipoSeleccionado}" />
+											</p:commandButton>
+										</p:column>
+									</p:dataTable>
+							</p:outputPanel>
+							
+							</p:panel>
+					</p:panel>
+				</h:form>
+			</div>
+			<div class="Container50 Responsive">
+					<p:panel style="height:500px" styleClass="fondoPaneles">
+						<h:form id="detalleComponentes" style="width:99%">
+							<p:panel>
+								<f:facet name="header">
+									<p:outputPanel style="display:block;" styleClass="left">
+										<h:outputLabel value="Equipo ID:  #{componenteActivosBackBean.equipoSeleccionado.id}" rendered="#{componenteActivosBackBean.equipoSeleccionado != null}"/>
+									</p:outputPanel>
+									<p:outputPanel style="display:block;" styleClass="right">
+										<p:commandButton value="Asociar Componente" style="color:white" icon="fa fa-plus-circle" immediate="true" action="#{componenteActivosBackBean.mostrarModal}"  rendered="#{componenteActivosBackBean.equipoSeleccionado != null}"/>
+										<p:commandButton value="Remover Componente" style="color:white" icon="fa fa-minus-circle" update="detalleComponentes" action="#{componenteActivosBackBean.removerComponente}" rendered="#{componenteActivosBackBean.equipoSeleccionado != null}"/>
+									</p:outputPanel>
+								</f:facet>
+								<h:panelGrid style="width:100%" columns="4" columnClasses="Wid10, Wid40, Wid10, Wid40">
+									<p:outputLabel for="descripcionEquipo" value="Descripción:"/>
+									<p:inputText id="descripcionEquipo" readonly="true" style="width:90%" value="#{componenteActivosBackBean.equipoSeleccionado.descripcion}"/>
+									<p:outputLabel for="codigoEquipo" value="Codigo:" />
+									<p:inputText id="codigoEquipo" readonly="true" style="width:90%" value="#{componenteActivosBackBean.equipoSeleccionado.codigoInventario}"/>
+								</h:panelGrid>
+								<p:outputPanel id="contenedorListaComponentesAsociados" styleClass="tableClass">
+									<p:dataTable style="width:100%" paginatorPosition="top" selectionMode="single" 
+									scrollable="true" scrollHeight="300" 
+									var="oComponente" id="listaComponentesAsociados" rowKey="#{oComponente.id}" 
+									value="#{componenteActivosBackBean.listaComponentesAsociados}"  selection="#{componenteActivosBackBean.componenteAsociadoSeleccionado}"
+									paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="10" pageLinks="3"
+									paginatorTemplate="#{configApplicationBean.paginatorTemplate}" currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
+									
+											<p:column resizable="true" headerText="Componente" style="text-align:left" width="30%" priority="1">
+												<h:outputText value="#{oComponente.oComponente.descripcion}" />
+											</p:column>
+									</p:dataTable>
+								</p:outputPanel>
+							</p:panel>
+						</h:form>
+					</p:panel>
+			</div>
+		</div>
+		
+		<p:dialog modal="true" id="modalComponentesDisponibles" widgetVar="modalComponentesDisponibles" closable="false" width="600"  height="400" hideEffect="blind" showEffect="blind" showHeader="false">
+			<h:form id="formComponentesDisponibles">
+				<p:panel >
+					<f:facet name="header">
+						<p:outputPanel styleClass="left">
+							<h:outputText value="Asociar Componentes" />
+						</p:outputPanel>
+						<p:outputPanel styleClass="right">
+							<p:commandButton value="Asociar" icon="fa fa-check-circle" style="color:white;" action="#{componenteActivosBackBean.asociarComponente}" update=":detalleComponentes"/>
+							<p:commandButton value="Cerrar" icon="fa fa-times" style="color:white" immediate="true" onclick="PF('modalComponentesDisponibles').hide()"/>
+						</p:outputPanel>
+					</f:facet>
+					<p:outputPanel styleClass="tableClass">
+						<p:dataTable style="width:100%" paginatorPosition="top" selectionMode="single" 
+									scrollable="true" scrollHeight="300" selection="#{componenteActivosBackBean.componenteDisponibleSeleccionado}"
+									var="oComponenteDisponible" id="listaComponentesDisponibles" rowKey="#{oComponenteDisponible.id}" 
+									value="#{componenteActivosBackBean.listaComponentesDisponibles}"  
+									paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="10" pageLinks="3" 
+									paginatorTemplate="#{configApplicationBean.paginatorTemplate}" currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
+							<p:column headerText="Nombre">
+								<h:outputText value="#{oComponenteDisponible.descripcion}" />
+							</p:column>
+						</p:dataTable>
+					</p:outputPanel>
+				</p:panel>
+			</h:form>
+		</p:dialog>
+		
+		<p:dialog modal="true" id="descripcionActivo" header="Información de Equipo" widgetVar="modalDescripcionActivo" width="350" height="100%" hideEffect="blind" showEffect="blind" resizable="false">
+			<h:form id="formDescripcionActivo">
+				<p:panel styleClass="fondoPaneles">
+					<p:outputPanel> 
+						<h:panelGrid columns="2" columnClasses="Wid20,Wid80">
+							<h:outputText value="Codigo:" />
+							<h:outputText value="#{componenteActivosBackBean.equipoSeleccionado.codigoInventario}"/>
+							<h:outputText value="Descripción:" />
+							<h:outputText value="#{componenteActivosBackBean.equipoSeleccionado.descripcion}"/>
+							<h:outputText value="Marca:" />
+							<h:outputText value="#{componenteActivosBackBean.equipoSeleccionado.marca.descripcion}"/>
+							<h:outputText value="Modelo:" />
+							<h:outputText value="#{componenteActivosBackBean.equipoSeleccionado.modelo.descripcion}"/>
+							<h:outputText value="No. Serie:" />
+							<h:outputText value="#{componenteActivosBackBean.equipoSeleccionado.serie}"/>
+						</h:panelGrid>
+					</p:outputPanel>
+				</p:panel>
+			</h:form>
+		</p:dialog>
+		<mc:buscaEmpleado nombreModal="busquedaEmpleado" componentesActualizar=":datosActivoEmpleado" backBeanBase="#{componenteActivosBackBean}" />
+</ui:define>
+</ui:composition>

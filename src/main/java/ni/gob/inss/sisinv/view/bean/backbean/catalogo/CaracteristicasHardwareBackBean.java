@@ -8,6 +8,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.primefaces.context.RequestContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -20,7 +21,9 @@ import ni.gob.inss.barista.view.bean.backbean.BaseBackBean;
 import ni.gob.inss.barista.view.utils.web.MessagesResults;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.CaracteristicasHardwareService;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.CatalogoExtService;
+import ni.gob.inss.sisinv.bussineslogic.service.catalogos.TipoActivoCaraceteristicaHardwareService;
 import ni.gob.inss.sisinv.model.entity.catalogo.CaracteristicasHardware;
+import ni.gob.inss.sisinv.model.entity.catalogo.TipoActivoCaracteristicasHardware;
 import ni.gob.inss.sisinv.util.CatalogoGeneral;
 import ni.gob.inss.sisinv.util.RegExpresionExtends;
 
@@ -37,13 +40,14 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 	private List<CaracteristicasHardware> listaCaracteristicasHardwarePadre = new ArrayList<CaracteristicasHardware>();
 	private List<CaracteristicasHardware> listaGeneralCaracteristicas = new ArrayList<CaracteristicasHardware>();
 	private List<CaracteristicasHardware> listaCaracteristicasHijas = new ArrayList<CaracteristicasHardware>();
-	private List<Catalogo> listaTipoActivos = new ArrayList<Catalogo>();
-	
+	private List<Catalogo> listaEquipos = new ArrayList<Catalogo>();
+	private String[] listaEquiposAsociados;
 	
 	private static final long serialVersionUID = 1L;
 
 	@Autowired CaracteristicasHardwareService oCaracteristicasHardwareService;
 	@Autowired CatalogoExtService oCatalogoService;
+	@Autowired TipoActivoCaraceteristicaHardwareService oTipoActivoCarateristicaHardwareService;
 	
 	@PostConstruct
 	public void init(){
@@ -52,7 +56,6 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 	}
 	
 	public void guardarOActualizar(){
-	
 		if(oCaracteristica.getId() == null){
 			guardar();
 		}else{
@@ -69,6 +72,24 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 			mostrarMensajeInfo(MessagesResults.EXITO_GUARDAR);
 		} catch (BusinessException | DAOException e) {
 			mostrarMensajeError(this.getClass().getSimpleName(), "guardar", MessagesResults.ERROR_GUARDAR, e);
+		}
+	}
+	
+	//TODO: REFACTORIZAR, DEBIDO A QUE TOMA MUCHO TIEMPO GUARDAR.
+	private void guardarAsociacionComponenteTipoEquipo() throws BusinessException{
+		for (String oEquipoId : this.listaEquiposAsociados) {
+			TipoActivoCaracteristicasHardware oComponenteAsociado = new TipoActivoCaracteristicasHardware();
+			oComponenteAsociado.setCaracteristicaPadreId(oCaracteristica.getId());
+				if(NumberUtils.isNumber(oEquipoId)){
+					oComponenteAsociado.setTipoActivoId(NumberUtils.toInt(oEquipoId));
+				}else{
+					throw new BusinessException("EL ELEMENTO SELECCIONADO NO PERTENECE AL TIPO ESPERADO.");
+				}
+			oComponenteAsociado.setCreadoEl(this.getTimeNow());
+			oComponenteAsociado.setCreadoPor(this.getUsuarioActual().getId());
+			oComponenteAsociado.setCreadoEnIp(this.getRemoteIp());
+			oComponenteAsociado.setPasivo(Boolean.FALSE);
+			oTipoActivoCarateristicaHardwareService.guardar(oComponenteAsociado);
 		}
 	}
 	
@@ -116,7 +137,6 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 			mostrarMensajeInfo(MessagesResults.EXITO_MODIFICAR);
 		} catch (BusinessException | DAOException e) {
 			mostrarMensajeError(this.getClass().getSimpleName(), "actualizarCaracteristicaHija", MessagesResults.ERROR_MODIFICAR, e);
-
 		}
 	}
 	
@@ -136,9 +156,7 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 	
 	public void cargarListas(){
 	 try {
-		this.listaCaracteristicasHardwarePadre = oCaracteristicasHardwareService.listaCaracteristicasHardwarePadre(null, this.getFiltroDescripcion());
-		this.listaTipoActivos = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.TIPO_ACTIVO.getCodigoCatalogo()); 
-		this.buscar();
+		this.listaEquipos = oCatalogoService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.TIPO_ACTIVO.getCodigoCatalogo());
 	} catch (EntityNotFoundException e) {
 		mostrarMensajeError(this.getClass().getSimpleName(), "cagarListas", MessagesResults.ERROR_OBTENER_LISTA, e);
 		}
@@ -159,7 +177,7 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 	
 	public void editar(){
 		if(this.oCaracteristicaHardwareSeleccionado !=null){
-			this.oCaracteristica = this.oCaracteristicaHardwareSeleccionado;
+			this.oCaracteristica = this.oCaracteristicaHardwareSeleccionado; 
 			this.cargarListaCaracteristicasHijas();
 		}else{
 			mostrarMensajeInfo(MessagesResults.SELECCIONE_UN_REGISTRO);
@@ -223,7 +241,20 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 		return regExpDescripcion;
 	}
 
-	public List<Catalogo> getListaTipoActivos() {
-		return listaTipoActivos;
-	}	
+	public List<Catalogo> getListaEquipos() {
+		return listaEquipos;
+	}
+
+	public void setListaEquipos(List<Catalogo> listaEquipos) {
+		this.listaEquipos = listaEquipos;
+	}
+
+	public String[] getListaEquiposAsociados() {
+		return listaEquiposAsociados;
+	}
+
+	public void setListaEquiposAsociados(String[] listaEquiposAsociados) {
+		this.listaEquiposAsociados = listaEquiposAsociados;
+	}
+
 }

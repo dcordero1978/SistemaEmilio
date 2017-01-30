@@ -1,5 +1,7 @@
 package ni.gob.inss.sisinv.bussineslogic.serviceImpl.catalogos;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +40,12 @@ public class TipoActivoCaraceteristicaHardwareServiceImpl implements TipoActivoC
 	@Override
 	public void actualizar(TipoActivoCaracteristicasHardware oTipoActivoCaracteristicaHardware) throws DAOException {
 		oTipoActivoCaracteristicaHardwareDao.updateUpper(oTipoActivoCaracteristicaHardware);
+	}
+
+	@Transactional 
+	@Override
+	public void guardar(List<TipoActivoCaracteristicasHardware> listaTipoActivoCaracteristicas) throws DAOException {
+		oTipoActivoCaracteristicaHardwareDao.saveUpper(listaTipoActivoCaracteristicas);
 	}
 	
 }

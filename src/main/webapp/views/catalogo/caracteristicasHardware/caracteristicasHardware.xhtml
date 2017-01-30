@@ -49,9 +49,6 @@
 								<p:column headerText="Descripción" width="50%">
 									<h:outputText value="#{oCaracteristica.descripcion}"/>
 								</p:column>
-								<p:column headerText="Tipo de Activo">
-									<h:outputText value="#{oCaracteristica.oTipoActivo.descripcion}"/>
-								</p:column>
 								<p:column headerText="Pasivo" style="text-align:center;">
 									<p:inputSwitch value="#{oCaracteristica.pasivo}" offLabel="No" onLabel="Si" disabled="true" style="background: white; color:black;"/>
 								</p:column>
@@ -78,11 +75,10 @@
 								<f:validateRegex pattern="#{caracteristicasHardwareBackBean.regExpDescripcion}"/>
 								<f:validateLength minimum="1" maximum="50"/>
 							</p:inputText>
-							<p:outputLabel for="tipoActivo" value="Tipo de Activo:" />
-							<p:selectOneMenu id="tipoActivo" label="Tipo de Activo" value="#{caracteristicasHardwareBackBean.oCaracteristica.tipoActivoId}" style="width:90%">
-								<f:selectItem itemLabel="Seleccione" itemValue="#{null}" />
-								<f:selectItems value="#{caracteristicasHardwareBackBean.listaTipoActivos}" var="oTipoActivo" itemLabel="#{oTipoActivo.descripcion}" itemValue="#{oTipoActivo.id}"/>
-							</p:selectOneMenu>
+							<p:outputLabel for="listaEquipos" value="Lista de Equipos:" />
+							<p:selectCheckboxMenu id="listaEquipos" label="Seleccione ..." style="width:90%" value="#{caracteristicasHardwareBackBean.listaEquiposAsociados}">
+								<f:selectItems value="#{caracteristicasHardwareBackBean.listaEquipos}"  var="oEquipo" itemLabel="#{oEquipo.descripcion}" itemValue="#{oEquipo.id}"/>
+							</p:selectCheckboxMenu>
 							<h:outputLabel for="pasivo" value="Pasivo:" rendered="#{caracteristicasHardwareBackBean.oCaracteristica.id != null}"/>
 							<p:inputSwitch id="pasivo"  value="#{caracteristicasHardwareBackBean.oCaracteristica.pasivo}" rendered="#{caracteristicasHardwareBackBean.oCaracteristica.id != null}" offLabel="No" onLabel="Si" style="background: white; color:black;"/>
 							
@@ -93,7 +89,7 @@
 									<h:outputLabel value="Lista de Caracteristicas Hijas" />
 								</p:outputPanel>
 								<p:outputPanel style="display:block;" styleClass="right">
-										<p:commandButton resetValues="true" update=":nuevaCaracteristicaHija" value="Nuevo" icon="fa fa-plus" style="color:white" action="#{caracteristicasHardwareBackBean.crearNuevaCaracteristicaHija}" immediate="true" oncomplete="PF('datosCaracteristicaHija').show()"/>
+										<p:commandButton resetValues="true" update=":nuevaCaracteristicaHija" value="Agregar" icon="fa fa-plus-circle" style="color:white" action="#{caracteristicasHardwareBackBean.crearNuevaCaracteristicaHija}" immediate="true" oncomplete="PF('datosCaracteristicaHija').show()"/>
 										<p:commandButton value="Editar" icon="fa fa-pencil" style="color:white" immediate="true" action="#{caracteristicasHardwareBackBean.editarCaracteristicaHija}" />
 								</p:outputPanel>
 							</f:facet>
@@ -127,8 +123,8 @@
 				</h:form>
 			</div>
 			<h:form id="nuevaCaracteristicaHija">
-				<p:dialog header="false" id="modalCaracteristicasHijas" widgetVar="datosCaracteristicaHija"  width="400"  height="120" closable="false" showHeader="false" modal="true" resizable="false" showEffect="blind" hideEffect="blind">
-						<p:panel styleClass="fondoPaneles" style="height:100px">
+				<p:dialog header="false" id="modalCaracteristicasHijas" widgetVar="datosCaracteristicaHija"  width="400"  height="100%" closable="false" showHeader="false" modal="true" resizable="false" showEffect="blind" hideEffect="blind">
+						<p:panel styleClass="fondoPaneles">
 							<f:facet name="header">
 								<p:outputPanel style="display:block" styleClass="left">
 									<h:outputLabel value="ID: #{caracteristicasHardwareBackBean.oCaracteristicaHija.id}" rendered="#{caracteristicasHardwareBackBean.oCaracteristicaHija.id != null}" />
@@ -151,6 +147,18 @@
 						</p:panel>
 				</p:dialog>
 			</h:form>
+			
+			<p:dialog id="tipoEquipo" modal="true" widgetVar="modalTipoEquipo" width="350" height="100%" header="Tipo de Equipo" hideEffect="blind" showEffect="blind" resizable="false">
+				<h:form id="formTipoEquipo">
+					<p:panel styleClass="fondoPaneles">
+						<p:outputPanel>
+							<h:panelGrid columns="2" columnClasses="Wid20,Wid80">
+								
+							</h:panelGrid>
+						</p:outputPanel>
+					</p:panel>
+				</h:form>
+			</p:dialog>
 		</div>  
     </ui:define>
 </ui:composition>

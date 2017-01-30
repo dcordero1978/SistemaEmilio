@@ -185,19 +185,22 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 		if(this.oCaracteristicaHardwareSeleccionado !=null){
 			this.oCaracteristica = this.oCaracteristicaHardwareSeleccionado; 
 			this.cargarListaCaracteristicasHijas();
-			//CARGAR EQUIPOS ASOCIADOS 
-			List<TipoActivoCaracteristicasHardware> listaCaracteristicaEquipo = oTipoActivoCarateristicaHardwareService.obtieneListaEquiposAsociadosACaracteristica(this.oCaracteristica.getId(), Boolean.FALSE);
-			if(listaCaracteristicaEquipo != null){
-				this.listaEquiposAsociados = new String[listaCaracteristicaEquipo.size()];
-				Object[] arrayCaracteristicaEquipos =    listaCaracteristicaEquipo.toArray();
-				IntStream.range(NumberUtils.INTEGER_ZERO, listaCaracteristicaEquipo.size()).forEach(contador -> {
-					listaEquiposAsociados[contador] = String.valueOf(((TipoActivoCaracteristicasHardware) arrayCaracteristicaEquipos[contador]).getTipoActivoId()) ;
-				});
-			}
+			this.cargarListaEquipoAsociados();
 		}else{
 			mostrarMensajeInfo(MessagesResults.SELECCIONE_UN_REGISTRO);
 		}
 	}
+	
+	private void cargarListaEquipoAsociados(){
+		List<TipoActivoCaracteristicasHardware> listaCaracteristicaEquipo = oTipoActivoCarateristicaHardwareService.obtieneListaEquiposAsociadosACaracteristica(this.oCaracteristica.getId(), Boolean.FALSE);
+		if(listaCaracteristicaEquipo != null){
+			this.listaEquiposAsociados = new String[listaCaracteristicaEquipo.size()];
+			Object[] arrayCaracteristicaEquipos =    listaCaracteristicaEquipo.toArray();
+			IntStream.range(NumberUtils.INTEGER_ZERO, listaCaracteristicaEquipo.size()).forEach(contador -> {
+				listaEquiposAsociados[contador] = String.valueOf(((TipoActivoCaracteristicasHardware) arrayCaracteristicaEquipos[contador]).getTipoActivoId()) ;
+			});
+		}
+	} 
 	
 	public List<CaracteristicasHardware> getListaCaracteristicasHardwarePadre() {
 		return listaCaracteristicasHardwarePadre;

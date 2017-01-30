@@ -2,7 +2,9 @@ package ni.gob.inss.sisinv.view.bean.backbean.catalogo;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
@@ -69,6 +71,7 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 		oCaracteristica.setCreadoPor(this.getUsuarioActual().getId());
 		try {
 			oCaracteristicasHardwareService.guardar(oCaracteristica);
+			this.guardarAsociacionComponenteTipoEquipo();
 			mostrarMensajeInfo(MessagesResults.EXITO_GUARDAR);
 		} catch (BusinessException | DAOException e) {
 			mostrarMensajeError(this.getClass().getSimpleName(), "guardar", MessagesResults.ERROR_GUARDAR, e);
@@ -76,7 +79,7 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 	}
 	
 	//TODO: REFACTORIZAR, DEBIDO A QUE TOMA MUCHO TIEMPO GUARDAR.
-	private void guardarAsociacionComponenteTipoEquipo() throws BusinessException{
+	private void guardarAsociacionComponenteTipoEquipo() throws BusinessException, DAOException{
 		for (String oEquipoId : this.listaEquiposAsociados) {
 			TipoActivoCaracteristicasHardware oComponenteAsociado = new TipoActivoCaracteristicasHardware();
 			oComponenteAsociado.setCaracteristicaPadreId(oCaracteristica.getId());
@@ -112,6 +115,7 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 			actualizarCaracteristicaHija();
 		}
 		this.crearNuevaCaracteristicaHija();
+		this.cargarListaCaracteristicasHijas();
 		RequestContext.getCurrentInstance().execute("PF('datosCaracteristicaHija').hide()");
 	}
 	
@@ -147,6 +151,7 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 	public void editarCaracteristicaHija(){
 		if(oCaracteristicaHardwareHijaSeleccionada != null){
 			oCaracteristicaHija = oCaracteristicaHardwareHijaSeleccionada;
+			
 			RequestContext.getCurrentInstance().execute("PF('datosCaracteristicaHija').show()");
 		}else{
 			mostrarMensajeError(MessagesResults.SELECCIONE_UN_REGISTRO);
@@ -173,12 +178,22 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 	public void agregar(){
 		this.oCaracteristica = new CaracteristicasHardware();
 		this.listaCaracteristicasHijas.clear();
+		Arrays.fill(this.listaEquiposAsociados, null);
 	}
 	
 	public void editar(){
 		if(this.oCaracteristicaHardwareSeleccionado !=null){
 			this.oCaracteristica = this.oCaracteristicaHardwareSeleccionado; 
 			this.cargarListaCaracteristicasHijas();
+			//CARGAR EQUIPOS ASOCIADOS 
+			List<TipoActivoCaracteristicasHardware> listaCaracteristicaEquipo = oTipoActivoCarateristicaHardwareService.obtieneListaEquiposAsociadosACaracteristica(this.oCaracteristica.getId(), Boolean.FALSE);
+			if(listaCaracteristicaEquipo != null){
+				this.listaEquiposAsociados = new String[listaCaracteristicaEquipo.size()];
+				Object[] arrayCaracteristicaEquipos =    listaCaracteristicaEquipo.toArray();
+				IntStream.range(NumberUtils.INTEGER_ZERO, listaCaracteristicaEquipo.size()).forEach(contador -> {
+					listaEquiposAsociados[contador] = String.valueOf(((TipoActivoCaracteristicasHardware) arrayCaracteristicaEquipos[contador]).getTipoActivoId()) ;
+				});
+			}
 		}else{
 			mostrarMensajeInfo(MessagesResults.SELECCIONE_UN_REGISTRO);
 		}

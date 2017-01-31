@@ -11,4 +11,5 @@ public interface TipoActivoCaraceteristicaHardwareService {
 	public void actualizar(TipoActivoCaracteristicasHardware oTipoActivoCaracteristicaHardware) throws DAOException;
 	public void guardar(List<TipoActivoCaracteristicasHardware> listaTipoActivoCaracteristicas) throws DAOException;
 	public List<TipoActivoCaracteristicasHardware> obtieneListaEquiposAsociadosACaracteristica(Integer caracteristicaId, Boolean esPasivo );
+	public TipoActivoCaracteristicasHardware obtieneTipoEquipoCaracteristica(Integer equipo, Integer caracteristica, Boolean pasivo);
 }

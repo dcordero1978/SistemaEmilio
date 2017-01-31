@@ -33,7 +33,6 @@ public class TipoActivoCaraceteristicaHardwareServiceImpl implements TipoActivoC
 	@Override
 	public void guardar(TipoActivoCaracteristicasHardware oTipoActivoCaracteristicaHardware) throws DAOException {
 		oTipoActivoCaracteristicaHardwareDao.saveUpper(oTipoActivoCaracteristicaHardware);
-		
 	}
 
 	@Transactional
@@ -56,5 +55,16 @@ public class TipoActivoCaraceteristicaHardwareServiceImpl implements TipoActivoC
 		oSearch.addFilter(Filter.equal("caracteristicaPadreId", caracteristicaId));
 		oSearch.addFilter(Filter.equal("pasivo", esPasivo));
 		return oTipoActivoCaracteristicaHardwareDao.search(oSearch);
+	}
+
+	@Transactional
+	@Override
+	public TipoActivoCaracteristicasHardware obtieneTipoEquipoCaracteristica(Integer equipoId, Integer caracteristicaId,
+			Boolean pasivo) {
+		Search oSearch = new Search();
+		oSearch.addFilterEqual("tipoActivoId", equipoId)
+				.addFilterEqual("caracteristicaPadreId", caracteristicaId)
+				.addFilterEqual("pasivo", pasivo);		
+		return (TipoActivoCaracteristicasHardware) oTipoActivoCaracteristicaHardwareDao.searchUnique(oSearch);
 	}
 }

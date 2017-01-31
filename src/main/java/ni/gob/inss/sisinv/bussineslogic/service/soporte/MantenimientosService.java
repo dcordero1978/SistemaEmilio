@@ -20,5 +20,7 @@ public interface MantenimientosService {
 
 	public List<ActivosUsuario> obtenerListaActivosUsuarios(Integer empleadoId);
 
+	public List<ProgramacionMantenimiento> obtenerListaProgramacionMantenimientoActivo();
+
 
 }

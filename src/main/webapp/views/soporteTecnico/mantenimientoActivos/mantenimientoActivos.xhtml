@@ -1,67 +1,88 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-  xmlns:ui="http://java.sun.com/jsf/facelets"
-                xmlns:h="http://java.sun.com/jsf/html"
-                xmlns:f="http://java.sun.com/jsf/core"
-                xmlns:p="http://primefaces.org/ui"
-                xmlns:pe="http://primefaces.org/ui/extensions"
-                template="/web/template/innerLayout.xhtml"
-                xmlns:mc="http://java.sun.com/jsf/composite/reusables">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/web/template/innerLayout.xhtml"
+	xmlns:mc="http://java.sun.com/jsf/composite/reusables">
 
-	<ui:param name="paramBackBean" value="#{programacionMantenimientoBackBean}"/>
+	<ui:param name="paramBackBean" value="#{mantenimientoActivosBackBean}" />
 	<ui:define name="headerContent">
-		Mantenimiento Preventivo
+		Listado de Equipos Asociados a un Mantenimiento
 	</ui:define>
 	<ui:define name="content">
 		<div id="ContainerIndent">
 			<div class="Container100 Responsive">
 				<h:form id="formGralMantenimiento" style="width: 100%;">
-				<p:panel  styleClass="fondoPaneles" >
-					<f:facet name="header">
-						<p:outputPanel style="display:block" styleClass="right">
-							<p:commandButton widgetVar="btnaddUser"  icon="ui-icon-plus" value="Agregar Usuario" disabled="true" id="addUser"  oncomplete="PF('winProgMto').show();"/>
-							<p:commandButton widgetVar="btnGuardar"  icon="ui-icon-disk" value="#{labelName.btnGuardar}" onstart="PF('btnGuardar').disable();" oncomplete="PF('btnGuardar').enable();" action="#{programacionMantenimientoBackBean.guardar}"/>
-							<p:commandButton resetValues="true" ajax="true" value="#{labelName.btnCancelar}" icon="ui-icon-cancel" />	
-						</p:outputPanel>
-					</f:facet>
-					<p:panel id="panelgenerales" styleClass="fondoPaneles" >
-						<h:panelGrid columns="6" cellpadding="5" columnClasses="Wid20,Wid40,Wid10,Wid10,Wid10,Wid10" style="width:100%" >
-	           				<p:outputLabel for="txtlistamantenimientos" value="Mantenimientos Programados"/>
-	           				<p:selectOneMenu  required="true" id="txtlistamantenimientos" label="Mantenimientos Programados" value="#{programacionMantenimientoBackBean.mantenimientoprogId}" effect="fold" style="width:88%" >
-							<p:ajax listener="#{programacionMantenimientoBackBean.cargarFechasMto}" update="desde,hasta"/>
-							<f:selectItem itemValue="#{null}" itemLabel="Seleccione ..."/>
-							<f:selectItems var="oMantenimiento" value="#{programacionMantenimientoBackBean.listaMantenimientos}" itemLabel="#{oMantenimiento.fechaInicio} - #{oMantenimiento.asunto} - #{oMantenimiento.delegacion}" itemValue="#{oMantenimiento.id}" style="width:90%"/>
-							</p:selectOneMenu>	
-							<p:outputLabel for="desde" value="Fecha Inicio:" />
-						    <p:calendar id="desde" effect="fold"  pattern="dd/MM/yyyy" mask="true" required="true" value="#{programacionMantenimientoBackBean.fechaInicio}"/>
-						    <p:outputLabel for="hasta" value="Fecha Fin:" />
-						    <p:calendar id="hasta" effect="fold"  pattern="dd/MM/yyyy" mask="true" required="true" value="#{programacionMantenimientoBackBean.fechaFin}"/>
-	       				</h:panelGrid>
-       				</p:panel> 
-					
-					<div class="Container50 Responsive">
-					    <p:dataTable id="tablaempleados" var="oUsuario" value="#{programacionMantenimientoBackBean.listaMantenimientos}" style="height:570px">
-					        <f:facet name="header">
-					            Usuarios asociados al Mantenimiento
+					<p:panel styleClass="fondoPaneles">
+						<f:facet name="header">
+							<p:outputPanel style="display:block" styleClass="right">
+								<p:commandButton widgetVar="btnGuardar" icon="ui-icon-disk"
+									value="#{labelName.btnGuardar}"
+									onstart="PF('btnGuardar').disable();"
+									oncomplete="PF('btnGuardar').enable();"
+									action="#{programacionMantenimientoBackBean.guardar}" />
+								<p:commandButton resetValues="true" ajax="true"
+									value="#{labelName.btnCancelar}" icon="ui-icon-cancel" />
+							</p:outputPanel>
+						</f:facet>
+						<p:panel id="panelgenerales" styleClass="fondoPaneles">
+							<h:panelGrid columns="6" cellpadding="5"
+								columnClasses="Wid20,Wid40,Wid10,Wid10,Wid10,Wid10"
+								style="width:100%">
+								<p:outputLabel for="txtlistamantenimientos"
+									value="Mantenimientos Programados" />
+								<p:selectOneMenu required="true" id="txtlistamantenimientos"
+									label="Mantenimientos Programados"
+									value="#{programacionMantenimientoBackBean.mantenimientoprogId}"
+									effect="fold" style="width:88%">
+									<p:ajax
+										listener="#{programacionMantenimientoBackBean.cargarFechasMto}"
+										update="desde,hasta" />
+									<f:selectItem itemValue="#{null}" itemLabel="Seleccione ..." />
+									<f:selectItems var="oMantenimiento"
+										value="#{programacionMantenimientoBackBean.listaMantenimientos}"
+										itemLabel="#{oMantenimiento.fechaInicio} - #{oMantenimiento.asunto} - #{oMantenimiento.delegacion}"
+										itemValue="#{oMantenimiento.id}" style="width:90%" />
+								</p:selectOneMenu>
+								<p:outputLabel for="desde" value="Fecha Inicio:" />
+								<p:calendar id="desde" effect="fold" pattern="dd/MM/yyyy"
+									mask="true" required="true"
+									value="#{programacionMantenimientoBackBean.fechaInicio}" />
+								<p:outputLabel for="hasta" value="Fecha Fin:" />
+								<p:calendar id="hasta" effect="fold" pattern="dd/MM/yyyy"
+									mask="true" required="true"
+									value="#{programacionMantenimientoBackBean.fechaFin}" />
+							</h:panelGrid>
+						</p:panel>
+
+						<div class="Container50 Responsive">
+							<p:dataTable id="tablaempleados" var="oUsuario"
+								value="#{mantenimientoActivosBackBean.listaMantenimiento}"
+								style="height:570px">
+								<f:facet name="header">
+					            Mantenimientos Programados
 					        </f:facet>
-					        <p:column headerText="Usuario">
-					            <h:outputText value="#{oUsuario.asunto}" />
-					        </p:column>
-					        <p:column headerText="Cargo">
-					            <h:outputText value="#{oUsuario.asunto}" />
-					        </p:column>
-					        <p:column headerText="Area">
-					            <h:outputText value="#{oUsuario.asunto}" />
-					        </p:column>
-					        <p:column headerText="Delegacion">
-					            <h:outputText value="#{oUsuario.asunto}" />
-					        </p:column>
-					    </p:dataTable>
-					</div>
-					<div class="Container50 Responsive">
+								<p:column headerText="Asunto">
+									<h:outputText value="#{oUsuario.asunto}" />
+								</p:column>
+								<p:column headerText="Fecha Inicio">
+									<h:outputText value="#{oUsuario.fechaInicio}" />
+								</p:column>
+								<p:column headerText="Fecha Fin">
+									<h:outputText value="#{oUsuario.fechaFin}" />
+								</p:column>
+								<p:column headerText="Delegacion">
+									<h:outputText value="#{oUsuario.delegacion_Id}" />
+								</p:column>
+							</p:dataTable>
+						</div>
+						<!-- <div class="Container50 Responsive">
 					
-					</div> 
-					
-					<p:dialog widgetVar="winProgMto" header="Equipos Informáticos asociados al Usuario" resizable="false" width="980" height="410"  modal="true">
+					</div> -->
+
+						<!-- <p:dialog widgetVar="winProgMto" header="Equipos Informáticos asociados al Usuario" resizable="false" width="980" height="410"  modal="true">
 					  <p:panel id="panelusuario" styleClass="fondoPaneles"  style="height: 400px;">
         				<h:panelGrid columns="2" cellpadding="5" columnClasses="Wid10,Wid90" >
         				  <p:graphicImage library="default" name="img/icons/comunes/user.png" width="100px"/>
@@ -102,9 +123,9 @@
         					</p:column>
 					    </p:dataTable>
         				</p:panel>
-					</p:dialog>
-					
-					<p:dialog widgetVar="winComponentes"  header="Detalle del Mantenimiento" resizable="false" width="1000" height="600" modal="true">
+					</p:dialog> -->
+
+						<!-- <p:dialog widgetVar="winComponentes"  header="Detalle del Mantenimiento" resizable="false" width="1000" height="600" modal="true">
 					 <p:panel id="panelgeneral" styleClass="fondoPaneles" >
 					  <f:facet name="header">
 					  	<p:outputPanel style="display:block" styleClass="right">
@@ -182,17 +203,18 @@
 						
 						
 						</p:panel>
-					</p:dialog>
-					
-				</p:panel>
-				
-					
+					</p:dialog> -->
+
+					</p:panel>
+
+
 				</h:form>
 			</div>
-			
-			
+
+
 		</div>
-		<mc:buscaEmpleado nombreModal="busquedaAvanzadaEmpleado" componentesActualizar=":formGralMantenimiento:panelusuario" backBeanBase="#{programacionMantenimientoBackBean}" />
-	</ui:define> 
+		<mc:buscaEmpleado nombreModal="busquedaAvanzadaEmpleado"
+			componentesActualizar=":formGralMantenimiento:panelusuario"
+			backBeanBase="#{mantenimientoActivosBackBean}" />
+	</ui:define>
 </ui:composition>
-			

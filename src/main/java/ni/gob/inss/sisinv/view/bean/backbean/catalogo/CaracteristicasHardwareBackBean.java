@@ -103,47 +103,45 @@ public class CaracteristicasHardwareBackBean extends BaseBackBean implements Ser
 			oCaracteristica.setModificadoEnIp(this.getRemoteIp());
 			oCaracteristica.setModificadoPor(this.getUsuarioActual().getId());
 			oCaracteristicasHardwareService.actualizar(oCaracteristica);
-			
-			List<TipoActivoCaracteristicasHardware> listaEquipoCaracteristicasAsociados =  oTipoActivoCarateristicaHardwareService.obtieneListaEquiposAsociadosACaracteristica(oCaracteristica.getId(), Boolean.FALSE);
-			if(listaEquipoCaracteristicasAsociados!= null){
-				for(String equipoAsociado : this.listaEquiposAsociados){
-					try{
-						TipoActivoCaracteristicasHardware equipoAsociadoPasivo =   oTipoActivoCarateristicaHardwareService.obtieneTipoEquipoCaracteristica(Integer.valueOf(equipoAsociado), oCaracteristica.getId(), Boolean.TRUE);
-						if(equipoAsociadoPasivo!= null){
-							equipoAsociadoPasivo.setPasivo(Boolean.FALSE);
-							oTipoActivoCarateristicaHardwareService.actualizar(equipoAsociadoPasivo);
-							
-						}else{
-							Predicate<TipoActivoCaracteristicasHardware> filtroEquipoAsociado = equipo -> equipo.getTipoActivoId().equals(Integer.valueOf(equipoAsociado));
-							//Realiza la Busqueda del Equipo Asociado, en caso de no encontrarlo retorna una nueva instancia para guardar
-							TipoActivoCaracteristicasHardware oEquipoAsociar =  listaEquipoCaracteristicasAsociados.stream().filter(filtroEquipoAsociado).findAny().orElse(new TipoActivoCaracteristicasHardware());
-							if( oEquipoAsociar.getId() == null){
-								oEquipoAsociar.setCreadoEl(this.getTimeNow());
-								oEquipoAsociar.setCreadoEnIp(this.getRemoteIp());
-								oEquipoAsociar.setCreadoPor(this.getUsuarioActual().getId());
-								oEquipoAsociar.setPasivo(Boolean.FALSE);
-								oEquipoAsociar.setTipoActivoId(Integer.valueOf(equipoAsociado) );
-								oEquipoAsociar.setCaracteristicaPadreId(oCaracteristica.getId());
-								oTipoActivoCarateristicaHardwareService.guardar(oEquipoAsociar);
-							}else{
-								listaEquipoCaracteristicasAsociados.removeIf(filtroEquipoAsociado);
-							}
-						}
-					}
-					catch(DAOException e){
-						mostrarMensajeError(this.getClass().getSimpleName(), "actualizar()", MessagesResults.ERROR_MODIFICAR, e);
-					}
-				}
-				
-				for(TipoActivoCaracteristicasHardware oEquipoCaracteristica : listaEquipoCaracteristicasAsociados){
-					oEquipoCaracteristica.setPasivo(Boolean.TRUE);
-					oTipoActivoCarateristicaHardwareService.actualizar(oEquipoCaracteristica);
-				}
-			}
+			this.actualizarEquiposAsociados();
 			mostrarMensajeInfo(MessagesResults.EXITO_MODIFICAR);
 		} catch (BusinessException | DAOException e) {
 			mostrarMensajeError(this.getClass().getSimpleName(), "Actualizar", MessagesResults.ERROR_MODIFICAR, e);
 		}
+	}
+	
+	private void actualizarEquiposAsociados() throws DAOException{
+		List<TipoActivoCaracteristicasHardware> listaEquipoCaracteristicasAsociados =  oTipoActivoCarateristicaHardwareService.obtieneListaEquiposAsociadosACaracteristica(oCaracteristica.getId(), Boolean.FALSE);
+		if(listaEquipoCaracteristicasAsociados!= null){
+			for(String equipoAsociado : this.listaEquiposAsociados){
+					TipoActivoCaracteristicasHardware equipoAsociadoPasivo =   oTipoActivoCarateristicaHardwareService.obtieneTipoEquipoCaracteristica(Integer.valueOf(equipoAsociado), oCaracteristica.getId(), Boolean.TRUE);
+					if(equipoAsociadoPasivo!= null){
+						equipoAsociadoPasivo.setPasivo(Boolean.FALSE);
+						oTipoActivoCarateristicaHardwareService.actualizar(equipoAsociadoPasivo);
+						
+					}else{
+						Predicate<TipoActivoCaracteristicasHardware> filtroEquipoAsociado = equipo -> equipo.getTipoActivoId().equals(Integer.valueOf(equipoAsociado));
+						//Realiza la Busqueda del Equipo Asociado, en caso de no encontrarlo retorna una nueva instancia para guardar
+						TipoActivoCaracteristicasHardware oEquipoAsociar =  listaEquipoCaracteristicasAsociados.stream().filter(filtroEquipoAsociado).findAny().orElse(new TipoActivoCaracteristicasHardware());
+						if( oEquipoAsociar.getId() == null){
+							oEquipoAsociar.setCreadoEl(this.getTimeNow());
+							oEquipoAsociar.setCreadoEnIp(this.getRemoteIp());
+							oEquipoAsociar.setCreadoPor(this.getUsuarioActual().getId());
+							oEquipoAsociar.setPasivo(Boolean.FALSE);
+							oEquipoAsociar.setTipoActivoId(Integer.valueOf(equipoAsociado) );
+							oEquipoAsociar.setCaracteristicaPadreId(oCaracteristica.getId());
+							oTipoActivoCarateristicaHardwareService.guardar(oEquipoAsociar);
+						}else{
+							listaEquipoCaracteristicasAsociados.removeIf(filtroEquipoAsociado);
+						}
+					}
+				}
+			}
+			
+			for(TipoActivoCaracteristicasHardware oEquipoCaracteristica : listaEquipoCaracteristicasAsociados){
+				oEquipoCaracteristica.setPasivo(Boolean.TRUE);
+				oTipoActivoCarateristicaHardwareService.actualizar(oEquipoCaracteristica);
+			}
 	}
 	
 	public void guardarOActualizarCaracteristicaHija(){

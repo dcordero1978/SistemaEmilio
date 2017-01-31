@@ -25,14 +25,11 @@ import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
 @SequenceGenerator(name="SerialTipoActivoCaracteristicasHardware", allocationSize=1, schema="catalogo", sequenceName="catalogo.tipo_activo_caracteristicas_hardware_id_seq")
 public class TipoActivoCaracteristicasHardware extends EntityBase implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private Integer tipoActivoId;
-	private Integer caracteristicaPadreId;
 	private Catalogo oTipoActivo;
+	private Integer caracteristicaPadreId;
 	private CaracteristicasHardware oCaracteristicaPadre;
 	private Boolean pasivo;
 	

@@ -35,7 +35,8 @@ public class CaracteristicasHardwareDAOImpl extends BaseGenericDAOImpl<Caracteri
 		String nativeQuery = "select tcaracteristicas.* from catalogo.caracteristicas_hardware  tcaracteristicas "
 								+ "inner join catalogo.tipo_activo_caracteristicas_hardware tactivocaracteristicas  "
 								+ "on tcaracteristicas.id = tactivocaracteristicas.caracteristica_padre_id  "
-								+ "and tactivocaracteristicas.tipo_activo_id = :tipoActivoId  and tactivocaracteristicas.pasivo is false";
+								+ "and tactivocaracteristicas.tipo_activo_id = :tipoActivoId  and tactivocaracteristicas.pasivo is false "
+								+ "and tcaracteristicas.pasivo is false";
 		Session oSession = this.sessionFactory.getCurrentSession();
 		
 		return oSession.createSQLQuery(nativeQuery).addEntity(CaracteristicasHardware.class).setInteger("tipoActivoId", tipoActivoId).list();

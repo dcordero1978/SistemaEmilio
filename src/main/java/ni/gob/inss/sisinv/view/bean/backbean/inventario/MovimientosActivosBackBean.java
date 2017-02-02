@@ -102,7 +102,6 @@ public class MovimientosActivosBackBean extends BaseBackBean implements Serializ
 		this.cargarListas();
 		this.cargarListaDelegaciones();
 		this.valoresfechas();
-		RequestContext.getCurrentInstance().execute("PF('btnReporte').disable()");
 	} 
 
 	public void limpiarBusquedaActivo(){
@@ -113,15 +112,7 @@ public class MovimientosActivosBackBean extends BaseBackBean implements Serializ
 		
 	}
 	
-	//
-	public void cancelarHistorial(){
-		this.setTxtcodigoInventario("");
-		this.setTxtcodigoSecundario("");
-		this.setTxtdescripcionBien("");
-		RequestContext.getCurrentInstance().execute("PF('btnReporte').disable()");
-		this.setListaMovimientos(null);
-		
-	}
+
 	
 	private void cargarListas() {
 		try {
@@ -142,7 +133,7 @@ public class MovimientosActivosBackBean extends BaseBackBean implements Serializ
 			}
 	}
 	
-	public void cargarDatosFiltro() throws EntityNotFoundException{
+	public void cargarDatosFiltro(){
 		try {
 			if(filtroEmpleadoSeleccionado==null) throw new BusinessException(MessagesResults.SELECCIONE_UN_REGISTRO);
 				this.setTxtEmpleadoDest(filtroEmpleadoSeleccionado.getNumeroEmpleado()+" - "+ filtroEmpleadoSeleccionado.getPrimerNombre()+ " "+filtroEmpleadoSeleccionado.getSegundoNombre()+ " "+filtroEmpleadoSeleccionado.getPrimerApellido()+" "+filtroEmpleadoSeleccionado.getSegundoApellido());
@@ -158,7 +149,6 @@ public class MovimientosActivosBackBean extends BaseBackBean implements Serializ
     }
 	
 	public void cargarDatosFiltroActivo(){
-		try {
         this.setTxtcodigoInventario(filtroActivoSeleccionado.getCodigoInventario());
         this.setTxtcodigoSecundario(filtroActivoSeleccionado.getCodigoSecundario());
         this.setTxtdescripcionBien(filtroActivoSeleccionado.getDescripcion()+ ", Marca: "+filtroActivoSeleccionado.marca.descripcion+", Modelo: "+filtroActivoSeleccionado.modelo.descripcion);
@@ -168,23 +158,23 @@ public class MovimientosActivosBackBean extends BaseBackBean implements Serializ
         this.setHfEmpOrigId(filtroActivoSeleccionado.empleado.getId());
         this.setHFActivoId(filtroActivoSeleccionado.getId());
 		cargarMovimientosActivos(filtroActivoSeleccionado.getId());
+    }
+	
+	public void cargarMovimientosActivos(Integer activoId){
+		try{
+			this.setListaMovimientos(oMovimientosService.buscar(activoId));
 		} catch (EntityNotFoundException e) {
 			mostrarMensajeError(this.getClass().getSimpleName(), "cargarDatos", MessagesResults.ERROR_OBTENER, e);
 		}
-    }
-	
-	public void cargarMovimientosActivos(Integer activoId) throws EntityNotFoundException{
-		this.setListaMovimientos(oMovimientosService.buscar(activoId));
 	}
 	
 	
 	public void busquedaAvanzadaActivos() throws EntityNotFoundException{
-		this.setFiltroListaActivos(oActivoService.buscar(this.getFiltroCodSecaf(), this.getFiltroCodSecundario(), this.getFiltroDescripcionBien(),this.getFiltroSerie(),this.getUbicacionId(),this.getEstadoFisicoId(),this.getTipoResguardoId()));
-		RequestContext.getCurrentInstance().execute("PF('btnReporte').enable()");
+		this.filtroListaActivos = oActivoService.buscar(this.getFiltroCodSecaf(), this.getFiltroCodSecundario(), this.getFiltroDescripcionBien(),this.getFiltroSerie(),this.getUbicacionId(),this.getEstadoFisicoId(),this.getTipoResguardoId());
 	}
 
 	
-	public void guardar() throws DAOException, BusinessException{
+	public void guardar() {
 		
 		if(this.getHfEmpOrigId().equals(this.getHFEmpDestId())){
 			mostrarMensajeError("El Empleado al que se le asignará el bien no puede ser el mismo");
@@ -247,22 +237,6 @@ public class MovimientosActivosBackBean extends BaseBackBean implements Serializ
 		this.setListaMovimientos(null);
 		this.setHFActivoId(null);
 		this.setTxtEmpleadoDest("");
-	}
-
-	public void imprimeReporteListadoMovimientos(){
-		Map<String, String> parametros = new HashMap<String, String>();
-		parametros.put("psEntidad",this.getEntidadActual().getId().toString());
-		parametros.put("psActivoId",this.getHFActivoId().toString());
-		parametros.put("psUsuario",this.getUsuarioActual().getUsername().toString());
-		
-		
-		//TODO: ESTE ES EL ID DEL REPORTE DEL CUAL SE OBTIENE EL ENCABEZADO. PENDIENTE MEJORAR
-		parametros.put("IdReporte","5");
-		try {
-			oJasperReportService.getReport("/reports/reports/Inventario/rpt_movimientos_activos", "pdf", parametros, "HistoralMovimientosActivos");
-		} catch (Exception e) {
-			mostrarMensajeError(this.getClass().getSimpleName(), "imprimeReporteListadoMovimientos", "OCURRIO UN ERROR AL GENERAR EL REPORTE", e);
-		}
 	}
 	
 	private void valoresfechas() {

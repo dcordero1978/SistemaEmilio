@@ -70,6 +70,7 @@ public class Activos extends EntityBase implements java.io.Serializable {
 	public Catalogo colorCatalogo;
 	private Integer entidadId;
 	private Catalogo tipoResguardo;
+	private Boolean baja;
 	private List<ActivosCaracteristicas> listaCaracteristicas = new ArrayList<ActivosCaracteristicas>();
 
 	
@@ -373,6 +374,15 @@ public class Activos extends EntityBase implements java.io.Serializable {
 
 	public void setTipoResguardo(Catalogo tipoResguardo) {
 		this.tipoResguardo = tipoResguardo;
+	}
+
+	@Column(name="baja", nullable=false)
+	public Boolean getBaja() {
+		return baja;
+	}
+
+	public void setBaja(Boolean baja) {
+		this.baja = baja;
 	}
 
 	

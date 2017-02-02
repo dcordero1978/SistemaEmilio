@@ -77,7 +77,7 @@ public class ConsultaActivosBackBean extends BaseBackBean implements Serializabl
 		
 		Map<String, String> parametros = new HashMap<String, String>();
 		parametros.put("psEntidad",this.getEntidadActual().getId().toString());
-		parametros.put("psUsuario",this.getUsuarioActual().getUsername().toString());
+		parametros.put("psUsuario",this.getUsuarioActual().getUsername());
 		parametros.put("psDelegacionId",StringUtils.defaultIfBlank(this.getDelegacionId() == null ? null : this.getDelegacionId().toString(), "0"));
 		parametros.put("psEstadoFisicoId",StringUtils.defaultIfBlank(this.getEstadoFisicoId() == null ? null : this.getEstadoFisicoId().toString() , "0"));
 		parametros.put("psProyectoId",StringUtils.defaultIfBlank(this.getProyectoId() == null ? null : this.getProyectoId().toString(), "0"));

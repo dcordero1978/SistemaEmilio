@@ -7,7 +7,7 @@
                 template="/web/template/innerLayout.xhtml"
                 xmlns:mc="http://java.sun.com/jsf/composite/reusables">
 
-	<ui:param name="paramBackBean" value="#{movimientosActivosBackBean}"/>
+	<ui:param name="paramBackBean" value="#{historialActivosBackBean}"/>
 	<ui:define name="headerContent">
 		Historial de Movimientos de Activos
 	</ui:define>
@@ -22,29 +22,31 @@
 							</p:outputPanel>
 							<p:outputPanel style="display:block;" styleClass="right">
 							<h:panelGrid columns="3" cellpadding="5">
-								<p:commandButton widgetVar="btnReporte" value="Generar Reporte" ajax="false" action="#{movimientosActivosBackBean.imprimeReporteListadoMovimientos}" icon="fa fa-file-pdf-o" style="margin-top:-5px; color:white;"/>
-								<p:commandButton value="Cancelar" id="btnCancelar" action="#{movimientosActivosBackBean.cancelarHistorial}" ajax="true" resetValues="true" icon="ui-icon-cancel" update="formHistorialActivos" />
+								<p:commandButton widgetVar="btnReporte" value="Generar Reporte" ajax="false" action="#{historialActivosBackBean.imprimeReporteListadoMovimientos}" icon="fa fa-file-pdf-o" style="margin-top:-5px; color:white;"/>
+								<p:commandButton value="Cancelar" id="btnCancelar" action="#{historialActivosBackBean.cancelar}" ajax="true" resetValues="true" icon="ui-icon-cancel" update="formHistorialActivos" />
 							</h:panelGrid>
 							</p:outputPanel>
 						</f:facet>
 						
 						<p:panel id="panelactivos" styleClass="fondoPaneles" >
-        				<h:panelGrid columns="5" cellpadding="5" columnClasses="Wid10,Wid40,Wid10,Wid10,Wid30" style="width:100%" >
+        				<h:panelGrid columns="7" cellpadding="5" columnClasses="Wid10,Wid20,Wid10,Wid10,Wid20,Wid10,Wid20" style="width:100%" >
             				<p:outputLabel for="txtcodigoInventario" value="Cod SECAF"/>
-            				<p:inputText id="txtcodigoInventario" maxlength="50"  placeholder="Código SECAF" styleClass="Wid90" value="#{movimientosActivosBackBean.txtcodigoInventario}" readonly="true"/>
+            				<p:inputText id="txtcodigoInventario" maxlength="50"  placeholder="Código SECAF" styleClass="Wid90" value="#{historialActivosBackBean.txtcodigoInventario}" readonly="true"/>
             				<p:commandButton  immediate="true" icon="ui-icon-search" onclick="PF('busquedaAvanzadaActivo').show();"/>
             				<p:outputLabel for="txtcodigoSecundario" value="Secundario"/>
-            				<p:inputText id="txtcodigoSecundario" maxlength="50" readonly="true" placeholder="Código Secundario" styleClass="Wid70" value="#{movimientosActivosBackBean.txtcodigoSecundario}"/>
+            				<p:inputText id="txtcodigoSecundario" maxlength="50" readonly="true" placeholder="Código Secundario" styleClass="Wid90" value="#{historialActivosBackBean.txtcodigoSecundario}"/>
+            				<p:outputLabel for="txtSerie" value="Num de Serie"/>
+            				<p:inputText id="txtSerie" maxlength="50" readonly="true" placeholder="Num de Serie" styleClass="Wid90" value="#{historialActivosBackBean.txtSerie}"/>
         				</h:panelGrid>
         				<h:panelGrid columns="2" cellpadding="5" columnClasses="Wid10,Wid90" style="width:100%" >
             				<p:outputLabel for="txtdescripcionBien" value="Activo"/>
-            				<p:inputTextarea id="txtdescripcionBien"  rows="2"  readonly="true" styleClass="Wid90" value="#{movimientosActivosBackBean.txtdescripcionBien}"/>
+            				<p:inputTextarea id="txtdescripcionBien"  rows="2"  readonly="true" styleClass="Wid100" value="#{historialActivosBackBean.txtdescripcionBien}"/>
         				</h:panelGrid>
         			</p:panel>
         			
         			<p:panel id="panelhistorico" styleClass="fondoPaneles" style="height: 590px;">
 						<p:dataTable style="width:100%" paginatorPosition="top" scrollable="true" scrollHeight="450" 
-						var="oListaMov" value="#{movimientosActivosBackBean.listaMovimientos}"
+						var="oListaMov" value="#{historialActivosBackBean.listaMovimientos}"
 						paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="12" pageLinks="3"  paginatorTemplate="#{configApplicationBean.paginatorTemplate}"
 						currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
 							<f:facet name="header">
@@ -79,6 +81,6 @@
 				</h:form>
 			</div>
 		</div>
-		<mc:buscaActivo nombreModal="busquedaAvanzadaActivo" componentesActualizar=":formHistorialActivos:panelactivos,:formHistorialActivos:panelhistorico" backBeanBase="#{movimientosActivosBackBean}" />
+		<mc:buscaActivo nombreModal="busquedaAvanzadaActivo" componentesActualizar=":formHistorialActivos:panelactivos,:formHistorialActivos:panelhistorico" backBeanBase="#{historialActivosBackBean}" />
 	</ui:define>
 </ui:composition>

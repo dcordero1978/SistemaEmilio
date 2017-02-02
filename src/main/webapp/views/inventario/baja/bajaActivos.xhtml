@@ -5,7 +5,7 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:pe="http://primefaces.org/ui/extensions"
                 template="/web/template/innerLayout.xhtml"
-                xmlns:mc="http://java.sun.com/jsf/composite/comps">
+                xmlns:mc="http://java.sun.com/jsf/composite/reusables">
 
 	<ui:param name="paramBackBean" value="#{bajaActivosBackBean}"/>
 	<ui:define name="headerContent">
@@ -15,9 +15,80 @@
 		<div id="ContainerIndent">
 			<div class="Container100 Responsive">
 				<h:form id="formBajaActivos" style="width: 100%;">
-				 
+				<p:panel id="panelbotones" styleClass="fondoPaneles" style="height: 590px;">
+				 	<f:facet name="header">
+							<p:outputPanel style="display:block;" styleClass="right">
+							<h:panelGrid columns="4" cellpadding="5">
+								<p:commandButton widgetVar="btnDiagnostico" value="Importar Diagnostico" action="#{bajaActivosBackBean.imprimeReporteBaja}" ajax="true" resetValues="true" icon="ui-icon-search" />
+								<p:commandButton widgetVar="btnBaja" value="Aplicar Baja"   ajax="true" resetValues="true" icon="ui-icon-disk"  action="#{bajaActivosBackBean.guardar}" update="formBajaActivos" />
+								<p:commandButton widgetVar="btnReporte" value="Acta de Baja" ajax="false" icon="fa fa-file-pdf-o" style="margin-top:-5px; color:white;"  action="#{bajaActivosBackBean.imprimeReporteBaja}"/>
+								<p:commandButton widgetVar="btnCancelar" value="Cancelar"  action="#{bajaActivosBackBean.cancelar}" ajax="true" resetValues="true" icon="ui-icon-cancel" update="formBajaActivos" />
+							</h:panelGrid>
+							</p:outputPanel>
+						</f:facet>
+						
+						<p:panel id="panelactivos" styleClass="fondoPaneles" >
+        				<h:panelGrid columns="7" cellpadding="5" columnClasses="Wid10,Wid20,Wid10,Wid10,Wid20,Wid10,Wid20" style="width:95%" >
+            				<p:outputLabel for="txtcodigoInventario" value="Cod SECAF"/>
+            				<p:inputText id="txtcodigoInventario" maxlength="50"  placeholder="Código SECAF" styleClass="Wid90" value="#{bajaActivosBackBean.txtcodigoInventario}" readonly="true"/>
+            				<p:commandButton  immediate="true" icon="ui-icon-search" onclick="PF('busquedaAvanzadaActivo').show();"/>
+            				<p:outputLabel for="txtcodigoSecundario" value="Secundario"/>
+            				<p:inputText id="txtcodigoSecundario" maxlength="50" readonly="true" placeholder="Código Secundario" styleClass="Wid90" value="#{bajaActivosBackBean.txtcodigoSecundario}"/>
+            				<p:outputLabel for="txtSerie" value="Num de Serie"/>
+            				<p:inputText id="txtSerie" maxlength="50" readonly="true" placeholder="Num de Serie" styleClass="Wid100" value="#{bajaActivosBackBean.txtSerie}"/>
+        				</h:panelGrid>
+        				<h:panelGrid columns="2" cellpadding="5" columnClasses="Wid10,Wid90" style="width:95%" >
+            				<p:outputLabel for="txtdescripcionBien" value="Activo"/>
+            				<p:inputTextarea id="txtdescripcionBien"  rows="2"  readonly="true" styleClass="Wid100" value="#{bajaActivosBackBean.txtdescripcionBien}"/>
+        				</h:panelGrid>
+        				</p:panel>
+        			
+        				<h:panelGrid columns="2" cellpadding="0" columnClasses="Wid50,Wid50" style="width:100%" >
+        				<p:panel id="panelorigen" styleClass="fondoPaneles" >
+        					<p:outputLabel value="UBICACIÓN ORIGEN" style="font-weight:bold"/>
+        					<h:panelGrid columns="2" style="width:100%" columnClasses="Wid20, Wid80">
+            					<p:outputLabel for="txtEmpleadoOrig" value="Empleado "/>
+            					<p:inputText id="txtEmpleadoOrig" maxlength="50" readonly="true" styleClass="Wid90" value="#{bajaActivosBackBean.txtEmpleadoOrig}" />
+            					<p:outputLabel for="cargoEmpleadoOrig" value="Cargo"/>
+            					<p:inputText id="cargoEmpleadoOrig" maxlength="50" readonly="true" styleClass="Wid90" value="#{bajaActivosBackBean.cargoEmpleadoOrig}" />
+            					<p:outputLabel for="ubicacionEmpleadoOrig" value="Ubicación"/>
+            					<p:inputText id="ubicacionEmpleadoOrig" maxlength="50" readonly="true" styleClass="Wid90" value="#{bajaActivosBackBean.ubicacionEmpleadoOrig}" />
+            				</h:panelGrid>
+        				</p:panel>
+        				<p:panel id="paneldestino" styleClass="fondoPaneles" >
+        					<p:outputLabel value="UBICACIÓN DESTINO" style="font-weight:bold"/>
+        					<h:panelGrid columns="2" style="width:100%" columnClasses="Wid10, Wid90">
+            					<p:outputLabel for="txtEmpleadoDest" value="Empleado "/>
+            					<p:inputText id="txtEmpleadoDest" maxlength="50" readonly="true" styleClass="Wid90" value="#{bajaActivosBackBean.txtEmpleadoDest}" />
+            					<p:outputLabel for="cargoEmpleadoDest" value="Cargo"/>
+            					<p:inputText id="cargoEmpleadoDest" maxlength="50" readonly="true" styleClass="Wid90" value="#{bajaActivosBackBean.cargoEmpleadoDest}" />
+            					<p:outputLabel for="ubicacionEmpleadoDest" value="Ubicación"/>
+            					<p:inputText id="ubicacionEmpleadoDest" maxlength="50" readonly="true" styleClass="Wid90" value="#{bajaActivosBackBean.ubicacionEmpleadoDest}" />
+            				</h:panelGrid>
+        				</p:panel>
+        			</h:panelGrid>
+        			
+        			<p:panel id="panelobservaciones" styleClass="fondoPaneles" >
+        			<h:panelGrid columns="2" cellpadding="5" columnClasses="Wid10,Wid90" style="width:95%" >
+        				<p:outputLabel for="observacion" value="Observaciones"/>
+            			<p:inputTextarea id="observacion"  rows="2"  styleClass="Wid100" value="#{bajaActivosBackBean.txtObservaciones}"/>
+        			</h:panelGrid>
+        			</p:panel>
+        			
+        			<p:panel id="paneldiagnostico" styleClass="fondoPaneles" >
+        			<p:tabView>
+        				<p:tab title="Diagnóstico">
+        				
+        				</p:tab>
+        			</p:tabView>
+        			</p:panel>
+        			
+        			
+        			</p:panel>
 				</h:form>
+			
 			</div>
 		</div>
+		<mc:buscaActivo nombreModal="busquedaAvanzadaActivo" componentesActualizar=":formBajaActivos:panelactivos, :formBajaActivos:panelorigen" backBeanBase="#{bajaActivosBackBean}" />
 </ui:define>
 </ui:composition>

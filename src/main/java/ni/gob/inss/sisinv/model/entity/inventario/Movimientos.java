@@ -154,6 +154,4 @@ public class Movimientos extends EntityBase implements Serializable {
 		this.idEmpleadoDestino = idEmpleadoDestino;
 	}
 
-	
-	
 }

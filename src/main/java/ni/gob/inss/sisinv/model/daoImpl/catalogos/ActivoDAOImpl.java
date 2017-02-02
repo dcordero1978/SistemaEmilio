@@ -90,6 +90,7 @@ public class ActivoDAOImpl extends BaseGenericDAOImpl<Activos, Integer> implemen
 			oCriteria.add(Restrictions.eq("tipoResguardoId", tipoResguardoId));
 		}
 		
+		oCriteria.add(Restrictions.eq("pasivo", false));
 		oCriteria.setFirstResult(0);
 		oCriteria.setMaxResults(cantidadResultados.intValue());
 		return oCriteria.list();

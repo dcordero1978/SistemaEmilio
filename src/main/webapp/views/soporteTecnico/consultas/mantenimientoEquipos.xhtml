@@ -1,0 +1,122 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/web/template/innerLayout.xhtml"
+	xmlns:mc="http://java.sun.com/jsf/composite/comps">
+
+	<ui:param name="paramBackBean" value="#{mantenimientoEquiposBackBean}" />
+	<ui:define name="headerContent">
+		Listado de Equipos Asociados a un Mantenimiento
+	</ui:define>
+	<ui:define name="content">
+		<div id="ContainerIndent">
+			<div class="Container100 Responsive">
+				<h:form id="formMantenimientoEquipo" style="width: 100%">
+					<p:panel styleClass="fondoPaneles">
+						<p:panel id="panelgenerales" styleClass="fondoPaneles">
+							<f:facet name="header">
+								<p:outputPanel style="display:block" styleClass="left">
+									<p:commandButton id="btnBuscarMantenimiento" icon="ui-icon-search" value="#{labelName.btnBuscar} Mantenimiento" immediate="true" actionListener="#{mantenimientoEquiposBackBean.abrirModalMantenimientos}"/>
+								</p:outputPanel>
+							</f:facet>
+						</p:panel>
+
+						<div class="Container100 Responsive" style="height:50%">
+							<p:dataTable id="tablaempleados" var="oUsuario"
+								value="#{mantenimientoEquiposBackBean.listaMantenimiento}" paginatorPosition="top"
+								rows="5" paginator="true" scrollable="true" scrollHeight="250"
+								selectionMode="single" selection="#{mantenimientoEquiposBackBean.selectedMantenimientos}"
+								rowKey="#{oUsuario.id}"
+								style="height:350px">
+								<f:facet name="header">
+					            	Mantenimiento Programados
+					        	</f:facet>
+								<p:column headerText="Asunto">
+									<h:outputText value="#{oUsuario.asunto}" />
+								</p:column>
+								<p:column headerText="Fecha Inicio">
+									<h:outputText value="#{oUsuario.fechaInicio}" />
+									
+								</p:column>
+								<p:column headerText="Fecha Fin">
+									<h:outputText value="#{oUsuario.fechaFin}" />
+								</p:column>
+								<p:column headerText="Delegacion">
+									<h:outputText value="#{oUsuario.delegacion_Id}" />
+								</p:column>
+							</p:dataTable>
+						</div>
+					</p:panel>
+
+
+				</h:form>
+			</div>
+
+
+		</div>
+		<p:dialog modal="true" id="modalMantenimientosProgramados" widgetVar="modalMantenimientosProgramados" closable="false" width="80%"  height="400" hideEffect="blind" showEffect="blind" showHeader="false">
+			<h:form id="formProgramacionMantenimiento" style="width: 100%">
+					<p:panel styleClass="fondoPaneles">
+						<p:panel id="panelgenerales" styleClass="fondoPaneles">
+							<f:facet name="header">
+								<p:outputPanel style="display:block" styleClass="left">
+									<p:commandButton id="btnBuscarMantenimiento" icon="ui-icon-search" value="#{labelName.btnBuscar} Mantenimiento" immediate="true" actionListener="#{mantenimientoEquiposBackBean.cerrarModalMantenimientos}"/>
+									<p:commandButton resetValues="true" ajax="true" value="#{labelName.btnCancelar}" icon="ui-icon-cancel" actionListener="#{mantenimientoEquiposBackBean.cerrarModalMantenimientos}"/>									
+								</p:outputPanel>
+							</f:facet>
+							
+							<h:panelGrid columns="6">
+								<p:outputLabel for="txtlistamantenimientos"
+									value="Mantenimientos Programados (Asunto)" />
+								<p:inputText id="txtlistamantenimientos"
+									value="#{mantenimientoEquiposBackBean.mantenimientoprogId}">
+								</p:inputText>
+								<p:outputLabel for="desde" value="Fecha de Inicio:" />
+								<p:calendar id="desde" effect="fold" pattern="dd/MM/yyyy"
+									mask="true" value="#{mantenimientoEquiposBackBean.fechaInicio}" />
+								<p:outputLabel for="hasta" value="Fecha Fin:" />
+								<p:calendar id="hasta" effect="fold" pattern="dd/MM/yyyy"
+									mask="true" value="#{mantenimientoEquiposBackBean.fechaFin}" />
+								<p:outputLabel for="delegacion" value="Delegación:" />
+					            <p:selectOneMenu id="delegacion" label="Delegación"  value="#{mantenimientoEquiposBackBean.cmdDelegacionId}" effect="fold" style="width:150px" >
+									<f:selectItem itemValue="#{null}" itemLabel="Seleccione una Delegación"/>
+									<f:selectItems  var="oDelegacion" value="#{mantenimientoEquiposBackBean.listaDelegaciones}" itemLabel="#{oDelegacion.descripcion}" itemValue="#{oDelegacion.id}"/>									
+								</p:selectOneMenu>
+							</h:panelGrid>
+						</p:panel>
+
+						<div class="Container100 Responsive" style="height:50%">
+							<p:dataTable id="tablaempleados" var="oUsuario"
+								value="#{mantenimientoEquiposBackBean.listaMantenimiento}" paginatorPosition="top"
+								rows="5" paginator="true" scrollable="true" scrollHeight="250"
+								selectionMode="single" selection="#{mantenimientoEquiposBackBean.selectedMantenimientos}"
+								rowKey="#{oUsuario.id}"
+								style="height:350px">
+								<f:facet name="header">
+					            	Mantenimiento Programados
+					        	</f:facet>
+								<p:column headerText="Asunto">
+									<h:outputText value="#{oUsuario.asunto}" />
+								</p:column>
+								<p:column headerText="Fecha Inicio">
+									<h:outputText value="#{oUsuario.fechaInicio}" />
+									
+								</p:column>
+								<p:column headerText="Fecha Fin">
+									<h:outputText value="#{oUsuario.fechaFin}" />
+								</p:column>
+								<p:column headerText="Delegacion">
+									<h:outputText value="#{oUsuario.delegacion_Id}" />
+								</p:column>
+							</p:dataTable>
+						</div>
+					</p:panel>
+
+
+				</h:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

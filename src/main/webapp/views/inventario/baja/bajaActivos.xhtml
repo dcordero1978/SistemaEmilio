@@ -21,12 +21,13 @@
 							<h:panelGrid columns="4" cellpadding="5">
 								<p:commandButton widgetVar="btnDiagnostico" value="Importar Diagnostico" action="#{bajaActivosBackBean.imprimeReporteBaja}" ajax="true" resetValues="true" icon="ui-icon-search" />
 								<p:commandButton widgetVar="btnBaja" value="Aplicar Baja"   ajax="true" resetValues="true" icon="ui-icon-disk"  action="#{bajaActivosBackBean.guardar}" update="formBajaActivos" />
-								<p:commandButton widgetVar="btnReporte" value="Acta de Baja" ajax="false" icon="fa fa-file-pdf-o" style="margin-top:-5px; color:white;"  action="#{bajaActivosBackBean.imprimeReporteBaja}"/>
-								<p:commandButton widgetVar="btnCancelar" value="Cancelar"  action="#{bajaActivosBackBean.cancelar}" ajax="true" resetValues="true" icon="ui-icon-cancel" update="formBajaActivos" />
+								<p:commandButton widgetVar="btnReporte" value="Acta de Baja" ajax="true" icon="fa fa-file-pdf-o" style="margin-top:-5px; color:white;"  action="#{bajaActivosBackBean.imprimeReporteBaja}"/>
+								<p:commandButton widgetVar="btnCancelar" value="Cancelar"  action="#{bajaActivosBackBean.cancelar}" ajax="true" resetValues="false" icon="ui-icon-cancel" update="panelgeneral" />
 							</h:panelGrid>
 							</p:outputPanel>
 						</f:facet>
 						
+						<p:outputPanel id="panelgeneral">
 						<p:panel id="panelactivos" styleClass="fondoPaneles" >
         				<h:panelGrid columns="7" cellpadding="5" columnClasses="Wid10,Wid20,Wid10,Wid10,Wid20,Wid10,Wid20" style="width:95%" >
             				<p:outputLabel for="txtcodigoInventario" value="Cod SECAF"/>
@@ -82,7 +83,7 @@
         				</p:tab>
         			</p:tabView>
         			</p:panel>
-        			
+        			</p:outputPanel>
         			
         			</p:panel>
 				</h:form>

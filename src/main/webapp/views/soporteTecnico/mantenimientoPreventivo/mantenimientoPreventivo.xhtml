@@ -81,7 +81,7 @@
             			</h:panelGrid>
 						<p:dataTable id="tablaactivosinf" var="oActivosInf" value="#{programacionMantenimientoBackBean.listaActivosUsuario}" height="350"
 						paginatorPosition="top" selectionMode="single"  scrollable="true" rowKey="#{oActivosInf.activoId}"  loadingmessage="Cargando registros..."
-							paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="5" pageLinks="3" lazy="true"  
+							paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="3" pageLinks="3" lazy="true"  
 							paginatorTemplate="#{configApplicationBean.paginatorTemplate}" currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
 					        <f:facet name="header">
 					           Lista de Equipos Informáticos
@@ -92,10 +92,10 @@
 					        <p:column headerText="Descripción Bien">
 					            <h:outputText value="#{oActivosInf.descripcionBien} #{oActivosInf.marca} #{oActivosInf.modelo}" />
 					        </p:column>
-							<p:column style="width:200px;text-align: center" headerText="Resguardo">
+							<p:column style="width:190px;text-align: center" headerText="Resguardo">
 					            <h:outputText value="#{oActivosInf.tipoResguardo}"/>
 					        </p:column>
-					        <p:column style="width:32px;text-align: center">
+					        <p:column style="width:40px;text-align: center">
              					<p:commandButton  icon="ui-icon-search" update=":formGralMantenimiento:panelprincequipo"  title="Ver" oncomplete="PF('winComponentes').show();">
              						 <f:setPropertyActionListener value="#{oActivosInf}" target="#{programacionMantenimientoBackBean.equipoSeleccionado}" />
              					</p:commandButton>

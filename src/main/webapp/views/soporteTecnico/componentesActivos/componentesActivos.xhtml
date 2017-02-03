@@ -46,7 +46,7 @@
 										value="#{componenteActivosBackBean.listaActivosTipoEquipo}" selection="#{componenteActivosBackBean.equipoSeleccionado}" 
 										paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="10" pageLinks="3"
 										paginatorTemplate="#{configApplicationBean.paginatorTemplate}" currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
-										<p:ajax update=":detalleComponentes, :formComponentesDisponibles" event="rowDblselect" listener="#{componenteActivosBackBean.cargarDatosComponentesEquipo}" />
+										<p:ajax update=":detalleComponentes, :formComponentesDisponibles" event="rowDblselect" listener="#{componenteActivosBackBean.cargarListaComponentesPadresDisponibles}" />
 										<p:column resizable="true" headerText="Descripción" style="text-align:left" width="50%" priority="1">
 											<h:outputText value="#{oEquipo.descripcion}" />
 										</p:column>
@@ -106,7 +106,7 @@
 			</div>
 		</div>
 		
-		<p:dialog modal="true" id="modalComponentesDisponibles" widgetVar="modalComponentesDisponibles" closable="false" width="600"  height="400" hideEffect="blind" showEffect="blind" showHeader="false">
+		<p:dialog modal="true" id="modalComponentesDisponibles" widgetVar="modalComponentesDisponibles" closable="false" width="600"  height="100%" hideEffect="blind" showEffect="blind" showHeader="false">
 			<h:form id="formComponentesDisponibles">
 				<p:panel >
 					<f:facet name="header">
@@ -114,19 +114,30 @@
 							<h:outputText value="Asociar Componentes" />
 						</p:outputPanel>
 						<p:outputPanel styleClass="right">
-							<p:commandButton value="Asociar" icon="fa fa-check-circle" style="color:white;" action="#{componenteActivosBackBean.asociarComponente}" update=":detalleComponentes"/>
-							<p:commandButton value="Cerrar" icon="fa fa-times" style="color:white" immediate="true" onclick="PF('modalComponentesDisponibles').hide()"/>
-						</p:outputPanel>
+							<p:commandButton value="Cerrar" icon="fa fa-times" style="color:white" immediate="true" onclick="PF('modalComponentesDisponibles').hide()"/>						</p:outputPanel>
 					</f:facet>
-					<p:outputPanel styleClass="tableClass">
-						<p:dataTable style="width:100%" paginatorPosition="top" selectionMode="single" 
-									scrollable="true" scrollHeight="300" selection="#{componenteActivosBackBean.componenteDisponibleSeleccionado}"
+					<p:outputPanel>
+						<h:panelGrid columns="2" columnClasses="Wid30, Wid70" style="width:100%">
+							<p:outputLabel for="comboComponentePadre" value="Componente Padre:" />
+							<p:selectOneMenu style="width:90%" id="comboComponentePadre" value="#{componenteActivosBackBean.componentePadreId}">
+								<p:ajax  update="listaComponentesHijos" listener="#{componenteActivosBackBean.cargarListaComponentesHijos}" />
+								<f:selectItem itemLabel="Seleccione" itemValue="#{null}"/>
+								<f:selectItems var="oComponentePadre" value="#{componenteActivosBackBean.listaComponentesDisponibles}" itemLabel="#{oComponentePadre.descripcion}" itemValue="#{oComponentePadre.id}"/>
+							</p:selectOneMenu>
+						</h:panelGrid>
+					</p:outputPanel>
+					<p:outputPanel id="listaComponentesHijos" styleClass="tableClass">
+						<p:dataTable style="width:100%" paginatorPosition="top"  
+									scrollable="true" scrollHeight="300" 
 									var="oComponenteDisponible" id="listaComponentesDisponibles" rowKey="#{oComponenteDisponible.id}" 
-									value="#{componenteActivosBackBean.listaComponentesDisponibles}"  
+									value="#{componenteActivosBackBean.listaComponentesHijos}"  
 									paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="10" pageLinks="3" 
 									paginatorTemplate="#{configApplicationBean.paginatorTemplate}" currentPageReportTemplate="#{configApplicationBean.currentPageReportTemplate}">
-							<p:column headerText="Nombre">
+							<p:column headerText="Descripción" width="80%" >
 								<h:outputText value="#{oComponenteDisponible.descripcion}" />
+							</p:column>
+							<p:column style="text-align:center" width="10%">
+								<p:commandButton id="asociarComponente" icon="fa fa fa-plus-circle" style="color:white;" update=":detalleComponentes" action="#{componenteActivosBackBean.asociarComponente(oComponenteDisponible)}"/>
 							</p:column>
 						</p:dataTable>
 					</p:outputPanel>

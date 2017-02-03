@@ -1,4 +1,7 @@
 package ni.gob.inss.sisinv.model.entity.catalogo;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,9 +30,7 @@ public class CaracteristicasHardware extends EntityBase implements java.io.Seria
 	private String descripcion;
 	private boolean pasivo;
 	private Integer caracteristicaPadreId;
-	private Integer tipoActivoId;
-	private Catalogo oTipoActivo;
-	
+	private List<TipoActivoCaracteristicasHardware> listaTiposActivos = new ArrayList<TipoActivoCaracteristicasHardware>();
 	@Id
 	@Column(name = "id", unique = true, nullable = false)
 	@GeneratedValue(generator="CaracateristicasHardwareSerial", strategy=GenerationType.SEQUENCE)
@@ -68,23 +69,16 @@ public class CaracteristicasHardware extends EntityBase implements java.io.Seria
 		this.caracteristicaPadreId = caracteristicaPadreId;
 	}
 
-	@Column(name="tipo_activo_id", insertable=true, updatable=true)
-	public Integer getTipoActivoId() {
-		return tipoActivoId;
+	@OneToMany(fetch=FetchType.LAZY, mappedBy="oCaracteristicaPadre")
+	public List<TipoActivoCaracteristicasHardware> getListaTiposActivos() {
+		return listaTiposActivos;
 	}
 
-	public void setTipoActivoId(Integer tipoActivoId) {
-		this.tipoActivoId = tipoActivoId;
+	public void setListaTiposActivos(List<TipoActivoCaracteristicasHardware> listaTiposActivos) {
+		this.listaTiposActivos = listaTiposActivos;
 	}
 
-	@ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="tipo_activo_id", insertable=false, updatable=false)
-	public Catalogo getoTipoActivo() {
-		return oTipoActivo;
-	}
-
-	public void setoTipoActivo(Catalogo oTipoActivo) {
-		this.oTipoActivo = oTipoActivo;
-	}
+	
+	
 
 }

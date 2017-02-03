@@ -204,5 +204,4 @@ public class Movimientos extends EntityBase implements Serializable {
 					.append(tipoMovimiento, oMovimiento.tipoMovimiento)
 					.append(tipoMovimientoId, oMovimiento.tipoMovimientoId).isEquals();				
 	}
-	
 }

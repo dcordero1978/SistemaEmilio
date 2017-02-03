@@ -55,6 +55,10 @@ public class BajaActivosBackBean extends BaseBackBean implements Serializable {
 	private Integer parametroRespBodega;
 	private Integer hfBajaId;
 	private Integer idtipoResguardo;
+	
+	static final Integer idBodegaBaja = 38;
+	static final Integer idResponsableBodega= 13;
+	static final String  codigoResguardoBodega="B";
 
 	@Autowired
 	DelegacionService oDelegacionService;
@@ -82,8 +86,8 @@ public class BajaActivosBackBean extends BaseBackBean implements Serializable {
 		RequestContext.getCurrentInstance().execute("PF('btnBaja').disable()");
 		RequestContext.getCurrentInstance().execute("PF('btnDiagnostico').disable()");
 		RequestContext.getCurrentInstance().execute("PF('btnReporte').disable()");
-		this.setHfUbicacionDestId(38);
-		this.setParametroRespBodega(13);
+		this.setHfUbicacionDestId(idBodegaBaja);
+		this.setParametroRespBodega(idResponsableBodega);
 		this.cargarBodegaBaja();
 		this.cargarResponsableBodega();
 		this.cargarTipoResguardo();
@@ -121,7 +125,7 @@ public class BajaActivosBackBean extends BaseBackBean implements Serializable {
 	}
 	
 	public void cargarTipoResguardo(){
-			this.setIdtipoResguardo(oCatalogoExtService.obtieneCatalogoPorCodigo("B").getId());
+			this.setIdtipoResguardo(oCatalogoExtService.obtieneCatalogoPorCodigo(codigoResguardoBodega).getId());
 	}
 	
 	public void cargarResponsableBodega(){
@@ -162,7 +166,7 @@ public class BajaActivosBackBean extends BaseBackBean implements Serializable {
 		Map<String, String> parametros = new HashMap<String, String>();
 		parametros.put("psEntidad",this.getEntidadActual().getId().toString());
 		parametros.put("psUsuario",this.getUsuarioActual().getUsername());
-		parametros.put("psBajaId","3"/*this.getHfBajaId().toString()*/);
+		parametros.put("psBajaId",this.getHfBajaId().toString());
 		
 		
 		//TODO: ESTE ES EL ID DEL REPORTE DEL CUAL SE OBTIENE EL ENCABEZADO. PENDIENTE MEJORAR

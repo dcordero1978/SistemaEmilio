@@ -6,7 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -69,7 +70,8 @@ public class FlujoMantenimiento extends EntityBase implements java.io.Serializab
 		this.pasivo = pasivo;
 	}
 	
-	@Column(name="codigo_estado_inicial", nullable=false, length=2)
+	@ManyToOne
+	@JoinColumn(name="codigo_estado_inicial", referencedColumnName="codigo",nullable=false)
 	public Catalogo getEstadoInicial() {
 		return estadoInicial;
 	}
@@ -77,7 +79,8 @@ public class FlujoMantenimiento extends EntityBase implements java.io.Serializab
 		this.estadoInicial = estadoInicial;
 	}
 	
-	@Column(name="codigo_estado_final", nullable=false, length=2)
+	@ManyToOne
+	@JoinColumn(name="codigo_estado_final", referencedColumnName="codigo", nullable=false)
 	public Catalogo getEstadoFinal() {
 		return estadoFinal;
 	}

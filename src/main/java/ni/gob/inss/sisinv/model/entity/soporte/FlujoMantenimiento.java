@@ -11,6 +11,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import ni.gob.inss.barista.model.entity.EntityBase;
+import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
 
 @Entity
 @Table(name="flujo_estado_mantenimiento", schema="soportetecnico")
@@ -19,6 +20,8 @@ public class FlujoMantenimiento extends EntityBase implements java.io.Serializab
 
 	private static final long serialVersionUID = 1L;
 	private Integer  id;
+	private Catalogo estadoInicial;
+    private Catalogo estadoFinal;
 	private String codigoEstadoInicial;
 	private String codigoEstadoFinal;
 	private Integer tipoMantenimientoId;
@@ -34,7 +37,7 @@ public class FlujoMantenimiento extends EntityBase implements java.io.Serializab
 		this.id = id;
 	}
 	
-	@Column(name="codigo_estado_inicial", nullable=false, length=2)
+	@Column(name="codigo_estado_inicial", nullable=false,insertable=false, updatable=false )
 	public String getCodigoEstadoInicial() {
 		return codigoEstadoInicial;
 	}
@@ -42,7 +45,7 @@ public class FlujoMantenimiento extends EntityBase implements java.io.Serializab
 		this.codigoEstadoInicial = codigoEstadoInicial;
 	}
 	
-	@Column(name="codigo_estado_final", nullable=false, length=2)
+	@Column(name="codigo_estado_final", nullable=false,insertable=false, updatable=false)
 	public String getCodigoEstadoFinal() {
 		return codigoEstadoFinal;
 	}
@@ -64,6 +67,22 @@ public class FlujoMantenimiento extends EntityBase implements java.io.Serializab
 	}
 	public void setPasivo(Boolean pasivo) {
 		this.pasivo = pasivo;
+	}
+	
+	@Column(name="codigo_estado_inicial", nullable=false, length=2)
+	public Catalogo getEstadoInicial() {
+		return estadoInicial;
+	}
+	public void setEstadoInicial(Catalogo estadoInicial) {
+		this.estadoInicial = estadoInicial;
+	}
+	
+	@Column(name="codigo_estado_final", nullable=false, length=2)
+	public Catalogo getEstadoFinal() {
+		return estadoFinal;
+	}
+	public void setEstadoFinal(Catalogo estadoFinal) {
+		this.estadoFinal = estadoFinal;
 	}
 
 	

@@ -6,6 +6,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -40,7 +41,7 @@ public class MantenimientoEquipoDetalle extends EntityBase implements java.io.Se
 	
 	@Id
 	@Column(name="id", unique=true, nullable=false)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="soportetecnico.mantenimiento_equipo_detalle_id_seq")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="MantenimientoEquipoDetalle_SEQ")
 	public Integer getId() {
 		return id;
 	}
@@ -49,7 +50,7 @@ public class MantenimientoEquipoDetalle extends EntityBase implements java.io.Se
 	}
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	@Column(name="mantenimiento_equipo_id", nullable=false)
+	@JoinColumn(name="mantenimiento_equipo_id", nullable=false)
 	public MantenimientoEquipo getMantenimientoEquipoId() {
 		return mantenimientoEquipoId;
 	}
@@ -58,7 +59,7 @@ public class MantenimientoEquipoDetalle extends EntityBase implements java.io.Se
 	}
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	@Column(name="equipo_id", nullable=false)
+	@JoinColumn(name="equipo_id", nullable=false)
 	public Activos getEquipoId() {
 		return equipoId;
 	}
@@ -75,7 +76,7 @@ public class MantenimientoEquipoDetalle extends EntityBase implements java.io.Se
 	}
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	@Column(name="estado_equipo")
+	@JoinColumn(name="estado_equipo")
 	public Catalogo getEstadoEquipo() {
 		return estadoEquipo;
 	}

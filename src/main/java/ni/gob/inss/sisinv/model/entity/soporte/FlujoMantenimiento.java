@@ -2,10 +2,11 @@ package ni.gob.inss.sisinv.model.entity.soporte;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -20,9 +21,11 @@ public class FlujoMantenimiento extends EntityBase implements java.io.Serializab
 
 	private static final long serialVersionUID = 1L;
 	private Integer  id;
-	private Catalogo codigoEstadoInicial;
-	private Catalogo codigoEstadoFinal;
-	private Catalogo tipoMantenimientoId;
+	private Catalogo estadoInicial;
+    private Catalogo estadoFinal;
+	private String codigoEstadoInicial;
+	private String codigoEstadoFinal;
+	private Integer tipoMantenimientoId;
 	private Boolean  pasivo;
 	
 	@Id
@@ -35,30 +38,27 @@ public class FlujoMantenimiento extends EntityBase implements java.io.Serializab
 		this.id = id;
 	}
 	
-	@ManyToOne(fetch = FetchType.EAGER)
-	@Column(name="codigo_estado_inicial", nullable=false, length=2)
-	public Catalogo getCodigoEstadoInicial() {
+	@Column(name="codigo_estado_inicial", nullable=false,insertable=false, updatable=false )
+	public String getCodigoEstadoInicial() {
 		return codigoEstadoInicial;
 	}
-	public void setCodigoEstadoInicial(Catalogo codigoEstadoInicial) {
+	public void setCodigoEstadoInicial(String codigoEstadoInicial) {
 		this.codigoEstadoInicial = codigoEstadoInicial;
 	}
 	
-	@ManyToOne(fetch = FetchType.EAGER)
-	@Column(name="codigo_estado_final", nullable=false, length=2)
-	public Catalogo getCodigoEstadoFinal() {
+	@Column(name="codigo_estado_final", nullable=false,insertable=false, updatable=false)
+	public String getCodigoEstadoFinal() {
 		return codigoEstadoFinal;
 	}
-	public void setCodigoEstadoFinal(Catalogo codigoEstadoFinal) {
+	public void setCodigoEstadoFinal(String codigoEstadoFinal) {
 		this.codigoEstadoFinal = codigoEstadoFinal;
 	}
 	
-	@ManyToOne(fetch = FetchType.EAGER)
 	@Column(name="tipo_matenimiento_id", nullable=false)
-	public Catalogo getTipoMantenimientoId() {
+	public Integer getTipoMantenimientoId() {
 		return tipoMantenimientoId;
 	}
-	public void setTipoMantenimientoId(Catalogo tipoMantenimientoId) {
+	public void setTipoMantenimientoId(Integer tipoMantenimientoId) {
 		this.tipoMantenimientoId = tipoMantenimientoId;
 	}
 	
@@ -68,6 +68,24 @@ public class FlujoMantenimiento extends EntityBase implements java.io.Serializab
 	}
 	public void setPasivo(Boolean pasivo) {
 		this.pasivo = pasivo;
+	}
+	
+	@ManyToOne
+	@JoinColumn(name="codigo_estado_inicial", referencedColumnName="codigo",nullable=false)
+	public Catalogo getEstadoInicial() {
+		return estadoInicial;
+	}
+	public void setEstadoInicial(Catalogo estadoInicial) {
+		this.estadoInicial = estadoInicial;
+	}
+	
+	@ManyToOne
+	@JoinColumn(name="codigo_estado_final", referencedColumnName="codigo", nullable=false)
+	public Catalogo getEstadoFinal() {
+		return estadoFinal;
+	}
+	public void setEstadoFinal(Catalogo estadoFinal) {
+		this.estadoFinal = estadoFinal;
 	}
 
 	

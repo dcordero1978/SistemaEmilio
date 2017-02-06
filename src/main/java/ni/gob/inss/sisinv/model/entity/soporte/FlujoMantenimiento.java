@@ -2,16 +2,15 @@ package ni.gob.inss.sisinv.model.entity.soporte;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import ni.gob.inss.barista.model.entity.EntityBase;
-import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
 
 @Entity
 @Table(name="flujo_estado_mantenimiento", schema="soportetecnico")
@@ -20,9 +19,9 @@ public class FlujoMantenimiento extends EntityBase implements java.io.Serializab
 
 	private static final long serialVersionUID = 1L;
 	private Integer  id;
-	private Catalogo codigoEstadoInicial;
-	private Catalogo codigoEstadoFinal;
-	private Catalogo tipoMantenimientoId;
+	private String codigoEstadoInicial;
+	private String codigoEstadoFinal;
+	private Integer tipoMantenimientoId;
 	private Boolean  pasivo;
 	
 	@Id
@@ -35,30 +34,27 @@ public class FlujoMantenimiento extends EntityBase implements java.io.Serializab
 		this.id = id;
 	}
 	
-	@ManyToOne(fetch = FetchType.EAGER)
 	@Column(name="codigo_estado_inicial", nullable=false, length=2)
-	public Catalogo getCodigoEstadoInicial() {
+	public String getCodigoEstadoInicial() {
 		return codigoEstadoInicial;
 	}
-	public void setCodigoEstadoInicial(Catalogo codigoEstadoInicial) {
+	public void setCodigoEstadoInicial(String codigoEstadoInicial) {
 		this.codigoEstadoInicial = codigoEstadoInicial;
 	}
 	
-	@ManyToOne(fetch = FetchType.EAGER)
 	@Column(name="codigo_estado_final", nullable=false, length=2)
-	public Catalogo getCodigoEstadoFinal() {
+	public String getCodigoEstadoFinal() {
 		return codigoEstadoFinal;
 	}
-	public void setCodigoEstadoFinal(Catalogo codigoEstadoFinal) {
+	public void setCodigoEstadoFinal(String codigoEstadoFinal) {
 		this.codigoEstadoFinal = codigoEstadoFinal;
 	}
 	
-	@ManyToOne(fetch = FetchType.EAGER)
 	@Column(name="tipo_matenimiento_id", nullable=false)
-	public Catalogo getTipoMantenimientoId() {
+	public Integer getTipoMantenimientoId() {
 		return tipoMantenimientoId;
 	}
-	public void setTipoMantenimientoId(Catalogo tipoMantenimientoId) {
+	public void setTipoMantenimientoId(Integer tipoMantenimientoId) {
 		this.tipoMantenimientoId = tipoMantenimientoId;
 	}
 	

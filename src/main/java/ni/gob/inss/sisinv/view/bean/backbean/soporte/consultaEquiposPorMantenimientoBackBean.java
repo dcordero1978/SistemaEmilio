@@ -17,19 +17,23 @@ import ni.gob.inss.barista.view.bean.backbean.BaseBackBean;
 import ni.gob.inss.barista.view.utils.web.MessagesResults;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.DelegacionService;
 import ni.gob.inss.sisinv.bussineslogic.service.soporte.MantenimientosService;
+import ni.gob.inss.sisinv.bussineslogic.service.soporte.consultaEquiposPorMantenimientoService;
+import ni.gob.inss.sisinv.bussineslogic.serviceImpl.soporte.consultaEquiposPorMantenimientoServiceImpl;
 import ni.gob.inss.sisinv.model.entity.catalogo.Delegacion;
 import ni.gob.inss.sisinv.model.entity.soporte.Mantenimientos;
 import ni.gob.inss.sisinv.model.entity.soporte.ProgramacionMantenimiento;
 
 @Named
 @Scope("view")
-public class mantenimientoEquiposBackBean extends BaseBackBean{
+public class consultaEquiposPorMantenimientoBackBean extends BaseBackBean{
 	
 	private static final long serialVersionUID = 1L;
 	
 	private List<ProgramacionMantenimiento> listaMantenimiento;
 	private List<Mantenimientos> listaMantenimientos;
+	private List<Map<String, Object>> listaMantenimientosRealizados;
 	private Mantenimientos selectedMantenimientos;
+	private Map<String, Object> selectedMantenimientosRealizados;
 	private List<Delegacion> listaDelegaciones;
 	
 	private Integer mantenimientoprogId;
@@ -42,16 +46,26 @@ public class mantenimientoEquiposBackBean extends BaseBackBean{
 	MantenimientosService oMantenimientosService;
 	
 	@Autowired
+	consultaEquiposPorMantenimientoService oConsultaEquiposPorMantenimientoService;
+	
+	@Autowired
 	DelegacionService oDelegacionService;
 	
 	@PostConstruct
 	public void init(){
 		cargaListaMantenimiento();
 		cargarListaDelegaciones();
+		cargaListaMantenimientoRealizados();
+		
 	}
 	
 	private void cargaListaMantenimiento(){
 		this.listaMantenimiento = oMantenimientosService.obtenerListaProgramacionMantenimientoActivo();
+	}
+	
+	private void cargaListaMantenimientoRealizados(){
+		
+		this.listaMantenimientosRealizados = oConsultaEquiposPorMantenimientoService.buscarMantenimiento(null, "", null, null, null);
 	}
 	
 	public void cargarMantenimientosPorEstado(){
@@ -137,6 +151,24 @@ public class mantenimientoEquiposBackBean extends BaseBackBean{
 	public void setListaDelegaciones(List<Delegacion> listaDelegaciones) {
 		this.listaDelegaciones = listaDelegaciones;
 	}
+
+	public List<Map<String, Object>> getListaMantenimientosRealizados() {
+		return listaMantenimientosRealizados;
+	}
+
+	public void setListaMantenimientosRealizados(List<Map<String, Object>> listaMantenimientosRealizados) {
+		this.listaMantenimientosRealizados = listaMantenimientosRealizados;
+	}
+
+	public Map<String, Object> getSelectedMantenimientosRealizados() {
+		return selectedMantenimientosRealizados;
+	}
+
+	public void setSelectedMantenimientosRealizados(Map<String, Object> selectedMantenimientosRealizados) {
+		this.selectedMantenimientosRealizados = selectedMantenimientosRealizados;
+	}
+	
+	
 	
 	
 }

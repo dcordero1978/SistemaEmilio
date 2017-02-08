@@ -11,7 +11,7 @@ public interface MantenimientosDAO extends BaseGenericDAO<ProgramacionMantenimie
 
 	public List<Mantenimientos> listaMantenimientos(Integer estadoId);
 
-	public List<ActivosUsuario> listaActivosUsuario(Integer empleadoId);
+	public List<ActivosUsuario> listaActivosUsuario(Integer empleadoId, Integer tipoMantenimientoId);
 
 
 

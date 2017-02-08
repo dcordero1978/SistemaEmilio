@@ -83,4 +83,12 @@ public class EmpleadoServiceImpl implements EmpleadoService{
 		return oEmpleadoDAO.buscar(criterioNombre, delegacion, pasivo, cargo, area, numeroIdentificacion, numeroEmpleado);
 	}
 	
+	@Transactional
+	@Override
+	public List<Empleado> buscarTecnicosSoporte() throws EntityNotFoundException{
+		Search oSearch = new Search();
+		oSearch.addFilter(Filter.equal("tecnicoSoporte", true));
+		return oEmpleadoDAO.search(oSearch);
+	}
+	
 }

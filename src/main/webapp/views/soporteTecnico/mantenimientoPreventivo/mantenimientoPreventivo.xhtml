@@ -79,6 +79,15 @@
             					</h:panelGrid>
             				</h:panelGrid>
             			</h:panelGrid>
+            			<h:panelGrid columns="1" style="width:100%" columnClasses="Wid100">
+            				<p:outputPanel style="display:block" styleClass="right">
+								<p:commandButton widgetVar="btnaddNotes"  icon="ui-icon-document" value="Agregar Observación"  id="addNotes"  oncomplete="PF('winProgMto').show();"/>	
+								 <p:overlayPanel id="NotePanel" for="addNotes"  height="200" showEffect="blind" hideEffect="explode" showEvent="mouseover" hideEvent="mousedown">
+								 	<p:outputLabel for="observacionMantenimiento" value="Observaciones"/>
+            						<p:inputTextarea id="observacionMantenimiento"  rows="4"  styleClass="Wid90" value="#{programacionMantenimientoBackBean.txtobservacion}"/>
+    							</p:overlayPanel>
+							</p:outputPanel>
+            			</h:panelGrid>
 						<p:dataTable id="tablaactivosinf" var="oActivosInf" value="#{programacionMantenimientoBackBean.listaActivosUsuario}" height="350"
 						paginatorPosition="top" selectionMode="single"  scrollable="true" rowKey="#{oActivosInf.activoId}"  loadingmessage="Cargando registros..."
 							paginator="true" emptyMessage="#{labelName.tableEmptyMessage}" rows="3" pageLinks="3" lazy="true"  
@@ -96,21 +105,21 @@
 					            <h:outputText value="#{oActivosInf.tipoResguardo}"/>
 					        </p:column>
 					        <p:column style="width:40px;text-align: center">
-             					<p:commandButton  icon="ui-icon-search" update=":formGralMantenimiento:panelprincequipo"  title="Ver" oncomplete="PF('winComponentes').show();">
-             						 <f:setPropertyActionListener value="#{oActivosInf}" target="#{programacionMantenimientoBackBean.equipoSeleccionado}" />
+             					<p:commandButton  icon="ui-icon-search" update=":formGralMantenimiento:panelprincequipo, :formGralMantenimiento:paneldatosmto"  title="Ver" oncomplete="PF('winComponentes').show();" action="#{programacionMantenimientoBackBean.seleccionEquipo}">
+             						 <f:setPropertyActionListener value="#{oActivosInf}" target="#{programacionMantenimientoBackBean.equipoSeleccionado}"/>
              					</p:commandButton>
         					</p:column>
 					    </p:dataTable>
+					     
         				</p:panel>
 					</p:dialog>
 					
-					<p:dialog widgetVar="winComponentes"  header="Detalle del Mantenimiento" resizable="false" width="1000" height="600" modal="true">
+					<p:dialog widgetVar="winComponentes"  header="Detalle del Mantenimiento" resizable="false" width="1000" height="500" modal="true">
 					 <p:panel id="panelgeneral" styleClass="fondoPaneles" >
 					  <f:facet name="header">
 					  	<p:outputPanel style="display:block" styleClass="right">
-							
-							<p:commandButton widgetVar="btnGuardarMto"  icon="ui-icon-disk" value="#{labelName.btnGuardar}" onstart="PF('btnGuardarMto').disable();" oncomplete="PF('btnGuardarMto').enable();" />
-							<p:commandButton resetValues="true" ajax="true" value="#{labelName.btnCancelar}" icon="ui-icon-cancel" />	
+							<p:commandButton widgetVar="btnGuardarMto"  icon="ui-icon-disk" value="#{labelName.btnGuardar}" onstart="PF('btnGuardarMto').disable();" oncomplete="PF('btnGuardarMto').enable();" action="#{programacionMantenimientoBackBean.guardarFichaMantenimiento}"/>
+							<p:commandButton widgetVar="btnCancelarMto" resetValues="true" ajax="true" value="#{labelName.btnCancelar}" icon="ui-icon-cancel" action="#{programacionMantenimientoBackBean.cancelarFicha}" />	
 						</p:outputPanel>
 					  </f:facet>
 						 <p:panel id="panelprincequipo" styleClass="fondoPaneles" >
@@ -143,39 +152,42 @@
 							 <h:panelGrid  columns="7" style="margin-bottom:10px" cellpadding="5" columnClasses="Wid10,Wid20,Wid10,Wid20,Wid10,Wid20,Wid10">
         						<h:outputText value="Software   " />
         						<h:outputText value="Depuración Programas" />
-        						<p:selectBooleanCheckbox value="#{programacionMantenimientoBackBean.ckDepuracion}" />
+        						<p:selectBooleanCheckbox  value="#{programacionMantenimientoBackBean.ckDepuracion}"  disabled="#{programacionMantenimientoBackBean.ckDepuracionDisabled}"/>
         						<h:outputText value="Instalación Programas " />
-        						<p:selectBooleanCheckbox value="#{programacionMantenimientoBackBean.ckInstPrograma}" />
+        						<p:selectBooleanCheckbox value="#{programacionMantenimientoBackBean.ckInstPrograma}"  disabled="#{programacionMantenimientoBackBean.ckInstProgramaDisabled}"/>
         						<h:outputText value="Instalacion/Cambio SO " />
-        						<p:selectBooleanCheckbox value="#{programacionMantenimientoBackBean.ckInstSOperativo}" />
+        						<p:selectBooleanCheckbox value="#{programacionMantenimientoBackBean.ckInstSOperativo}" disabled="#{programacionMantenimientoBackBean.ckInstSOperativoDisabled}"/>
         					
         						<h:outputText value="Antivirus " />
         						<h:outputText value="Instalacion/Cambio " />
-        						<p:selectBooleanCheckbox value="#{programacionMantenimientoBackBean.ckInstAntivirus}" />
+        						<p:selectBooleanCheckbox value="#{programacionMantenimientoBackBean.ckInstAntivirus}" disabled="#{programacionMantenimientoBackBean.ckInstAntivirusDisabled}"/>
         						<h:outputText value="Actualización " />
-        						<p:selectBooleanCheckbox value="#{programacionMantenimientoBackBean.ckActAntivirus}" />
+        						<p:selectBooleanCheckbox value="#{programacionMantenimientoBackBean.ckActAntivirus}" disabled="#{programacionMantenimientoBackBean.ckActAntivirusDisabled}"/>
         						<h:outputText value="Escaneo " />
-        						<p:selectBooleanCheckbox value="#{programacionMantenimientoBackBean.ckEscAntivirus}" /> 
+        						<p:selectBooleanCheckbox value="#{programacionMantenimientoBackBean.ckEscAntivirus}" disabled="#{programacionMantenimientoBackBean.ckEscAntivirusDisabled}"/> 
         						 
         						<h:outputText value="Hardware  "/>
         						<h:outputText value="Limpieza " />
-        						<p:selectBooleanCheckbox value="#{programacionMantenimientoBackBean.ckLimpieza}" />
+        						<p:selectBooleanCheckbox value="#{programacionMantenimientoBackBean.ckLimpieza}" disabled="#{programacionMantenimientoBackBean.ckLimpiezaDisabled}"/>
         						<h:outputText value="Reemplazo de Componente " />
-        						<p:selectBooleanCheckbox value="#{programacionMantenimientoBackBean.ckReemplazo}" />
+        						<p:selectBooleanCheckbox value="#{programacionMantenimientoBackBean.ckReemplazo}" disabled="#{programacionMantenimientoBackBean.ckReemplazoDisabled}"/>
         					</h:panelGrid>
 						</p:panel>
 						<p:panel  id="paneldatosinfo" styleClass="fondoPaneles" >
 						<h3>Información Adicional</h3>
-						 	<h:panelGrid  columns="7" style="margin-bottom:10px" cellpadding="5" columnClasses="Wid10,Wid20,Wid10,Wid20,Wid10,Wid20,Wid10">
-								<h:outputText value="Estado  " />
-        						<h:outputText value="Bueno " />
-        						<p:selectBooleanCheckbox value="#{programacionMantenimientoBackBean.ckBueno}" />
-        						<h:outputText value="Dañado " />
-        						<p:selectBooleanCheckbox value="#{programacionMantenimientoBackBean.ckDanado}" />
-							</h:panelGrid>
-							<h:panelGrid  columns="2"  cellpadding="5" style="width:100%" columnClasses="Wid10,Wid90">
-								<p:outputLabel for="observacion" value="Observaciones"/>
-            					<p:inputTextarea id="observacion"  rows="4"  styleClass="Wid90" value="#{programacionMantenimientoBackBean.txtobservacion}"/>
+						 	<h:panelGrid  columns="6" style="margin-bottom:10px" cellpadding="5" columnClasses="Wid10,Wid20,Wid10,Wid20,Wid20,Wid20">
+								<h:outputText value="Estado " />
+        						<p:selectOneMenu id="estadoequipo" label="Estado Equipo" value="#{programacionMantenimientoBackBean.tecnicoSoporteId}" styleClass="Wid90">									
+									<f:selectItem itemValue="#{null}" itemLabel="Seleccione ..."/>
+									<f:selectItems var="oEstadoEquipo" value="#{programacionMantenimientoBackBean.listaEstadoEquipo}" itemLabel="#{oEstadoEquipo.descripcion}" itemValue="#{oEstadoEquipo.id}"/>
+								</p:selectOneMenu>
+        						<h:outputText value="Técnico " />
+        						<p:selectOneMenu id="tecnicoSoporte" label="Técnico Soporte" value="#{programacionMantenimientoBackBean.tecnicoSoporteId}" styleClass="Wid90">									
+									<f:selectItem itemValue="#{null}" itemLabel="Seleccione un Técnico"/>
+									<f:selectItems var="oTecnico" value="#{programacionMantenimientoBackBean.listaTecnicosSoporte}" itemLabel="#{oTecnico.nombreCompleto}" itemValue="#{oTecnico.id}"/>
+								</p:selectOneMenu>
+								<p:outputLabel for="fechaMto" value="Fecha Mantenimiento:" />
+						    	<p:calendar id="fechaMto" effect="fold"  pattern="dd/MM/yyyy" mask="true"  value="#{programacionMantenimientoBackBean.fechaMantenimiento}" styleClass="Wid90"/>
 							</h:panelGrid>
 						</p:panel>
 						

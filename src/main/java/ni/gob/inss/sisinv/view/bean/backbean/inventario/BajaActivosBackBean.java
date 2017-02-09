@@ -140,7 +140,7 @@ public class BajaActivosBackBean extends BaseBackBean implements Serializable {
 	public void cargarEmpleadoRespBodegaBaja(){
 		try{
 			this.setEmpleadoResponsable(oEmpleadoService.obtener(hfEmpDestId));
-			this.setTxtEmpleadoDest(this.getEmpleadoResponsable().getPrimerNombre()+ " "+this.getEmpleadoResponsable().getSegundoNombre()+" "+this.getEmpleadoResponsable().getPrimerApellido()+" "+this.getEmpleadoResponsable().getSegundoApellido());
+			this.setTxtEmpleadoDest(this.getEmpleadoResponsable().getNombreCompleto());
 			this.setCargoEmpleadoDest(this.getEmpleadoResponsable().getCargo());
 		}catch(EntityNotFoundException e){
 			mostrarMensajeError(this.getClass().getSimpleName(), "cargarEmpleadoRespBodegaBaja", MessagesResults.ERROR_OBTENER_LISTA, e);
@@ -154,7 +154,7 @@ public class BajaActivosBackBean extends BaseBackBean implements Serializable {
         this.setTxtSerie(filtroActivoSeleccionado.getSerie());
         this.setHfUbicacionId(filtroActivoSeleccionado.getUbicacionId());
         this.setTxtdescripcionBien(filtroActivoSeleccionado.getDescripcion()+ ", Marca: "+filtroActivoSeleccionado.marca.descripcion+", Modelo: "+filtroActivoSeleccionado.modelo.descripcion);
-        this.setTxtEmpleadoOrig(filtroActivoSeleccionado.empleado.getNumeroEmpleado()+" - "+filtroActivoSeleccionado.empleado.getPrimerNombre() + " "+StringUtils.defaultIfBlank(filtroActivoSeleccionado.empleado.getSegundoNombre(),"") + " "+filtroActivoSeleccionado.empleado.getPrimerApellido()+" "+StringUtils.defaultIfBlank(filtroActivoSeleccionado.empleado.getSegundoApellido(),""));
+        this.setTxtEmpleadoOrig(filtroActivoSeleccionado.empleado.getNombreCompleto());
         this.setCargoEmpleadoOrig(filtroActivoSeleccionado.empleado.getCargo());
         this.setUbicacionEmpleadoOrig(filtroActivoSeleccionado.empleado.getArea());
         this.setHfEmpOrigId(filtroActivoSeleccionado.empleado.getId());

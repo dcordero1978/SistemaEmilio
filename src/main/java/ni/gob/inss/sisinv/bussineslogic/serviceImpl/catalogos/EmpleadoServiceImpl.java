@@ -88,6 +88,7 @@ public class EmpleadoServiceImpl implements EmpleadoService{
 	public List<Empleado> buscarTecnicosSoporte() throws EntityNotFoundException{
 		Search oSearch = new Search();
 		oSearch.addFilter(Filter.equal("tecnicoSoporte", true));
+		oSearch.addFilter(Filter.equal("pasivo", false));
 		return oEmpleadoDAO.search(oSearch);
 	}
 	

@@ -9,7 +9,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -29,6 +31,7 @@ public class MantenimientoEquipo extends EntityBase implements java.io.Serializa
 	private Integer id;
 	private Catalogo tipoMantenimientoId;
 	private Empleado responsableSoporteId;
+	private Empleado empleado_id;
 	private Integer areaId;
 	private Delegacion delegacionId;
 	private Empleado tecnicoSoporteId;
@@ -37,6 +40,8 @@ public class MantenimientoEquipo extends EntityBase implements java.io.Serializa
 	private Date    fechaEntrega;
 	private Boolean pasivo;
 	private Integer entidadId;
+	private ProgramacionMantenimiento programacionMantenimientoId;
+	private Integer programacionMtoId;
 	
 	@Id
 	@Column(name="id", unique=true, nullable=false)
@@ -67,7 +72,7 @@ public class MantenimientoEquipo extends EntityBase implements java.io.Serializa
 		this.responsableSoporteId = responsableSoporteId;
 	}
 	
-	@Column(name="area_id", nullable=false)
+	@Column(name="area_id")
 	public Integer getAreaId() {
 		return areaId;
 	}
@@ -133,6 +138,33 @@ public class MantenimientoEquipo extends EntityBase implements java.io.Serializa
 	}
 	public void setEntidadId(Integer entidadId) {
 		this.entidadId = entidadId;
+	}
+	
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="empleado_id", nullable=false)
+	public Empleado getEmpleado_id() {
+		return empleado_id;
+	}
+	public void setEmpleado_id(Empleado empleado_id) {
+		this.empleado_id = empleado_id;
+	}
+	
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="programacion_mantenimiento_id",insertable=false,updatable=false)
+	public ProgramacionMantenimiento getProgramacionMantenimientoId() {
+		return programacionMantenimientoId;
+	}
+	
+	public void setProgramacionMantenimientoId(ProgramacionMantenimiento programacionMantenimientoId) {
+		this.programacionMantenimientoId = programacionMantenimientoId;
+	}
+	
+	@Column(name="programacion_mantenimiento_id")
+	public Integer getProgramacionMtoId() {
+		return programacionMtoId;
+	}
+	public void setProgramacionMtoId(Integer programacionMtoId) {
+		this.programacionMtoId = programacionMtoId;
 	}
 	
 	

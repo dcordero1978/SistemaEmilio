@@ -9,6 +9,8 @@ import ni.gob.inss.barista.model.dao.DAOException;
 import ni.gob.inss.sisinv.bussineslogic.service.soporte.MantenimientosService;
 import ni.gob.inss.sisinv.model.dao.soporte.MantenimientosDAO;
 import ni.gob.inss.sisinv.model.entity.soporte.ActivosUsuario;
+import ni.gob.inss.sisinv.model.entity.soporte.MantenimientoEquipo;
+import ni.gob.inss.sisinv.model.entity.soporte.MantenimientoEquipoDetalle;
 import ni.gob.inss.sisinv.model.entity.soporte.Mantenimientos;
 import ni.gob.inss.sisinv.model.entity.soporte.ProgramacionMantenimiento;
 
@@ -46,9 +48,21 @@ public class MantenimientosServiceImpl implements MantenimientosService  {
 	
 	@Transactional
 	@Override
-	public List<ActivosUsuario> obtenerListaActivosUsuarios(Integer empleadoId){
-		return oMantenimientosDAO.listaActivosUsuario(empleadoId);
+	public List<ActivosUsuario> obtenerListaActivosUsuarios(Integer empleadoId, Integer tipoMantenimientoId){ 
+		return oMantenimientosDAO.listaActivosUsuario(empleadoId, tipoMantenimientoId);
+	}
+	
+	@Transactional
+	@Override
+	public void guardarFichaMantenimientoMaestro(MantenimientoEquipo oMantenimientoEquipo) throws DAOException{
+		oMantenimientosDAO.saveUpper(oMantenimientoEquipo);
 	}
 
+	@Transactional
+	@Override
+	public void guardarFichaMantenimientoDetalle(MantenimientoEquipoDetalle oMantenimientoEquipoDetalle) throws DAOException{
+		oMantenimientosDAO.saveUpper(oMantenimientoEquipoDetalle);
+	}
+	
 
 }

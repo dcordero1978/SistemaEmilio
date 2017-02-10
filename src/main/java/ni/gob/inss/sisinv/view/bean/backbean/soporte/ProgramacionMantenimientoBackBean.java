@@ -25,8 +25,10 @@ import org.springframework.context.annotation.Scope;
 
 import ni.gob.inss.barista.businesslogic.service.BusinessException;
 import ni.gob.inss.barista.model.dao.DAOException;
+import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
 import ni.gob.inss.barista.view.bean.backbean.BaseBackBean;
 import ni.gob.inss.barista.view.utils.web.MessagesResults;
+import ni.gob.inss.sisinv.bussineslogic.service.catalogos.ActivoService;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.CatalogoExtService;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.DelegacionService;
 import ni.gob.inss.sisinv.bussineslogic.service.catalogos.EmpleadoService;
@@ -34,8 +36,11 @@ import ni.gob.inss.sisinv.bussineslogic.service.soporte.MantenimientosService;
 import ni.gob.inss.sisinv.model.entity.catalogo.Delegacion;
 import ni.gob.inss.sisinv.model.entity.catalogo.Empleado;
 import ni.gob.inss.sisinv.model.entity.soporte.ActivosUsuario;
+import ni.gob.inss.sisinv.model.entity.soporte.MantenimientoEquipo;
+import ni.gob.inss.sisinv.model.entity.soporte.MantenimientoEquipoDetalle;
 import ni.gob.inss.sisinv.model.entity.soporte.Mantenimientos;
 import ni.gob.inss.sisinv.model.entity.soporte.ProgramacionMantenimiento;
+import ni.gob.inss.sisinv.util.CatalogoGeneral;
 
 @Named
 @Scope("view")
@@ -49,13 +54,17 @@ public class ProgramacionMantenimientoBackBean extends BaseBackBean implements S
 	private List<ProgramacionMantenimiento> listaMtoProgramado;
 	private List<Mantenimientos> listaMantenimientos;
 	private List<ActivosUsuario> listaActivosUsuario;
+	private List<Empleado> listaTecnicosSoporte;
+	private List<Catalogo> listaEstadoEquipo;
 	private ActivosUsuario equipoSeleccionado;
 	private Empleado filtroEmpleadoSeleccionado; 
     private Date fechaInicio;
     private Date fechaFin;
+    private Date fechaMantenimiento;
     private String asunto;
     private Integer mantenimientoprogId;
-    
+    private Integer tecnicoSoporteId;
+    private Integer estadoEquipoId;
     
     private Date fechaIniciotxt;
     private Date fechaFintxt;
@@ -67,6 +76,8 @@ public class ProgramacionMantenimientoBackBean extends BaseBackBean implements S
     private String txtubicacionEmpleado;
     private String txtobservacion;
     private Integer HfEmpId;
+    private Integer HfEquipoId;
+    private Integer HfIdCpu;
     
     private Boolean ckLimpieza;
     private Boolean ckReemplazo;
@@ -78,9 +89,24 @@ public class ProgramacionMantenimientoBackBean extends BaseBackBean implements S
     private Boolean ckInstSOperativo;
     private Boolean ckBueno;
     private Boolean ckDanado;
+    
+    private Boolean ckDepuracionDisabled;
+    private Boolean ckInstProgramaDisabled;
+    private Boolean ckInstSOperativoDisabled;
+    private Boolean ckInstAntivirusDisabled;
+    private Boolean ckActAntivirusDisabled;
+    private Boolean ckEscAntivirusDisabled;
+    private Boolean ckLimpiezaDisabled;
+    private Boolean ckReemplazoDisabled;
+    
+    private MantenimientoEquipo oMantenimientoEquipo;
+    
+    final static Integer MantenimientoPreventivoId = 1004;
+    final static String codigoActivoEspecial = "CPU";
 
 
-	
+    @Autowired
+    ActivoService oActivoService;
 	
 	@Autowired
 	DelegacionService oDelegacionService;
@@ -97,10 +123,13 @@ public class ProgramacionMantenimientoBackBean extends BaseBackBean implements S
 	@PostConstruct
 	public void init(){
 		this.cargarListaDelegaciones();
+		this.cargarListaTecnicosSoporte();
+		this.cargarEstadoEquipo();
 		eventModel = new DefaultScheduleModel();	
 		limpiarVentanaMto();
 		cargarMantenimientosProgramados();
 		cargarMantenimientosPorEstado();
+		cargarIdCPU();
 	}
 
 	public void cargarListaDelegaciones(){
@@ -117,8 +146,27 @@ public class ProgramacionMantenimientoBackBean extends BaseBackBean implements S
 		eventModel.clear();
 		this.listaMtoProgramado.forEach(resultado->{
 			this.getEventModel().addEvent(new DefaultScheduleEvent(resultado.getAsunto(), resultado.getFechaInicio(),resultado.getFechaFin()));
-		});
-		
+		});	
+	}
+	
+	public void cargarEstadoEquipo(){
+		try{
+			this.setListaEstadoEquipo(oCatalogoExtService.obtieneListaCatalogosPorRefTipoCatalogo(CatalogoGeneral.ESTADO_EQUIPO_INFORMATICO.getCodigoCatalogo()));
+		}catch(Exception e){
+			mostrarMensajeError(this.getClass().getSimpleName(),"cargarEstadoEquipo()",MessagesResults.ERROR_OBTENER_LISTA, e);
+		}
+	}
+	
+	public void cargarListaTecnicosSoporte(){
+		try{
+		this.setListaTecnicosSoporte(oEmpleadoService.buscarTecnicosSoporte());
+		} catch (Exception e) {
+        	mostrarMensajeError(this.getClass().getSimpleName(),"cargarListaTecnicosSoporte()",MessagesResults.ERROR_OBTENER_LISTA, e);
+		}
+	}
+	
+	public void cargarIdCPU(){
+		this.setHfIdCpu(oCatalogoExtService.obtieneCatalogoPorCodigo(codigoActivoEspecial).getId());
 	}
 	
 	public void cargarMantenimientosPorEstado(){
@@ -129,6 +177,7 @@ public class ProgramacionMantenimientoBackBean extends BaseBackBean implements S
 		ProgramacionMantenimiento oMantenimiento = oMantenimientosService.obtener(mantenimientoprogId);
 		this.setFechaInicio(oMantenimiento.getFechaInicio());
 		this.setFechaFin(oMantenimiento.getFechaFin());
+		this.setDelegacionId(oMantenimiento.getDelegacion_Id());
 		RequestContext.getCurrentInstance().execute("PF('btnaddUser').enable();");
 	}
 	
@@ -139,15 +188,41 @@ public class ProgramacionMantenimientoBackBean extends BaseBackBean implements S
 		this.setFechaFin(null);
 	}
 	
+	public void seleccionEquipo(){
+		this.setHfEquipoId(equipoSeleccionado.getActivoId());
+		if(equipoSeleccionado.getTipoActivo().equals(this.getHfIdCpu())){
+			this.setCkDepuracionDisabled(false);
+			this.setCkActAntivirusDisabled(false);
+			this.setCkEscAntivirusDisabled(false);
+			this.setCkInstAntivirusDisabled(false);
+			this.setCkInstProgramaDisabled(false);
+			this.setCkInstSOperativoDisabled(false);
+			this.setCkLimpiezaDisabled(false);
+			this.setCkReemplazoDisabled(false);
+		}else{
+			this.setCkDepuracionDisabled(true);
+			this.setCkActAntivirusDisabled(true);
+			this.setCkEscAntivirusDisabled(true);
+			this.setCkInstAntivirusDisabled(true);
+			this.setCkInstProgramaDisabled(true);
+			this.setCkInstSOperativoDisabled(true);
+			this.setCkLimpiezaDisabled(false);
+			this.setCkReemplazoDisabled(false);
+		}
+	}
+	
 	public void cargarDatosFiltro() throws EntityNotFoundException, ni.gob.inss.barista.model.dao.EntityNotFoundException{
 		try {
 			if(filtroEmpleadoSeleccionado==null) throw new BusinessException(MessagesResults.SELECCIONE_UN_REGISTRO);
-				this.setTxtEmpleado(filtroEmpleadoSeleccionado.getNumeroEmpleado()+" - "+ filtroEmpleadoSeleccionado.getPrimerNombre()+ " "+filtroEmpleadoSeleccionado.getSegundoNombre()+ " "+filtroEmpleadoSeleccionado.getPrimerApellido()+" "+filtroEmpleadoSeleccionado.getSegundoApellido());
+				if(filtroEmpleadoSeleccionado.getDelegacionId()!=delegacionId)
+				this.setTxtEmpleado(filtroEmpleadoSeleccionado.getNumeroEmpleado()+" - "+ filtroEmpleadoSeleccionado.getNombreCompleto());
 				this.setTxtcargoEmpleado(filtroEmpleadoSeleccionado.getCargo());
 				this.setTxtubicacionEmpleado(filtroEmpleadoSeleccionado.getArea());
 				Empleado oEmpleado = oEmpleadoService.obtener(filtroEmpleadoSeleccionado.getId());
 				this.setHfEmpId(oEmpleado.getId()); 
-				this.listaActivosUsuario = oMantenimientosService.obtenerListaActivosUsuarios(this.getHfEmpId());
+				this.listaActivosUsuario = oMantenimientosService.obtenerListaActivosUsuarios(this.getHfEmpId(),MantenimientoPreventivoId);
+				mostrarMensajeInfo("La delegación del usuario que ha seleccionado es diferente a la delegación programada en el Mantenimiento. Favor verificar");
+				
 		} catch (EntityNotFoundException e) {
 			mostrarMensajeError(this.getClass().getSimpleName(), "cargarDatos", MessagesResults.ERROR_OBTENER, e);
 		}catch(BusinessException e){
@@ -186,6 +261,65 @@ public class ProgramacionMantenimientoBackBean extends BaseBackBean implements S
 		}
 	}
 	
+	public void guardarFichaMantenimiento(){
+		try{
+			if(oMantenimientoEquipo==null){
+				 guardarFichaMaestro();
+				 guardarFichaDetalle();
+			}else{
+				guardarFichaDetalle();
+			}
+			
+			
+			
+			RequestContext.getCurrentInstance().execute("PF('btnGuardarMto').disable()");
+			RequestContext.getCurrentInstance().execute("PF('winComponentes').hide()");
+			mostrarMensajeInfo(MessagesResults.EXITO_GUARDAR);
+		} catch (DAOException e) {
+			mostrarMensajeError(MessagesResults.ERROR_GUARDAR);
+		}
+	}
+	
+
+	public void guardarFichaMaestro() throws DAOException{
+		oMantenimientoEquipo = new MantenimientoEquipo();
+		oMantenimientoEquipo.setTipoMantenimientoId(oCatalogoExtService.obtener(MantenimientoPreventivoId));
+		oMantenimientoEquipo.setResponsableSoporteId(null);
+		oMantenimientoEquipo.setAreaId(null);
+		oMantenimientoEquipo.setDelegacionId(oDelegacionService.obtener(this.getDelegacionId()));
+		oMantenimientoEquipo.setTecnicoSoporteId(oEmpleadoService.obtener(this.tecnicoSoporteId));
+		oMantenimientoEquipo.setObservaciones(this.getTxtobservacion());
+		oMantenimientoEquipo.setFechaInicio(this.getFechaMantenimiento());
+		oMantenimientoEquipo.setPasivo(false);
+		oMantenimientoEquipo.setCreadoEl(this.getTimeNow());
+		oMantenimientoEquipo.setCreadoEnIp(this.getRemoteIp());
+		oMantenimientoEquipo.setCreadoPor(this.getUsuarioActual().getId());
+		oMantenimientoEquipo.setEntidadId(this.getEntidadActual().getId());
+		oMantenimientoEquipo.setProgramacionMtoId(this.mantenimientoprogId);
+		oMantenimientoEquipo.setEmpleado_id(oEmpleadoService.obtener(this.getHfEmpId()));
+		oMantenimientosService.guardarFichaMantenimientoMaestro(oMantenimientoEquipo);
+	}
+	
+	public void guardarFichaDetalle() throws DAOException{
+		MantenimientoEquipoDetalle oMantenimientoEquipoDetalle = new MantenimientoEquipoDetalle();
+		oMantenimientoEquipoDetalle.setMantenimientoEquipoId(oMantenimientoEquipo);
+		oMantenimientoEquipoDetalle.setEquipoId(oActivoService.obtener(this.getHfEquipoId()));
+		oMantenimientoEquipoDetalle.setLimpieza(this.getCkLimpieza());
+		oMantenimientoEquipoDetalle.setDepuracionPrograma(this.getCkDepuracion());
+		oMantenimientoEquipoDetalle.setInstalacionPrograma(this.ckInstPrograma);
+		oMantenimientoEquipoDetalle.setInstalacionCambioSO(this.getCkInstSOperativo());
+		oMantenimientoEquipoDetalle.setInstalacionCambioAntivirus(this.getCkInstAntivirus());
+		oMantenimientoEquipoDetalle.setActualizacionAntivirus(this.getCkActAntivirus());
+		oMantenimientoEquipoDetalle.setEscaneoVirus(this.getCkEscAntivirus());
+		oMantenimientoEquipoDetalle.setReemplazoComponentes(this.getCkReemplazo());
+		oMantenimientoEquipoDetalle.setEstadoEquipo(oCatalogoExtService.obtener(this.getEstadoEquipoId()));
+		oMantenimientoEquipoDetalle.setPasivo(false);
+		oMantenimientoEquipoDetalle.setCreadoEl(this.getTimeNow());
+		oMantenimientoEquipoDetalle.setCreadoEnIp(this.getRemoteIp());
+		oMantenimientoEquipoDetalle.setCreadoPor(this.getUsuarioActual().getId());
+		oMantenimientosService.guardarFichaMantenimientoDetalle(oMantenimientoEquipoDetalle);
+		
+	}
 	
 	public ScheduleModel getEventModel() {
 		return eventModel;
@@ -482,6 +616,134 @@ public class ProgramacionMantenimientoBackBean extends BaseBackBean implements S
 
 	public void setTxtobservacion(String txtobservacion) {
 		this.txtobservacion = txtobservacion;
+	}
+
+	public Integer getHfIdCpu() {
+		return HfIdCpu;
+	}
+
+	public void setHfIdCpu(Integer hfIdCpu) {
+		HfIdCpu = hfIdCpu;
+	}
+
+	public Boolean getCkDepuracionDisabled() {
+		return ckDepuracionDisabled;
+	}
+
+	public void setCkDepuracionDisabled(Boolean ckDepuracionDisabled) {
+		this.ckDepuracionDisabled = ckDepuracionDisabled;
+	}
+
+	public Boolean getCkInstProgramaDisabled() {
+		return ckInstProgramaDisabled;
+	}
+
+	public void setCkInstProgramaDisabled(Boolean ckInstProgramaDisabled) {
+		this.ckInstProgramaDisabled = ckInstProgramaDisabled;
+	}
+
+	public Boolean getCkInstSOperativoDisabled() {
+		return ckInstSOperativoDisabled;
+	}
+
+	public void setCkInstSOperativoDisabled(Boolean ckInstSOperativoDisabled) {
+		this.ckInstSOperativoDisabled = ckInstSOperativoDisabled;
+	}
+
+	public Boolean getCkInstAntivirusDisabled() {
+		return ckInstAntivirusDisabled;
+	}
+
+	public void setCkInstAntivirusDisabled(Boolean ckInstAntivirusDisabled) {
+		this.ckInstAntivirusDisabled = ckInstAntivirusDisabled;
+	}
+
+	public Boolean getCkActAntivirusDisabled() {
+		return ckActAntivirusDisabled;
+	}
+
+	public void setCkActAntivirusDisabled(Boolean ckActAntivirusDisabled) {
+		this.ckActAntivirusDisabled = ckActAntivirusDisabled;
+	}
+
+	public Boolean getCkEscAntivirusDisabled() {
+		return ckEscAntivirusDisabled;
+	}
+
+	public void setCkEscAntivirusDisabled(Boolean ckEscAntivirusDisabled) {
+		this.ckEscAntivirusDisabled = ckEscAntivirusDisabled;
+	}
+
+	public Boolean getCkLimpiezaDisabled() {
+		return ckLimpiezaDisabled;
+	}
+
+	public void setCkLimpiezaDisabled(Boolean ckLimpiezaDisabled) {
+		this.ckLimpiezaDisabled = ckLimpiezaDisabled;
+	}
+
+	public Boolean getCkReemplazoDisabled() {
+		return ckReemplazoDisabled;
+	}
+
+	public void setCkReemplazoDisabled(Boolean ckReemplazoDisabled) {
+		this.ckReemplazoDisabled = ckReemplazoDisabled;
+	}
+
+	public List<Empleado> getListaTecnicosSoporte() {
+		return listaTecnicosSoporte;
+	}
+
+	public void setListaTecnicosSoporte(List<Empleado> listaTecnicosSoporte) {
+		this.listaTecnicosSoporte = listaTecnicosSoporte;
+	}
+
+	public Integer getTecnicoSoporteId() {
+		return tecnicoSoporteId;
+	}
+
+	public void setTecnicoSoporteId(Integer tecnicoSoporteId) {
+		this.tecnicoSoporteId = tecnicoSoporteId;
+	}
+
+	public Date getFechaMantenimiento() {
+		return fechaMantenimiento;
+	}
+
+	public void setFechaMantenimiento(Date fechaMantenimiento) {
+		this.fechaMantenimiento = fechaMantenimiento;
+	}
+
+	public MantenimientoEquipo getoMantenimientoEquipo() {
+		return oMantenimientoEquipo;
+	}
+
+	public void setoMantenimientoEquipo(MantenimientoEquipo oMantenimientoEquipo) {
+		this.oMantenimientoEquipo = oMantenimientoEquipo;
+	}
+
+	public Integer getHfEquipoId() {
+		return HfEquipoId;
+	}
+
+	public void setHfEquipoId(Integer hfEquipoId) {
+		HfEquipoId = hfEquipoId;
+	}
+
+	public Integer getEstadoEquipoId() {
+		return estadoEquipoId;
+	}
+
+	public void setEstadoEquipoId(Integer estadoEquipoId) {
+		this.estadoEquipoId = estadoEquipoId;
+	}
+
+	public List<Catalogo> getListaEstadoEquipo() {
+		return listaEstadoEquipo;
+	}
+
+	public void setListaEstadoEquipo(List<Catalogo> listaEstadoEquipo) {
+		this.listaEstadoEquipo = listaEstadoEquipo;
 	}
 
 	

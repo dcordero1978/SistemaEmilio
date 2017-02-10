@@ -31,10 +31,7 @@ public class MantenimientoEquipo extends EntityBase implements java.io.Serializa
 	private Integer id;
 	private Catalogo tipoMantenimientoId;
 	private Empleado responsableSoporteId;
-	private Empleado empleado_id;
-	private Integer areaId;
 	private Delegacion delegacionId;
-	private Empleado tecnicoSoporteId;
 	private String  observaciones;
 	private Date    fechaInicio;
 	private Date    fechaEntrega;
@@ -72,14 +69,6 @@ public class MantenimientoEquipo extends EntityBase implements java.io.Serializa
 		this.responsableSoporteId = responsableSoporteId;
 	}
 	
-	@Column(name="area_id")
-	public Integer getAreaId() {
-		return areaId;
-	}
-	public void setAreaId(Integer areaId) {
-		this.areaId = areaId;
-	}
-	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="delegacion_id")
 	public Delegacion getDelegacionId() {
@@ -87,15 +76,6 @@ public class MantenimientoEquipo extends EntityBase implements java.io.Serializa
 	}
 	public void setDelegacionId(Delegacion delegacionId) {
 		this.delegacionId = delegacionId;
-	}
-	
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name="tecnico_soporte_id")
-	public Empleado getTecnicoSoporteId() {
-		return tecnicoSoporteId;
-	}
-	public void setTecnicoSoporteId(Empleado tecnicoSoporteId) {
-		this.tecnicoSoporteId = tecnicoSoporteId;
 	}
 	
 	@Column(name="observaciones", length=500)
@@ -141,15 +121,6 @@ public class MantenimientoEquipo extends EntityBase implements java.io.Serializa
 	}
 	
 	@ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="empleado_id", nullable=false)
-	public Empleado getEmpleado_id() {
-		return empleado_id;
-	}
-	public void setEmpleado_id(Empleado empleado_id) {
-		this.empleado_id = empleado_id;
-	}
-	
-	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="programacion_mantenimiento_id",insertable=false,updatable=false)
 	public ProgramacionMantenimiento getProgramacionMantenimientoId() {
 		return programacionMantenimientoId;
@@ -166,8 +137,5 @@ public class MantenimientoEquipo extends EntityBase implements java.io.Serializa
 	public void setProgramacionMtoId(Integer programacionMtoId) {
 		this.programacionMtoId = programacionMtoId;
 	}
-	
-	
-	
 
 }

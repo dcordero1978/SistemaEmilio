@@ -13,6 +13,7 @@ import javax.persistence.Table;
 
 import ni.gob.inss.barista.model.entity.EntityBase;
 import ni.gob.inss.barista.model.entity.catalogo.Catalogo;
+import ni.gob.inss.sisinv.model.entity.catalogo.Empleado;
 import ni.gob.inss.sisinv.model.entity.inventario.Activos;
 
 @Entity
@@ -26,6 +27,8 @@ public class MantenimientoEquipoDetalle extends EntityBase implements java.io.Se
 	private Activos equipoId;
 	private Boolean limpieza;
 	private Catalogo estadoEquipo;
+	private Empleado tecnicoId;
+	private Empleado empleadoId;
 	private Boolean depuracionPrograma;
 	private Boolean instalacionPrograma;
 	private Boolean instalacionCambioSO;
@@ -179,6 +182,25 @@ public class MantenimientoEquipoDetalle extends EntityBase implements java.io.Se
 	public void setPasivo(Boolean pasivo) {
 		this.pasivo = pasivo;
 	}
+	
+	@ManyToOne(fetch= FetchType.EAGER)
+	@JoinColumn(name="tecnico_id", nullable=false)
+	public Empleado getTecnicoId() {
+		return tecnicoId;
+	}
+	public void setTecnicoId(Empleado tecnicoId) {
+		this.tecnicoId = tecnicoId;
+	}
+	
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="empleado_id", nullable=false)
+	public Empleado getEmpleadoId() {
+		return empleadoId;
+	}
+	public void setEmpleadoId(Empleado empleadoId) {
+		this.empleadoId = empleadoId;
+	}
+	
 	
 	
 }

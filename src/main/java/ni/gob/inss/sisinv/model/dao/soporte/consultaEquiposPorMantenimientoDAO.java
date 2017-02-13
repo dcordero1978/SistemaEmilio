@@ -8,6 +8,6 @@ import ni.gob.inss.sisinv.model.entity.soporte.ProgramacionMantenimiento;
 
 public interface consultaEquiposPorMantenimientoDAO extends BaseGenericDAO<ProgramacionMantenimiento, Integer> {
 	
-	public List<Map<String, Object>> buscarMantenimiento(Integer tipoMantenimiento, String nombreResponsableSoporte, Integer delegacion, java.util.Date fechaIni, java.util.Date fechaFin);
+	public List<Map<String, Object>> buscarMantenimiento(Integer tipoMantenimiento, Integer delegacion, java.util.Date fechaInicioI, java.util.Date fechaInicioF, java.util.Date fechaEntregaI, java.util.Date fechaEntregaF);
 
 }

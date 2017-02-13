@@ -38,11 +38,14 @@
 									<h:outputText value="#{oUsuario.asunto}" />
 								</p:column>
 								<p:column headerText="Fecha Inicio">
-									<h:outputText value="#{oUsuario.fechaInicio}" />
-									
+									<h:outputText value="#{oUsuario.fechaInicio}">
+										<f:convertDateTime pattern="dd-MMM-yyyy" />
+									</h:outputText>
 								</p:column>
 								<p:column headerText="Fecha Fin">
-									<h:outputText value="#{oUsuario.fechaFin}" />
+									<h:outputText value="#{oUsuario.fechaFin}">
+										<f:convertDateTime pattern="dd-MMM-yyyy" />
+									</h:outputText>
 								</p:column>
 								<p:column headerText="Delegacion">
 									<h:outputText value="#{oUsuario.delegacion_Id}" />
@@ -57,59 +60,80 @@
 
 
 		</div>
-		<p:dialog modal="true" id="modalMantenimientosProgramados" widgetVar="modalMantenimientosProgramados" closable="false" width="80%"  height="400" hideEffect="blind" showEffect="blind" showHeader="false">
-			<h:form id="formProgramacionMantenimiento" style="width: 100%">
+		<p:dialog modal="true" id="modalMantenimientosProgramados" widgetVar="modalMantenimientosProgramados" 
+				closable="false" width="80%"  height="100%" hideEffect="blind" showEffect="blind"  
+				showHeader="true" position="center center">
+			<h:form id="formProgramacionMantenimiento" style="width: 100%" >
 					<p:panel styleClass="fondoPaneles">
 						<p:panel id="panelgenerales" styleClass="fondoPaneles">
 							<f:facet name="header">
 								<p:outputPanel style="display:block" styleClass="left">
-									<p:commandButton id="btnBuscarMantenimiento" icon="ui-icon-search" value="Seleccionar Mantenimiento" immediate="true" actionListener="#{consultaEquiposPorMantenimientoBackBean.cerrarModalMantenimientos}"/>
+									<p:commandButton id="btnBuscarMantenimiento" icon="ui-icon-search" 
+										value="Buscar" update=":formProgramacionMantenimiento:tablaempleados"
+										actionListener="#{consultaEquiposPorMantenimientoBackBean.buscarMantenimientosRealizados}"/>
 									<p:commandButton resetValues="true" ajax="true" value="#{labelName.btnCancelar}" icon="ui-icon-cancel" actionListener="#{consultaEquiposPorMantenimientoBackBean.cerrarModalMantenimientos}"/>									
 								</p:outputPanel>
 							</f:facet>
 							
 							<h:panelGrid columns="6">
-								<p:outputLabel for="txtlistamantenimientos"
-									value="Mantenimientos Programados (Asunto)" />
-								<p:inputText id="txtlistamantenimientos"
-									value="#{consultaEquiposPorMantenimientoBackBean.mantenimientoprogId}">
-								</p:inputText>
-								<p:outputLabel for="desde" value="Fecha de Inicio:" />
-								<p:calendar id="desde" effect="fold" pattern="dd/MM/yyyy"
-									mask="true" value="#{consultaEquiposPorMantenimientoBackBean.fechaInicio}" />
-								<p:outputLabel for="hasta" value="Fecha Fin:" />
-								<p:calendar id="hasta" effect="fold" pattern="dd/MM/yyyy"
-									mask="true" value="#{consultaEquiposPorMantenimientoBackBean.fechaFin}" />
+								
+								<p:outputLabel for="tipoMantenimiento"
+									value="Tipo de Mantenimiento" />
+								<p:selectOneMenu id="tipoMantenimiento" label="Tipo de Mantenimiento"  value="#{consultaEquiposPorMantenimientoBackBean.cmdTipoMantenimiento}" effect="fold" style="width:150px" >
+									<f:selectItem itemValue="#{null}" itemLabel="Seleccione un Tipo de Mantenimiento"/>
+									<f:selectItems  var="oTipoMantenimiento" value="#{consultaEquiposPorMantenimientoBackBean.listaTipoMantenimiento}" itemLabel="#{oTipoMantenimiento.descripcion}" itemValue="#{oTipoMantenimiento.id}"/>									
+								</p:selectOneMenu>
 								<p:outputLabel for="delegacion" value="Delegación:" />
 					            <p:selectOneMenu id="delegacion" label="Delegación"  value="#{consultaEquiposPorMantenimientoBackBean.cmdDelegacionId}" effect="fold" style="width:150px" >
 									<f:selectItem itemValue="#{null}" itemLabel="Seleccione una Delegación"/>
 									<f:selectItems  var="oDelegacion" value="#{consultaEquiposPorMantenimientoBackBean.listaDelegaciones}" itemLabel="#{oDelegacion.descripcion}" itemValue="#{oDelegacion.id}"/>									
 								</p:selectOneMenu>
+								
+								<h:panelGroup />
+								<h:panelGroup />
+								
+								<p:outputLabel for="filtroFechas" value="Filtro de Fechas:" />
+					            <p:selectOneMenu id="filtroFechas" label="filtros"  value="#{consultaEquiposPorMantenimientoBackBean.cmbFiltroFechas}" effect="fold" style="width:150px" >
+									<f:selectItem itemValue="#{null}" itemLabel="Seleccione un tipo Filtro"/>
+									<f:selectItem itemValue="#{1}" itemLabel="Filtrar por Fecha de Inicio"/>
+									<f:selectItem itemValue="#{2}" itemLabel="Filtrar por Fecha de Entrega"/>
+								</p:selectOneMenu>
+								
+								<p:outputLabel for="desde" value="Fecha de Inicio:" />
+								<p:calendar id="desde" effect="fold" pattern="dd/MM/yyyy"
+									mask="true" value="#{consultaEquiposPorMantenimientoBackBean.fechaIni}" />
+								<p:outputLabel for="hasta" value="Fecha Fin:" />
+								<p:calendar id="hasta" effect="fold" pattern="dd/MM/yyyy"
+									mask="true" value="#{consultaEquiposPorMantenimientoBackBean.fechaFin}" />
 							</h:panelGrid>
 						</p:panel>
 
 						<div class="Container100 Responsive" style="height:50%">
-							<p:dataTable id="tablaempleados" var="oUsuario"
+							<p:dataTable id="tablaempleados" var="oListaMantenimiento"
 								value="#{consultaEquiposPorMantenimientoBackBean.listaMantenimientosRealizados}" paginatorPosition="top"
 								rows="5" paginator="true" scrollable="true" scrollHeight="250"
 								selectionMode="single" selection="#{consultaEquiposPorMantenimientoBackBean.selectedMantenimientosRealizados}"
-								rowKey="#{oUsuario.id}"
+								rowKey="#{oListaMantenimiento.id}"
 								style="height:350px">
 								<f:facet name="header">
 					            	Mantenimiento Programados
 					        	</f:facet>
-								<p:column headerText="Asunto">
-									<h:outputText value="#{oUsuario.descripcion_tipo_mantenimiento}" />
+								<p:column headerText="Tipo de Mantenimiento">
+									<h:outputText value="#{oListaMantenimiento.descripcion_tipo_mantenimiento}" />
 								</p:column>
 								<p:column headerText="Fecha Inicio">
-									<h:outputText value="#{oUsuario.fecha_inicio}" />
+									<h:outputText value="#{oListaMantenimiento.fecha_inicio}">
+										<f:convertDateTime pattern="dd-MMM-yyyy" />
+									</h:outputText>
 									
 								</p:column>
-								<p:column headerText="Fecha Fin">
-									<h:outputText value="#{oUsuario.fecha_entrega}" />
+								<p:column headerText="Fecha Entrega">
+									<h:outputText value="#{oListaMantenimiento.fecha_entrega}">
+										<f:convertDateTime pattern="dd-MMM-yyyy" />
+									</h:outputText>
 								</p:column>
 								<p:column headerText="Delegacion">
-									<h:outputText value="#{oUsuario.delegacion_Id}" />
+									<h:outputText value="#{oListaMantenimiento.nombre_delegacion}" />
 								</p:column>
 							</p:dataTable>
 						</div>

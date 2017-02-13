@@ -26,5 +26,7 @@ public interface MantenimientosService {
 
 	public void guardarFichaMantenimientoDetalle(MantenimientoEquipoDetalle oMantenimientoEquipoDetalle) throws DAOException;
 
+	public List<ProgramacionMantenimiento> obtenerListaProgramacionMantenimientoActivo();
+
 
 }

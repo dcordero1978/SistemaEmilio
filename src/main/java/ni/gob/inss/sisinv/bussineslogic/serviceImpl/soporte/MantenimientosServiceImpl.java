@@ -5,6 +5,11 @@ import javax.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.googlecode.genericdao.search.Filter;
+import com.googlecode.genericdao.search.Search;
+import com.googlecode.genericdao.search.Sort;
+
 import ni.gob.inss.barista.model.dao.DAOException;
 import ni.gob.inss.sisinv.bussineslogic.service.soporte.MantenimientosService;
 import ni.gob.inss.sisinv.model.dao.soporte.MantenimientosDAO;
@@ -64,5 +69,14 @@ public class MantenimientosServiceImpl implements MantenimientosService  {
 		oMantenimientosDAO.saveUpper(oMantenimientoEquipoDetalle);
 	}
 	
+
+	@Transactional
+	@Override
+	public List<ProgramacionMantenimiento> obtenerListaProgramacionMantenimientoActivo(){
+		Search oSearch = new Search();
+		oSearch.addFilter(Filter.equal("pasivo", false));
+		oSearch.addSort(Sort.asc("fechaInicio"));
+		return oMantenimientosDAO.search(oSearch);
+	}
 
 }

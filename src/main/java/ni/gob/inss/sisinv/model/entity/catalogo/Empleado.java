@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Formula;
 
 import ni.gob.inss.barista.model.entity.EntityBase;
@@ -40,6 +41,7 @@ public class Empleado extends EntityBase{
 	private String area;
 	private String cargo;
 	private Boolean ingresadoManual;
+	private Boolean tecnicoSoporte;
 	private List<Activos> listaActivos;
 	private String nombreCompleto;
 
@@ -172,14 +174,26 @@ public class Empleado extends EntityBase{
 		this.ingresadoManual = ingresadoManual;
 	}
 		
-	@Formula("primer_nombre ||' '||segundo_nombre ||' '||primer_apellido||' '||segundo_apellido")
+	@Column(name="tecnico_soporte")
+	public Boolean getTecnicoSoporte() {
+		return tecnicoSoporte;
+	}
+
+	public void setTecnicoSoporte(Boolean tecnicoSoporte) {
+		this.tecnicoSoporte = tecnicoSoporte;
+	}
+	
+	
+	@Column(name="nombre_completo")
 	public String getNombreCompleto(){
 		return nombreCompleto;
 	}
 
 	public void setNombreCompleto(String nombreCompleto) {
-		this.nombreCompleto = this.primerNombre +" "+ this.segundoNombre+" "+ this.primerApellido+" "+ this.segundoApellido;
+		this.nombreCompleto = nombreCompleto;
 	}
+
+
 	
 	
 	

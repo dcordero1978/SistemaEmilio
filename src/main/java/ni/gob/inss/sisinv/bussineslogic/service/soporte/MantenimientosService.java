@@ -5,6 +5,8 @@ import java.util.List;
 import javax.persistence.EntityNotFoundException;
 import ni.gob.inss.barista.model.dao.DAOException;
 import ni.gob.inss.sisinv.model.entity.soporte.ActivosUsuario;
+import ni.gob.inss.sisinv.model.entity.soporte.MantenimientoEquipo;
+import ni.gob.inss.sisinv.model.entity.soporte.MantenimientoEquipoDetalle;
 import ni.gob.inss.sisinv.model.entity.soporte.Mantenimientos;
 import ni.gob.inss.sisinv.model.entity.soporte.ProgramacionMantenimiento;
 
@@ -18,7 +20,11 @@ public interface MantenimientosService {
 
 	public ProgramacionMantenimiento obtener(int mantenimientoId) throws EntityNotFoundException, ni.gob.inss.barista.model.dao.EntityNotFoundException;
 
-	public List<ActivosUsuario> obtenerListaActivosUsuarios(Integer empleadoId);
+	public List<ActivosUsuario> obtenerListaActivosUsuarios(Integer empleadoId, Integer tipoMantenimientoId);
+
+	public void guardarFichaMantenimientoMaestro(MantenimientoEquipo oMantenimientoEquipo) throws DAOException;
+
+	public void guardarFichaMantenimientoDetalle(MantenimientoEquipoDetalle oMantenimientoEquipoDetalle) throws DAOException;
 
 
 }

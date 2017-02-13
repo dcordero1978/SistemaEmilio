@@ -102,7 +102,10 @@ public class MovimientosActivosBackBean extends BaseBackBean implements Serializ
 		this.cargarListas();
 		this.cargarListaDelegaciones();
 		this.valoresfechas();
+		RequestContext.getCurrentInstance().execute("PF('btnGuardar').disable();");
 	} 
+	
+	
 
 	public void limpiarBusquedaActivo(){
 		this.setEstadoFisicoId(null);
@@ -136,7 +139,7 @@ public class MovimientosActivosBackBean extends BaseBackBean implements Serializ
 	public void cargarDatosFiltro(){
 		try {
 			if(filtroEmpleadoSeleccionado==null) throw new BusinessException(MessagesResults.SELECCIONE_UN_REGISTRO);
-				this.setTxtEmpleadoDest(filtroEmpleadoSeleccionado.getNumeroEmpleado()+" - "+ filtroEmpleadoSeleccionado.getPrimerNombre()+ " "+filtroEmpleadoSeleccionado.getSegundoNombre()+ " "+filtroEmpleadoSeleccionado.getPrimerApellido()+" "+filtroEmpleadoSeleccionado.getSegundoApellido());
+				this.setTxtEmpleadoDest(filtroEmpleadoSeleccionado.getNumeroEmpleado()+" - "+ filtroEmpleadoSeleccionado.getNombreCompleto());
 				this.setTxtcargoEmpleadoDest(filtroEmpleadoSeleccionado.getCargo());
 				this.setTxtubicacionEmpleadoDest(filtroEmpleadoSeleccionado.getArea());
 				Empleado oEmpleado = oEmpleadoService.obtener(filtroEmpleadoSeleccionado.getId());
@@ -152,12 +155,13 @@ public class MovimientosActivosBackBean extends BaseBackBean implements Serializ
         this.setTxtcodigoInventario(filtroActivoSeleccionado.getCodigoInventario());
         this.setTxtcodigoSecundario(filtroActivoSeleccionado.getCodigoSecundario());
         this.setTxtdescripcionBien(filtroActivoSeleccionado.getDescripcion()+ ", Marca: "+filtroActivoSeleccionado.marca.descripcion+", Modelo: "+filtroActivoSeleccionado.modelo.descripcion);
-        this.setTxtEmpleadoOrig(filtroActivoSeleccionado.empleado.getNumeroEmpleado()+" - "+filtroActivoSeleccionado.empleado.getPrimerNombre() + " "+filtroActivoSeleccionado.empleado.getSegundoNombre() + " "+filtroActivoSeleccionado.empleado.getPrimerApellido()+" "+filtroActivoSeleccionado.empleado.getSegundoApellido());
+        this.setTxtEmpleadoOrig(filtroActivoSeleccionado.empleado.getNumeroEmpleado()+" - "+filtroActivoSeleccionado.empleado.getNombreCompleto());
         this.setCargoEmpleadoOrig(filtroActivoSeleccionado.empleado.getCargo());
         this.setUbicacionEmpleadoOrig(filtroActivoSeleccionado.empleado.getArea());
         this.setHfEmpOrigId(filtroActivoSeleccionado.empleado.getId());
         this.setHFActivoId(filtroActivoSeleccionado.getId());
 		cargarMovimientosActivos(filtroActivoSeleccionado.getId());
+		RequestContext.getCurrentInstance().execute("PF('btnGuardar').enable();");
     }
 	
 	public void cargarMovimientosActivos(Integer activoId){
@@ -214,7 +218,7 @@ public class MovimientosActivosBackBean extends BaseBackBean implements Serializ
 					oActivoEmpleadoService.guardar(oActivoEmpleado);
 					cargarMovimientosActivos(this.getHFActivoId());
 					mostrarMensajeInfo(MessagesResults.EXITO_GUARDAR);
-					
+					RequestContext.getCurrentInstance().execute("PF('btnGuardar').disable();");
 					
 			} catch (BusinessException | DAOException e) {
 				mostrarMensajeError(MessagesResults.ERROR_GUARDAR);
@@ -237,6 +241,7 @@ public class MovimientosActivosBackBean extends BaseBackBean implements Serializ
 		this.setListaMovimientos(null);
 		this.setHFActivoId(null);
 		this.setTxtEmpleadoDest("");
+		RequestContext.getCurrentInstance().execute("PF('btnGuardar').disable();");
 	}
 	
 	private void valoresfechas() {

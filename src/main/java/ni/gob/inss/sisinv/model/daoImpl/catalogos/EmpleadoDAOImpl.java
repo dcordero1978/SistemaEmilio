@@ -51,6 +51,8 @@ public class EmpleadoDAOImpl extends BaseGenericDAOImpl<Empleado, Integer> imple
 		oCriteria.setFirstResult(0);
 		oCriteria.setMaxResults(cantidadResultados.intValue());
 		return oCriteria.list();
-	}	
+	}
+	
+	
 
 }

@@ -15,7 +15,7 @@ public class ActivoEmpleadoServiceImpl implements ActivoEmpleadoService {
 	
 	@Autowired
 	ActivoEmpleadoDAO oActivoEmpleadoDAO;
-	
+	//probando para pull
 	@Transactional
 	@Override
 	public void guardar(ActivosEmpleados oActivoEmpleado) throws BusinessException, DAOException {

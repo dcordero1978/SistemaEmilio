@@ -285,9 +285,9 @@ public class ProgramacionMantenimientoBackBean extends BaseBackBean implements S
 		oMantenimientoEquipo = new MantenimientoEquipo();
 		oMantenimientoEquipo.setTipoMantenimientoId(oCatalogoExtService.obtener(MantenimientoPreventivoId));
 		oMantenimientoEquipo.setResponsableSoporteId(null);
-		oMantenimientoEquipo.setAreaId(null);
+		//oMantenimientoEquipo.setAreaId(null);
 		oMantenimientoEquipo.setDelegacionId(oDelegacionService.obtener(this.getDelegacionId()));
-		oMantenimientoEquipo.setTecnicoSoporteId(oEmpleadoService.obtener(this.tecnicoSoporteId));
+		//oMantenimientoEquipo.setTecnicoSoporteId(oEmpleadoService.obtener(this.tecnicoSoporteId));
 		oMantenimientoEquipo.setObservaciones(this.getTxtobservacion());
 		oMantenimientoEquipo.setFechaInicio(this.getFechaMantenimiento());
 		oMantenimientoEquipo.setPasivo(false);
@@ -296,7 +296,7 @@ public class ProgramacionMantenimientoBackBean extends BaseBackBean implements S
 		oMantenimientoEquipo.setCreadoPor(this.getUsuarioActual().getId());
 		oMantenimientoEquipo.setEntidadId(this.getEntidadActual().getId());
 		oMantenimientoEquipo.setProgramacionMtoId(this.mantenimientoprogId);
-		oMantenimientoEquipo.setEmpleado_id(oEmpleadoService.obtener(this.getHfEmpId()));
+		//oMantenimientoEquipo.setEmpleado_id(oEmpleadoService.obtener(this.getHfEmpId()));
 		oMantenimientosService.guardarFichaMantenimientoMaestro(oMantenimientoEquipo);
 	}
 	

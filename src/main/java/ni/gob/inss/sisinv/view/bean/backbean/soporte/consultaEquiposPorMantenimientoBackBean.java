@@ -50,6 +50,7 @@ public class consultaEquiposPorMantenimientoBackBean extends BaseBackBean{
 	
 	@Autowired
 	consultaEquiposPorMantenimientoService oConsultaEquiposPorMantenimientoService;
+	//prueba
 	
 	@Autowired
 	DelegacionService oDelegacionService;
